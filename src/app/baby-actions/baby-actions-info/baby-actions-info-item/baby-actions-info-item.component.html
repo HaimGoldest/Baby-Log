@@ -1,22 +1,22 @@
 <div class="card mb-3" (contextmenu)="onStartEditMode($event)">
   <div class="row g-0 card-body">
     <div class="col-3">
-      <!-- <h6 class="card-title">{{ babyAction.type }}</h6> -->
+      <!-- <h6 class="card-title">{{ babyActionData.type }}</h6> -->
       <img
-        src="{{ babyAction.imagePath }}"
+        src="{{ babyActionData.imagePath }}"
         class="img-fluid rounded-start actionImg"
-        alt="{{ babyAction.type }}"
+        alt="{{ babyActionData.type }}"
       />
       <span class="time-info">
         <h6 class="card-subtitle text-body-secondary">
-          {{ babyAction.creationTime | date : "dd/MM/yy" }} -
-          {{ babyAction.creationTime | date : "HH:mm:ss" }}
+          {{ babyActionData.creationTime | date : "dd/MM/yy" }} -
+          {{ babyActionData.creationTime | date : "HH:mm:ss" }}
         </h6>
       </span>
     </div>
     <div class="col-9" *ngIf="!editMode">
       <p class="card-text">
-        {{ babyAction.desciption }}
+        {{ babyActionData.desciption }}
       </p>
     </div>
     <div class="col-9" *ngIf="editMode">

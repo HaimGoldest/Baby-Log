@@ -9,6 +9,9 @@ import { BabyActionsPanelComponent } from './baby-actions/baby-actions-panel/bab
 import { BabyActionsInfoComponent } from './baby-actions/baby-actions-info/baby-actions-info.component';
 import { BabyActionsInfoItemComponent } from './baby-actions/baby-actions-info/baby-actions-info-item/baby-actions-info-item.component';
 import { BabyActionsPanelItemComponent } from './baby-actions/baby-actions-panel/baby-actions-panel-item/baby-actions-panel-item.component';
+import { GrowthTrackingComponent } from './growth-tracking/growth-tracking.component';
+import { BabyActionsPreferencesComponent } from './baby-actions/baby-actions-preferences/baby-actions-preferences.component';
+import { BabyActionCategoryPrefComponent } from './baby-actions/baby-actions-preferences/baby-action-category-pref/baby-action-category-pref.component';
 
 @NgModule({
   declarations: [
@@ -18,13 +21,13 @@ import { BabyActionsPanelItemComponent } from './baby-actions/baby-actions-panel
     BabyActionsPanelComponent,
     BabyActionsInfoComponent,
     BabyActionsInfoItemComponent,
-    BabyActionsPanelItemComponent
+    BabyActionsPanelItemComponent,
+    GrowthTrackingComponent,
+    BabyActionsPreferencesComponent,
+    BabyActionCategoryPrefComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
+  imports: [BrowserModule, AppRoutingModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,60 +1,36 @@
-import { Component } from '@angular/core';
-import { BabyActionModel } from '../../models/bayby-action.model';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { BabyActionCategoryModel } from '../../models/baby-action-category.model';
+import { BabyActionCategoriesService } from '../../services/baby-actions-categories.service';
 
 @Component({
   selector: 'app-baby-actions-panel',
   templateUrl: './baby-actions-panel.component.html',
   styleUrl: './baby-actions-panel.component.css',
 })
-export class BabyActionsPanelComponent {
-  babyActions: BabyActionModel[] = [
-    new BabyActionModel(
-      'Bottle',
-      null,
-      'temp..',
-      '../../assets/images/icons8-baby-bottle-96.png'
-    ),
-    new BabyActionModel(
-      'Poo',
-      null,
-      'temp..',
-      '../../assets/images/icons8-pile-of-poo-3d-fluency-96.png'
-    ),
-    new BabyActionModel(
-      'Shower',
-      null,
-      'temp..',
-      '../../assets/images/icons8-shower-96.png'
-    ),
-    new BabyActionModel(
-      'Awake',
-      null,
-      'temp..',
-      '../../assets/images/icons8-sun-96.png'
-    ),
-    new BabyActionModel(
-      'Sleep',
-      null,
-      'temp..',
-      '../../assets/images/icons8-moon-96.png'
-    ),
-    new BabyActionModel(
-      'Fever',
-      null,
-      'temp..',
-      '../../assets/images/icons8-thermometer-96.png'
-    ),
-    new BabyActionModel(
-      'Medication',
-      null,
-      'temp..',
-      '../../assets/images/icons8-pill-96.png'
-    ),
-    new BabyActionModel(
-      'Vomit',
-      null,
-      'temp..',
-      '../../assets/images/icons8-face-vomiting-96.png'
-    ),
-  ];
+export class BabyActionsPanelComponent implements OnInit, OnDestroy {
+  babyActionsCategories: BabyActionCategoryModel[] = [];
+  babyActionsCategoriesChanged: Subscription;
+
+  constructor(
+    private babyActionCategoriesService: BabyActionCategoriesService
+  ) {}
+
+  ngOnInit(): void {
+    this.babyActionCategoriesService.getCategories().forEach(category => {
+      if (category.isEnable) {
+        this.babyActionsCategories.push(category)
+      }
+    })
+
+    this.babyActionsCategoriesChanged =
+      this.babyActionCategoriesService.babyActionsCategoriesChanged.subscribe(
+        (newCategories: BabyActionCategoryModel[]) =>
+          (this.babyActionsCategories = newCategories)
+      );
+  }
+
+  ngOnDestroy(): void {
+    this.babyActionsCategoriesChanged.unsubscribe;
+  }
 }

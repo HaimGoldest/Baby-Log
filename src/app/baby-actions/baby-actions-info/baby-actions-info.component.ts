@@ -1,29 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { BabyActionModel } from '../../models/bayby-action.model';
-import { BabyActionsService } from '../../services/baby-actions.service';
+import { BabyActionDataModel } from '../../models/baby-action-data.model';
+import { BabyActionsDataService } from '../../services/baby-actions-data.service';
 
 @Component({
   selector: 'app-baby-actions-info',
   templateUrl: './baby-actions-info.component.html',
   styleUrl: './baby-actions-info.component.css',
 })
-export class BabyActionsInfoComponent {
-  babyActions: BabyActionModel[] = [];
-  private babyActionsChanged: Subscription;
+export class BabyActionsInfoComponent implements OnInit, OnDestroy {
+  babyActionsData: BabyActionDataModel[] = [];
+  private babyActionsDataChanged: Subscription;
 
-  constructor(private babyActionService: BabyActionsService) {}
+  constructor(private babyActionDataService: BabyActionsDataService) {}
 
   ngOnInit(): void {
-    this.babyActions = this.babyActionService.getBabyActions();
-    this.babyActionsChanged =
-      this.babyActionService.babyActionsChanged.subscribe(
-        (newBabyActions: BabyActionModel[]) =>
-          (this.babyActions = newBabyActions)
+    this.babyActionsData = this.babyActionDataService.getBabyActions();
+
+    this.babyActionsDataChanged =
+      this.babyActionDataService.babyActionsDataChanged.subscribe(
+        (newBabyActions: BabyActionDataModel[]) =>
+          (this.babyActionsData = newBabyActions)
       );
   }
 
   ngOnDestroy(): void {
-    this.babyActionsChanged.unsubscribe;
+    this.babyActionsDataChanged.unsubscribe;
   }
 }

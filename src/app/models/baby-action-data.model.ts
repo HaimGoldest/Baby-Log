@@ -1,4 +1,4 @@
-export class BabyActionModel {
+export class BabyActionDataModel {
   constructor(
     public type: string,
     public creationTime: Date,
