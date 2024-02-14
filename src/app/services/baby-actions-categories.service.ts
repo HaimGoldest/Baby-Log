@@ -12,102 +12,66 @@ export class BabyActionCategoriesService {
   babyActionsCategories: BabyActionCategoryModel[] = [
     new BabyActionCategoryModel(
       'Bottle',
+      'אכל בקבוק שלם',
+      '../../assets/images/icons8-baby-bottle-96.png',
       true,
-      true,
-      new BabyActionDataModel(
-        'Bottle',
-        null,
-        '',
-        '../../assets/images/icons8-baby-bottle-96.png'
-      )
+      false
     ),
     new BabyActionCategoryModel(
       'Poo',
+      '',
+      '../../assets/images/icons8-pile-of-poo-3d-fluency-96.png',
       true,
-      true,
-      new BabyActionDataModel(
-        'Poo',
-        null,
-        '',
-        '../../assets/images/icons8-pile-of-poo-3d-fluency-96.png'
-      )
+      false
     ),
     new BabyActionCategoryModel(
       'Shower',
+      '',
+      '../../assets/images/icons8-shower-96.png',
       true,
-      true,
-      new BabyActionDataModel(
-        'Shower',
-        null,
-        '',
-        '../../assets/images/icons8-shower-96.png'
-      )
+      false
     ),
     new BabyActionCategoryModel(
       'Awake',
+      '',
+      '../../assets/images/icons8-sun-96.png',
       true,
-      true,
-      new BabyActionDataModel(
-        'Awake',
-        null,
-        '',
-        '../../assets/images/icons8-sun-96.png'
-      )
+      false
     ),
     new BabyActionCategoryModel(
       'Sleep',
+      '',
+      '../../assets/images/icons8-moon-96.png',
       true,
-      true,
-      new BabyActionDataModel(
-        'Sleep',
-        null,
-        '',
-        '../../assets/images/icons8-moon-96.png'
-      )
+      false
     ),
     new BabyActionCategoryModel(
       'Fever',
+      '',
+      '../../assets/images/icons8-thermometer-96.png',
       true,
-      true,
-      new BabyActionDataModel(
-        'Fever',
-        null,
-        '',
-        '../../assets/images/icons8-thermometer-96.png'
-      )
+      false
     ),
     new BabyActionCategoryModel(
       'Medication',
+      '',
+      '../../assets/images/icons8-pill-96.png',
       true,
-      true,
-      new BabyActionDataModel(
-        'Medication',
-        null,
-        '',
-        '../../assets/images/icons8-pill-96.png'
-      )
+      false
     ),
     new BabyActionCategoryModel(
       'Vomit',
+      '',
+      '../../assets/images/icons8-face-vomiting-96.png',
       true,
-      true,
-      new BabyActionDataModel(
-        'Vomit',
-        null,
-        '',
-        '../../assets/images/icons8-face-vomiting-96.png'
-      )
+      false
     ),
     new BabyActionCategoryModel(
       'Vaccine',
+      '',
+      '../../assets/images/icons8-syringe-96.png',
       false,
-      false,
-      new BabyActionDataModel(
-        'Vaccine',
-        null,
-        '',
-        '../../assets/images/icons8-syringe-96.png'
-      )
+      false
     ),
   ];
 

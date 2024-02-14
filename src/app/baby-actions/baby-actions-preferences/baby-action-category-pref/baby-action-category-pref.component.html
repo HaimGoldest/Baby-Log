@@ -2,9 +2,9 @@
   <div class="card mb-3">
     <div class="col-12">
       <img
-        src="{{ babyActionCategory.data.imagePath }}"
+        src="{{ babyActionCategory.imagePath }}"
         class="img-fluid rounded-start actionImg"
-        alt="{{ babyActionCategory.data.type }}"
+        alt="{{ babyActionCategory.name }}"
       />
       <label for="cateroryNameCheckbox" style="margin-right: 10px">
         Enable {{ babyActionCategory.name }}:
@@ -17,11 +17,11 @@
       <label
         for="cateroryDescCheckbox"
         *ngIf="babyActionCategory.isCategoryEnable"
-        >| Enable Default Desciption
+        >| Enable Default Description
         <input
           type="checkbox"
           id="cateroryDescCheckbox"
-          [(ngModel)]="babyActionCategory.isDefaultDesciptionEnable"
+          [(ngModel)]="babyActionCategory.isDefaultDescriptionEnable"
         />
       </label>
     </div>
@@ -29,18 +29,18 @@
       class="col-12"
       *ngIf="
         babyActionCategory.isCategoryEnable &&
-        babyActionCategory.isDefaultDesciptionEnable
+        babyActionCategory.isDefaultDescriptionEnable
       "
     >
       <div class="form-floating">
         <textarea
           class="form-control"
-          id="defaultDesciptionText"
+          id="defaultDescription Text"
           style="height: 80px"
         >
-          {{ babyActionCategory.data.desciption }}
+          {{ babyActionCategory.defaultDescription }}
         </textarea>
-        <label for="defaultDesciptionText">Default Desciption</label>
+        <label for="defaultDescription Text">Default Description </label>
       </div>
     </div>
   </div>

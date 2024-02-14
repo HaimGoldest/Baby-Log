@@ -19,7 +19,7 @@ export class BabyActionsInfoItemComponent {
   }
 
   onEditSubmit(newDescription: string) {
-    this.babyActionData.desciption = newDescription;
+    this.babyActionData.description = newDescription;
     this.editMode = false;
   }
 

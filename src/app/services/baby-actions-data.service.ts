@@ -8,14 +8,7 @@ import { BabyActionDataModel } from '../models/baby-action-data.model';
 export class BabyActionsDataService {
   babyActionsDataChanged = new Subject<BabyActionDataModel[]>();
 
-  babyActionsData: BabyActionDataModel[] = [
-    new BabyActionDataModel(
-      'Bottle',
-      new Date(),
-      'אכל חצי בקבוק',
-      '../../assets/images/icons8-baby-bottle-96.png'
-    ),
-  ];
+  babyActionsData: BabyActionDataModel[] = [];
 
   constructor() {}
 
@@ -27,8 +20,8 @@ export class BabyActionsDataService {
   //   return this.babyActionsData[index];
   // }
 
-  addBabyAction(babyAction: BabyActionDataModel) {
-    this.babyActionsData.unshift(babyAction);
+  addBabyAction(babyActionData: BabyActionDataModel) {
+    this.babyActionsData.unshift(babyActionData);
     this.invokeBabyActionsDataChanged();
   }
 

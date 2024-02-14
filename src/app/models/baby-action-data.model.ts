@@ -1,8 +1,9 @@
+import { BabyActionCategoryModel } from './baby-action-category.model';
+
 export class BabyActionDataModel {
   constructor(
-    public type: string,
-    public creationTime: Date,
-    public desciption: string,
-    public imagePath: string
+    public category: BabyActionCategoryModel,
+    public description: string,
+    public creationTime: Date
   ) {}
 }

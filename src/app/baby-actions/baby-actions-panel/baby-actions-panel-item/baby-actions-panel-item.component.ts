@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { BabyActionCategoryModel } from '../../../models/baby-action-category.model';
+import { BabyActionDataModel } from '../../../models/baby-action-data.model';
 import { BabyActionsDataService } from '../../../services/baby-actions-data.service';
 
 @Component({
@@ -14,8 +15,20 @@ export class BabyActionsPanelItemComponent {
   constructor(private babyActionDataService: BabyActionsDataService) {}
 
   onAddBabyAction() {
-    let BabyActionData = this.babyActionCategory.data;
-    BabyActionData.creationTime = new Date();
-    this.babyActionDataService.addBabyAction(BabyActionData);
+    try {
+      const description = this.babyActionCategory.isDefaultDescriptionEnable
+        ? this.babyActionCategory.defaultDescription
+        : '';
+
+      const babyActionData = new BabyActionDataModel(
+        this.babyActionCategory,
+        description,
+        new Date()
+      );
+
+      this.babyActionDataService.addBabyAction(babyActionData);
+    } catch (error) {
+      console.error('Error adding baby action data:', Error);
+    }
   }
 }

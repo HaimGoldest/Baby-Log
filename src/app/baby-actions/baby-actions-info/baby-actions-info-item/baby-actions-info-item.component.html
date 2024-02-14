@@ -3,9 +3,9 @@
     <div class="col-3">
       <!-- <h6 class="card-title">{{ babyActionData.type }}</h6> -->
       <img
-        src="{{ babyActionData.imagePath }}"
+        src="{{ babyActionData.category.imagePath }}"
         class="img-fluid rounded-start actionImg"
-        alt="{{ babyActionData.type }}"
+        alt="{{ babyActionData.category.name }}"
       />
       <span class="time-info">
         <h6 class="card-subtitle text-body-secondary">
@@ -16,7 +16,7 @@
     </div>
     <div class="col-9" *ngIf="!editMode">
       <p class="card-text">
-        {{ babyActionData.desciption }}
+        {{ babyActionData.description }}
       </p>
     </div>
     <div class="col-9" *ngIf="editMode">
@@ -24,10 +24,10 @@
         <textarea
           #descriptionTextarea
           class="form-control"
-          id="desciption"
+          id="description "
           style="height: 80px"
         ></textarea>
-        <label for="desciption">Desciption</label>
+        <label for="description ">Description </label>
       </div>
 
       <div class="button-container">
