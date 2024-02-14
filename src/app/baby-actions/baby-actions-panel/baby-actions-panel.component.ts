@@ -17,11 +17,11 @@ export class BabyActionsPanelComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.babyActionCategoriesService.getCategories().forEach(category => {
-      if (category.isEnable) {
-        this.babyActionsCategories.push(category)
+    this.babyActionCategoriesService.getCategories().forEach((category) => {
+      if (category.isCategoryEnable) {
+        this.babyActionsCategories.push(category);
       }
-    })
+    });
 
     this.babyActionsCategoriesChanged =
       this.babyActionCategoriesService.babyActionsCategoriesChanged.subscribe(

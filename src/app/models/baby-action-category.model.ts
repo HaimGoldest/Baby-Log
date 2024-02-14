@@ -3,7 +3,8 @@ import { BabyActionDataModel } from './baby-action-data.model';
 export class BabyActionCategoryModel {
   constructor(
     public name: string,
-    public isEnable: boolean,
+    public isCategoryEnable: boolean,
+    public isDefaultDesciptionEnable: boolean,
     public data: BabyActionDataModel
   ) {}
 }

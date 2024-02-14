@@ -1,15 +1,47 @@
-<!-- <label for="cateroryName">Name
-  <input type="checkbox" id="cateroryName"/>
-</label>
-<br>
-<label for="cateroryDesc">Default Desciption -->
-  <!-- <input type="textarea" #cateroryDesc /> -->
-  
-<!-- </label>
-<br>
-<textarea name="" id="" cols="30" rows="3"></textarea> -->
-
-
-
-
-
+<div class="row">
+  <div class="card mb-3">
+    <div class="col-12">
+      <img
+        src="{{ babyActionCategory.data.imagePath }}"
+        class="img-fluid rounded-start actionImg"
+        alt="{{ babyActionCategory.data.type }}"
+      />
+      <label for="cateroryNameCheckbox" style="margin-right: 10px">
+        Enable {{ babyActionCategory.name }}:
+        <input
+          type="checkbox"
+          id="cateroryNameCheckbox"
+          [(ngModel)]="babyActionCategory.isCategoryEnable"
+        />
+      </label>
+      <label
+        for="cateroryDescCheckbox"
+        *ngIf="babyActionCategory.isCategoryEnable"
+        >| Enable Default Desciption
+        <input
+          type="checkbox"
+          id="cateroryDescCheckbox"
+          [(ngModel)]="babyActionCategory.isDefaultDesciptionEnable"
+        />
+      </label>
+    </div>
+    <div
+      class="col-12"
+      *ngIf="
+        babyActionCategory.isCategoryEnable &&
+        babyActionCategory.isDefaultDesciptionEnable
+      "
+    >
+      <div class="form-floating">
+        <textarea
+          class="form-control"
+          id="defaultDesciptionText"
+          style="height: 80px"
+        >
+          {{ babyActionCategory.data.desciption }}
+        </textarea>
+        <label for="defaultDesciptionText">Default Desciption</label>
+      </div>
+    </div>
+  </div>
+</div>

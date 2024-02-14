@@ -10,7 +10,7 @@ import { BabyActionsDataService } from '../../services/baby-actions-data.service
 })
 export class BabyActionsInfoComponent implements OnInit, OnDestroy {
   babyActionsData: BabyActionDataModel[] = [];
-  private babyActionsDataChanged: Subscription;
+  babyActionsDataChanged: Subscription;
 
   constructor(private babyActionDataService: BabyActionsDataService) {}
 

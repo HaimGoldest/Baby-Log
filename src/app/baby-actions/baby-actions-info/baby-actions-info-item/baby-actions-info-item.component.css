@@ -19,7 +19,7 @@
   }
   
   .time-info {
-    white-space: nowrap; /* Prevent wrapping */
+    white-space: nowrap;
   }
   
   .button-container {

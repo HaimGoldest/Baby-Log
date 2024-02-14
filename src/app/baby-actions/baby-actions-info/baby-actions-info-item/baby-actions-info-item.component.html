@@ -20,15 +20,16 @@
       </p>
     </div>
     <div class="col-9" *ngIf="editMode">
-      <textarea
-        #descriptionTextarea
-        name="desciption"
-        id="desciption"
-        [value]=""
-        cols="textareaCols"
-        rows="2"
-      >
-      </textarea>
+      <div class="form-floating">
+        <textarea
+          #descriptionTextarea
+          class="form-control"
+          id="desciption"
+          style="height: 80px"
+        ></textarea>
+        <label for="desciption">Desciption</label>
+      </div>
+
       <div class="button-container">
         <button
           class="btn btn-success"

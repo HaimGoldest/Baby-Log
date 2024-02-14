@@ -13,90 +13,99 @@ export class BabyActionCategoriesService {
     new BabyActionCategoryModel(
       'Bottle',
       true,
+      true,
       new BabyActionDataModel(
         'Bottle',
         null,
-        'temp..',
+        '',
         '../../assets/images/icons8-baby-bottle-96.png'
       )
     ),
     new BabyActionCategoryModel(
       'Poo',
       true,
+      true,
       new BabyActionDataModel(
         'Poo',
         null,
-        'temp..',
+        '',
         '../../assets/images/icons8-pile-of-poo-3d-fluency-96.png'
       )
     ),
     new BabyActionCategoryModel(
       'Shower',
       true,
+      true,
       new BabyActionDataModel(
         'Shower',
         null,
-        'temp..',
+        '',
         '../../assets/images/icons8-shower-96.png'
       )
     ),
     new BabyActionCategoryModel(
       'Awake',
       true,
+      true,
       new BabyActionDataModel(
         'Awake',
         null,
-        'temp..',
+        '',
         '../../assets/images/icons8-sun-96.png'
       )
     ),
     new BabyActionCategoryModel(
       'Sleep',
       true,
+      true,
       new BabyActionDataModel(
         'Sleep',
         null,
-        'temp..',
+        '',
         '../../assets/images/icons8-moon-96.png'
       )
     ),
     new BabyActionCategoryModel(
       'Fever',
       true,
+      true,
       new BabyActionDataModel(
         'Fever',
         null,
-        'temp..',
+        '',
         '../../assets/images/icons8-thermometer-96.png'
       )
     ),
     new BabyActionCategoryModel(
       'Medication',
       true,
+      true,
       new BabyActionDataModel(
         'Medication',
         null,
-        'temp..',
+        '',
         '../../assets/images/icons8-pill-96.png'
       )
     ),
     new BabyActionCategoryModel(
       'Vomit',
       true,
+      true,
       new BabyActionDataModel(
         'Vomit',
         null,
-        'temp..',
+        '',
         '../../assets/images/icons8-face-vomiting-96.png'
       )
     ),
     new BabyActionCategoryModel(
       'Vaccine',
       false,
+      false,
       new BabyActionDataModel(
         'Vaccine',
         null,
-        'temp..',
+        '',
         '../../assets/images/icons8-syringe-96.png'
       )
     ),
@@ -108,9 +117,9 @@ export class BabyActionCategoriesService {
     return this.babyActionsCategories.slice();
   }
 
-  // getCategory(index: number) {
-  //   return this.babyActionsCategories[index];
-  // }
+  getCategory(index: number) {
+    return this.babyActionsCategories[index];
+  }
 
   addCategory(babyAction: BabyActionCategoryModel) {
     this.babyActionsCategories.unshift(babyAction);
