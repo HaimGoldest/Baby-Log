@@ -12,7 +12,7 @@ export class BabyActionCategoriesService {
   babyActionsCategories: BabyActionCategoryModel[] = [
     new BabyActionCategoryModel(
       'Bottle',
-      'אכל בקבוק שלם',
+      '',
       '../../assets/images/icons8-baby-bottle-96.png',
       true,
       false
@@ -81,18 +81,8 @@ export class BabyActionCategoriesService {
     return this.babyActionsCategories.slice();
   }
 
-  getCategory(index: number) {
-    return this.babyActionsCategories[index];
-  }
-
-  addCategory(babyAction: BabyActionCategoryModel) {
-    this.babyActionsCategories.unshift(babyAction);
-    this.invokeBabyActionsCategoriesChanged();
-  }
-
-  // deleteCategory(index: number) {
-  //   this.babyActionsCategories.splice(index, 1);
-  //   this.invokeBabyActionsCategoriesChanged();
+  // getCategory(index: number) {
+  //   return this.babyActionsCategories[index];
   // }
 
   invokeBabyActionsCategoriesChanged() {

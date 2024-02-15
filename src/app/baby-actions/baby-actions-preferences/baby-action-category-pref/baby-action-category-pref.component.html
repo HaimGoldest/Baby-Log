@@ -35,12 +35,13 @@
       <div class="form-floating">
         <textarea
           class="form-control"
-          id="defaultDescription Text"
+          id="defaultDescriptionText"
           style="height: 80px"
+          (keyup)="updateDefaultDescription($event.target.value)"
         >
           {{ babyActionCategory.defaultDescription }}
         </textarea>
-        <label for="defaultDescription Text">Default Description </label>
+        <label for="defaultDescriptionText">Default Description </label>
       </div>
     </div>
   </div>

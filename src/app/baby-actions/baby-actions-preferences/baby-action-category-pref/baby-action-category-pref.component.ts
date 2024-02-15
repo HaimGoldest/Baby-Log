@@ -19,4 +19,8 @@ export class BabyActionCategoryPrefComponent implements OnInit {
     this.babyActionCategory =
       this.babyActionCategoriesService.getCategories()[this.index];
   }
+
+  updateDefaultDescription(newValue: string) {
+    this.babyActionCategory.defaultDescription = newValue;
+  }
 }
