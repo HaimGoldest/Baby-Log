@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { BabyActionModel } from '../../../models/bayby-action.model';
+import { BabyActionDataModel } from '../../../models/baby-action-data.model';
 
 @Component({
   selector: 'app-baby-actions-info-item',
@@ -7,7 +7,7 @@ import { BabyActionModel } from '../../../models/bayby-action.model';
   styleUrl: './baby-actions-info-item.component.css',
 })
 export class BabyActionsInfoItemComponent {
-  @Input() babyAction: BabyActionModel | undefined;
+  @Input() babyActionData: BabyActionDataModel | undefined;
   @Input() index: number | undefined;
   @ViewChild('descriptionTextarea', { static: true })
   descriptionTextareaRef: ElementRef;
@@ -19,7 +19,7 @@ export class BabyActionsInfoItemComponent {
   }
 
   onEditSubmit(newDescription: string) {
-    this.babyAction.desciption = newDescription;
+    this.babyActionData.description = newDescription;
     this.editMode = false;
   }
 

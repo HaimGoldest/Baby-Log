@@ -1,34 +1,35 @@
 <div class="card mb-3" (contextmenu)="onStartEditMode($event)">
   <div class="row g-0 card-body">
     <div class="col-3">
-      <!-- <h6 class="card-title">{{ babyAction.type }}</h6> -->
+      <!-- <h6 class="card-title">{{ babyActionData.type }}</h6> -->
       <img
-        src="{{ babyAction.imagePath }}"
+        src="{{ babyActionData.category.imagePath }}"
         class="img-fluid rounded-start actionImg"
-        alt="{{ babyAction.type }}"
+        alt="{{ babyActionData.category.name }}"
       />
       <span class="time-info">
         <h6 class="card-subtitle text-body-secondary">
-          {{ babyAction.creationTime | date : "dd/MM/yy" }} -
-          {{ babyAction.creationTime | date : "HH:mm:ss" }}
+          {{ babyActionData.creationTime | date : "dd/MM/yy" }} -
+          {{ babyActionData.creationTime | date : "HH:mm:ss" }}
         </h6>
       </span>
     </div>
     <div class="col-9" *ngIf="!editMode">
       <p class="card-text">
-        {{ babyAction.desciption }}
+        {{ babyActionData.description }}
       </p>
     </div>
     <div class="col-9" *ngIf="editMode">
-      <textarea
-        #descriptionTextarea
-        name="desciption"
-        id="desciption"
-        [value]=""
-        cols="textareaCols"
-        rows="2"
-      >
-      </textarea>
+      <div class="form-floating">
+        <textarea
+          #descriptionTextarea
+          class="form-control"
+          id="description "
+          style="height: 80px"
+        ></textarea>
+        <label for="description ">Description </label>
+      </div>
+
       <div class="button-container">
         <button
           class="btn btn-success"

@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { BabyActionModel } from '../../../models/bayby-action.model';
-import { BabyActionsService } from '../../../services/baby-actions.service';
+import { BabyActionCategoryModel } from '../../../models/baby-action-category.model';
+import { BabyActionDataModel } from '../../../models/baby-action-data.model';
+import { BabyActionsDataService } from '../../../services/baby-actions-data.service';
 
 @Component({
   selector: 'app-baby-actions-panel-item',
@@ -8,13 +9,26 @@ import { BabyActionsService } from '../../../services/baby-actions.service';
   styleUrl: './baby-actions-panel-item.component.css',
 })
 export class BabyActionsPanelItemComponent {
-  @Input() babyAction: BabyActionModel;
+  @Input() babyActionCategory: BabyActionCategoryModel;
   @Input() index: number;
 
-  constructor(private babyActionService: BabyActionsService) {}
+  constructor(private babyActionDataService: BabyActionsDataService) {}
 
   onAddBabyAction() {
-    this.babyAction.creationTime = new Date();
-    this.babyActionService.addBabyAction(this.babyAction);
+    try {
+      const description = this.babyActionCategory.isDefaultDescriptionEnable
+        ? this.babyActionCategory.defaultDescription
+        : '';
+
+      const babyActionData = new BabyActionDataModel(
+        this.babyActionCategory,
+        description,
+        new Date()
+      );
+
+      this.babyActionDataService.addBabyAction(babyActionData);
+    } catch (error) {
+      console.error('Error adding baby action data:', Error);
+    }
   }
 }

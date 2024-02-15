@@ -13,18 +13,18 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" routerLink="/">Baby Actions</a>
+      <ul class="nav nav-pills">
+        <li class="nav-item">
+          <a class="nav-link routerLinkActive" routerLink="/baby-actions">Baby Actions</a>
         </li>
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" routerLink="/">Growth Tracking</a>
+        <li class="nav-item">
+          <a class="nav-link routerLinkActive" routerLink="/growth-tracking">Growth Tracking</a>
         </li>
       </ul>
       <ul class="navbar-nav ms-auto">
         <li class="nav-item dropdown">
           <a
-            class="nav-link dropdown-toggle"
+            class=".nav-link-active dropdown-toggle"
             id="navbarDropdown"
             role="button"
             data-bs-toggle="dropdown"
@@ -37,14 +37,14 @@
             aria-labelledby="navbarDropdown"
           >
             <li>
-              <a class="dropdown-item" style="cursor: pointer">Add Baby</a>
+              <a class="dropdown-item" routerLink="/">Add Baby</a>
             </li>
             <li>
-              <a class="dropdown-item" style="cursor: pointer">Preferences</a>
+              <a class="dropdown-item" routerLink="/baby-actions-preferences">Preferences</a>
             </li>
             <li><hr class="dropdown-divider" /></li>
             <li>
-              <a class="dropdown-item" style="cursor: pointer">Logout</a>
+              <a class="dropdown-item" routerLink="/">Logout</a>
             </li>
           </ul>
         </li>

@@ -4,12 +4,12 @@ import { BabyActionCategoryModel } from '../../models/baby-action-category.model
 import { BabyActionCategoriesService } from '../../services/baby-actions-categories.service';
 
 @Component({
-  selector: 'app-baby-actions-panel',
-  templateUrl: './baby-actions-panel.component.html',
-  styleUrl: './baby-actions-panel.component.css',
+  selector: 'app-baby-actions-preferences',
+  templateUrl: './baby-actions-preferences.component.html',
+  styleUrl: './baby-actions-preferences.component.css',
 })
-export class BabyActionsPanelComponent implements OnInit, OnDestroy {
-  babyActionsCategories: BabyActionCategoryModel[] = [];
+export class BabyActionsPreferencesComponent implements OnInit, OnDestroy {
+  babyActionsCategories: BabyActionCategoryModel[];
   babyActionsCategoriesChanged: Subscription;
 
   constructor(
@@ -17,11 +17,8 @@ export class BabyActionsPanelComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.babyActionCategoriesService.getCategories().forEach((category) => {
-      if (category.isCategoryEnable) {
-        this.babyActionsCategories.push(category);
-      }
-    });
+    this.babyActionsCategories =
+      this.babyActionCategoriesService.getCategories();
 
     this.babyActionsCategoriesChanged =
       this.babyActionCategoriesService.babyActionsCategoriesChanged.subscribe(
