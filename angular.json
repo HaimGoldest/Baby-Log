@@ -91,5 +91,10 @@
         }
       }
     }
+  },
+  "cli": {
+    "cache": {
+      "enabled": false
+    }
   }
 }

@@ -8,6 +8,7 @@ const routes: Routes = [
   { path: '', component: BabyActionsComponent },
   { path: 'baby-actions', component: BabyActionsComponent },
   { path: 'growth-tracking', component: GrowthTrackingComponent },
+  { path: 'growth-tracking', component: GrowthTrackingComponent },
   {
     path: 'baby-actions-preferences',
     component: BabyActionsPreferencesComponent,

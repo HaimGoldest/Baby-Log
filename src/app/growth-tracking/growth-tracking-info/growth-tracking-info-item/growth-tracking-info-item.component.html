@@ -1,0 +1,16 @@
+<div class="card mb-3">
+  <div class="row g-0 card-body">
+    <div class="col-3">
+      <p class="card-text">Date: {{ measurement.date | date : "dd/MM/yy" }}</p>
+    </div>
+    <div class="col-3">
+      <p class="card-text">Height: {{ measurement.height }}</p>
+    </div>
+    <div class="col-3">
+      <p class="card-text">Weight: {{ measurement.weight }}</p>
+    </div>
+    <div class="col-3">
+      <p class="card-text">Head Measure: {{ measurement.headMeasure }}</p>
+    </div>
+  </div>
+</div>

@@ -13,6 +13,9 @@ import { BabyActionsPanelItemComponent } from './baby-actions/baby-actions-panel
 import { GrowthTrackingComponent } from './growth-tracking/growth-tracking.component';
 import { BabyActionsPreferencesComponent } from './baby-actions/baby-actions-preferences/baby-actions-preferences.component';
 import { BabyActionCategoryPrefComponent } from './baby-actions/baby-actions-preferences/baby-action-category-pref/baby-action-category-pref.component';
+import { GrowthTrackingInfoComponent } from './growth-tracking/growth-tracking-info/growth-tracking-info.component';
+import { GrowthTrackingNewMeasurementComponent } from './growth-tracking/growth-tracking-new-measurement/growth-tracking-new-measurement.component';
+import { GrowthTrackingInfoItemComponent } from './growth-tracking/growth-tracking-info/growth-tracking-info-item/growth-tracking-info-item.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +29,9 @@ import { BabyActionCategoryPrefComponent } from './baby-actions/baby-actions-pre
     GrowthTrackingComponent,
     BabyActionsPreferencesComponent,
     BabyActionCategoryPrefComponent,
+    GrowthTrackingInfoComponent,
+    GrowthTrackingNewMeasurementComponent,
+    GrowthTrackingInfoItemComponent,
   ],
   imports: [BrowserModule, FormsModule, AppRoutingModule],
   providers: [],
