@@ -13,9 +13,6 @@ import { BabyActionsPanelItemComponent } from './baby-actions/baby-actions-panel
 import { GrowthTrackingComponent } from './growth-tracking/growth-tracking.component';
 import { BabyActionsPreferencesComponent } from './baby-actions/baby-actions-preferences/baby-actions-preferences.component';
 import { BabyActionCategoryPrefComponent } from './baby-actions/baby-actions-preferences/baby-action-category-pref/baby-action-category-pref.component';
-import { GrowthTrackingHeightComponent } from './growth-tracking/growth-tracking-height/growth-tracking-height.component';
-import { GrowthTrackingWeightComponent } from './growth-tracking/growth-tracking-weight/growth-tracking-weight.component';
-import { GrowthTrackingHeadMeasureComponent } from './growth-tracking/growth-tracking-head-measure/growth-tracking-head-measure.component';
 import { GrowthTrackingInfoComponent } from './growth-tracking/growth-tracking-info/growth-tracking-info.component';
 import { GrowthTrackingNewMeasurementComponent } from './growth-tracking/growth-tracking-new-measurement/growth-tracking-new-measurement.component';
 import { GrowthTrackingInfoItemComponent } from './growth-tracking/growth-tracking-info/growth-tracking-info-item/growth-tracking-info-item.component';
@@ -32,9 +29,6 @@ import { GrowthTrackingInfoItemComponent } from './growth-tracking/growth-tracki
     GrowthTrackingComponent,
     BabyActionsPreferencesComponent,
     BabyActionCategoryPrefComponent,
-    GrowthTrackingHeightComponent,
-    GrowthTrackingWeightComponent,
-    GrowthTrackingHeadMeasureComponent,
     GrowthTrackingInfoComponent,
     GrowthTrackingNewMeasurementComponent,
     GrowthTrackingInfoItemComponent,
