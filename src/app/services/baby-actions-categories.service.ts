@@ -72,6 +72,13 @@ export class BabyActionCategoriesService {
       false,
       false
     ),
+    new BabyActionCategoryModel(
+      'Notes',
+      '',
+      '../../assets/images/icons8-task-96.png',
+      true,
+      false
+    ),
   ];
 
   constructor() {}
