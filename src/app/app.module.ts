@@ -1,8 +1,12 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-
 import { AppRoutingModule } from './app-routing.module';
+
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { environment } from '../environments/environment';
+
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { BabyActionsComponent } from './baby-actions/baby-actions.component';
@@ -16,6 +20,7 @@ import { BabyActionCategoryPrefComponent } from './baby-actions/baby-actions-pre
 import { GrowthTrackingInfoComponent } from './growth-tracking/growth-tracking-info/growth-tracking-info.component';
 import { GrowthTrackingNewMeasurementComponent } from './growth-tracking/growth-tracking-new-measurement/growth-tracking-new-measurement.component';
 import { GrowthTrackingInfoItemComponent } from './growth-tracking/growth-tracking-info/growth-tracking-info-item/growth-tracking-info-item.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -32,8 +37,15 @@ import { GrowthTrackingInfoItemComponent } from './growth-tracking/growth-tracki
     GrowthTrackingInfoComponent,
     GrowthTrackingNewMeasurementComponent,
     GrowthTrackingInfoItemComponent,
+    LoginComponent,
   ],
-  imports: [BrowserModule, FormsModule, AppRoutingModule],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    AppRoutingModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireAuthModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })
