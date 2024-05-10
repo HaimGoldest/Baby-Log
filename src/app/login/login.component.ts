@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import * as firebaseui from 'firebaseui';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { GoogleAuthProvider } from 'firebase/auth';
+import { FacebookAuthProvider, GoogleAuthProvider } from 'firebase/auth';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 
@@ -23,7 +23,10 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.afAuth.app.then((app) => {
       const uiConfig = {
-        signInOptions: [GoogleAuthProvider.PROVIDER_ID],
+        signInOptions: [
+          GoogleAuthProvider.PROVIDER_ID,
+          FacebookAuthProvider.PROVIDER_ID,
+        ],
         callbacks: {
           signInSuccessWithAuthResult: this.onLoginSuccessful.bind(this),
         },
@@ -42,7 +45,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     console.log('onLoginSuccessful');
     if (result.error) {
       console.error('Firebase UI error:', result.error);
-      // Handle error based on error code (e.g., display an error message to the user)
     } else {
       console.log('Firebase UI result:', result);
     }
