@@ -1,7 +1,12 @@
 <nav class="navbar navbar-expand-lg" style="background-color: #e3f2fd">
   <div class="container-fluid">
-    <a class="navbar-brand" routerLink="/">Home</a>
+    <img
+      class="user-avatar"
+      *ngIf="isLoggedIn && pictureUrl"
+      [src]="pictureUrl"
+    />
     <button
+      *ngIf="isLoggedIn"
       class="navbar-toggler"
       type="button"
       data-bs-toggle="collapse"
@@ -12,7 +17,7 @@
     >
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
+    <div class="collapse navbar-collapse" id="navbarNav" *ngIf="isLoggedIn">
       <ul class="nav nav-pills">
         <li class="nav-item">
           <a class="nav-link routerLinkActive" routerLink="/baby-actions"
@@ -41,7 +46,7 @@
             aria-labelledby="navbarDropdown"
           >
             <li>
-              <a class="dropdown-item" routerLink="/">Add Baby</a>
+              <a class="dropdown-item" routerLink="/baby-actions">Add Baby</a>
             </li>
             <li>
               <a class="dropdown-item" routerLink="/baby-actions-preferences"
@@ -50,7 +55,7 @@
             </li>
             <li><hr class="dropdown-divider" /></li>
             <li>
-              <a class="dropdown-item" routerLink="/">Logout</a>
+              <a class="dropdown-item" (click)="logout()">Logout</a>
             </li>
           </ul>
         </li>
