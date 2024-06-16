@@ -35,9 +35,12 @@
           class="btn btn-success"
           (click)="onEditSubmit(descriptionTextarea.value)"
         >
-          V
+          Save
         </button>
-        <button class="btn btn-danger" (click)="onCancelEdit()">X</button>
+        <button class="btn btn-secondary" (click)="onCancelEdit()">
+          Cancel
+        </button>
+        <button class="btn btn-danger" (click)="onDelete()">Delete</button>
       </div>
     </div>
   </div>

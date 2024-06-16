@@ -28,6 +28,9 @@ export class BabyActionsPreferencesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.babyActionCategoriesService.updateCategories(
+      this.babyActionsCategories
+    );
     this.babyActionsCategoriesChanged.unsubscribe;
   }
 }

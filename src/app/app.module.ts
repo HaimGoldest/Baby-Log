@@ -21,6 +21,8 @@ import { GrowthTrackingInfoComponent } from './growth-tracking/growth-tracking-i
 import { GrowthTrackingNewMeasurementComponent } from './growth-tracking/growth-tracking-new-measurement/growth-tracking-new-measurement.component';
 import { GrowthTrackingInfoItemComponent } from './growth-tracking/growth-tracking-info/growth-tracking-info-item/growth-tracking-info-item.component';
 import { LoginComponent } from './login/login.component';
+import { AddBabyComponent } from './add-baby/add-baby.component';
+import { BabyInfoComponent } from './baby-info/baby-info.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,8 @@ import { LoginComponent } from './login/login.component';
     GrowthTrackingNewMeasurementComponent,
     GrowthTrackingInfoItemComponent,
     LoginComponent,
+    AddBabyComponent,
+    BabyInfoComponent,
   ],
   imports: [
     BrowserModule,

@@ -8,7 +8,7 @@ import { BabyActionCategoryModel } from '../models/baby-action-category.model';
 export class BabyActionCategoriesService {
   babyActionsCategoriesChanged = new Subject<BabyActionCategoryModel[]>();
 
-  babyActionsCategories: BabyActionCategoryModel[] = [
+  private babyActionsCategories: BabyActionCategoryModel[] = [
     new BabyActionCategoryModel(
       'Bottle',
       '',
@@ -81,17 +81,25 @@ export class BabyActionCategoriesService {
     ),
   ];
 
-  constructor() {}
-
-  getCategories() {
+  getCategories(): BabyActionCategoryModel[] {
     return this.babyActionsCategories.slice();
   }
 
-  // getCategory(index: number) {
-  //   return this.babyActionsCategories[index];
-  // }
+  updateCategories(newCategories: BabyActionCategoryModel[]): void {
+    this.babyActionsCategories = newCategories.map(
+      (obj) =>
+        new BabyActionCategoryModel(
+          obj.name,
+          obj.defaultDescription,
+          obj.imagePath,
+          obj.isCategoryEnable,
+          obj.isDefaultDescriptionEnable
+        )
+    );
+    this.invokeBabyActionsCategoriesChanged();
+  }
 
-  invokeBabyActionsCategoriesChanged() {
+  invokeBabyActionsCategoriesChanged(): void {
     this.babyActionsCategoriesChanged.next(this.babyActionsCategories.slice());
   }
 }

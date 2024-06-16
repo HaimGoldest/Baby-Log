@@ -14,11 +14,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   ui: firebaseui.auth.AuthUI;
   errorMsg: string = null;
 
-  constructor(
-    private afAuth: AngularFireAuth,
-    private router: Router,
-    private userService: UserService
-  ) {}
+  constructor(private afAuth: AngularFireAuth) {}
 
   ngOnInit() {
     this.afAuth.app.then((app) => {
@@ -31,18 +27,16 @@ export class LoginComponent implements OnInit, OnDestroy {
           signInSuccessWithAuthResult: this.onLoginSuccessful.bind(this),
         },
       };
-
       this.ui = new firebaseui.auth.AuthUI(app.auth());
       this.ui.start('#firebaseui-auth-container', uiConfig);
     });
   }
-
   ngOnDestroy() {
     this.ui.delete();
   }
 
   onLoginSuccessful(result) {
-    console.log('onLoginSuccessful');
+    console.log('Login was successful');
     if (result.error) {
       console.error('Firebase UI error:', result.error);
     } else {

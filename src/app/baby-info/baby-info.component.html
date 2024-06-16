@@ -1,0 +1,33 @@
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header">
+      <h5>Baby Information</h5>
+    </div>
+    <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-sm-4">
+          <strong>Baby Key:</strong>
+        </div>
+        <div class="col-sm-8">
+          {{ uid }}
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-sm-4">
+          <strong>Name:</strong>
+        </div>
+        <div class="col-sm-8">
+          {{ name }}
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-sm-4">
+          <strong>Birth Date:</strong>
+        </div>
+        <div class="col-sm-8">
+          {{ birthDate | date : "longDate" }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

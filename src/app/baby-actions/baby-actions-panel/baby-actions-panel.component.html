@@ -1,11 +1,12 @@
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="d-flex justify-content-center">
-      <app-baby-actions-panel-item
-        *ngFor="let babyActionCategoryElement of babyActionsCategories; let i = index"
-        [babyActionCategory]="babyActionCategoryElement"
-        [index]="i"
-      ></app-baby-actions-panel-item>
-    </div>
+<div class="row justify-content-center">
+  <div class="d-flex justify-content-center">
+    <app-baby-actions-panel-item
+      *ngFor="
+        let babyActionCategoryElement of activeBabyActionsCategories;
+        let i = index
+      "
+      [babyActionCategory]="babyActionCategoryElement"
+      [index]="i"
+    ></app-baby-actions-panel-item>
   </div>
 </div>
