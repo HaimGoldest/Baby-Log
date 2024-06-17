@@ -9,7 +9,7 @@ import { BabyActionCategoriesService } from '../../services/baby-actions-categor
   styleUrl: './baby-actions-panel.component.css',
 })
 export class BabyActionsPanelComponent implements OnInit, OnDestroy {
-  babyActionsCategories: BabyActionCategoryModel[] = [];
+  activeBabyActionsCategories: BabyActionCategoryModel[] = [];
   babyActionsCategoriesChanged: Subscription;
 
   constructor(
@@ -17,16 +17,17 @@ export class BabyActionsPanelComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.babyActionCategoriesService.getCategories().forEach((category) => {
-      if (category.isCategoryEnable) {
-        this.babyActionsCategories.push(category);
-      }
-    });
+    this.activeBabyActionsCategories = this.babyActionCategoriesService
+      .getCategories()
+      .filter((category) => category.isCategoryEnable);
 
     this.babyActionsCategoriesChanged =
       this.babyActionCategoriesService.babyActionsCategoriesChanged.subscribe(
-        (newCategories: BabyActionCategoryModel[]) =>
-          (this.babyActionsCategories = newCategories)
+        (newCategories: BabyActionCategoryModel[]) => {
+          this.activeBabyActionsCategories = newCategories.filter(
+            (category) => category.isCategoryEnable
+          );
+        }
       );
   }
 

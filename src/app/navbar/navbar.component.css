@@ -2,3 +2,9 @@
   max-height: 35px;
   border-radius: 4px;
 }
+
+.disabled {
+  pointer-events: none;
+  color: gray;
+  text-decoration: none;
+}

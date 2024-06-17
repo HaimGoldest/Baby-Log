@@ -2,13 +2,13 @@ export const environment = {
     production: false,
   
     firebaseConfig: {
-      apiKey: 'AIzaSyB2Qk7TnxfpComrx5mMtJWWk34UBfJy3JU',
-      authDomain: 'fir-demo-1835d.firebaseapp.com',
-      projectId: 'fir-demo-1835d',
-      storageBucket: 'fir-demo-1835d.appspot.com',
-      messagingSenderId: '595942327529',
-      appId: '1:595942327529:web:f8d7f685aedd9f4ef49c78',
-      measurementId: 'G-HEKXPMQ8CJ',
+      apiKey: "AIzaSyBpR7-Vrb4x-Z-jIyJnmi3WVXC3Xf_6iWA",
+      authDomain: "baby-log-management.firebaseapp.com",
+      projectId: "baby-log-management",
+      storageBucket: "baby-log-management.appspot.com",
+      messagingSenderId: "588172152694",
+      appId: "1:588172152694:web:29a4c0c9589cbb7f453457",
+      measurementId: "G-SKVTBYQBWM"
     },
   };
   

@@ -1,0 +1,63 @@
+<div class="d-flex flex-column justify-content-center align-items-center">
+  <h2 class="mb-4">
+    {{ isNewBabyMode ? "Add New Baby" : "Add Existing Baby" }}
+  </h2>
+
+  <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
+    <div *ngIf="isNewBabyMode">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          id="name"
+          class="form-control"
+          ngModel
+          name="name"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="birthDate">Birth Date</label>
+        <input
+          type="date"
+          id="birthDate"
+          class="form-control"
+          ngModel
+          name="birthDate"
+          required
+        />
+      </div>
+    </div>
+    <div *ngIf="!isNewBabyMode">
+      <div class="form-group">
+        <label for="uid">Enter baby key</label>
+        <input
+          type="text"
+          id="uid"
+          class="form-control"
+          ngModel
+          name="uid"
+          required
+        />
+      </div>
+    </div>
+    <div>
+      <hr />
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="!authForm.valid"
+      >
+        Add Baby
+      </button>
+      |
+      <button type="button" class="btn btn-secondary" (click)="onSwitchMode()">
+        Switch to {{ isNewBabyMode ? "existing baby" : "new baby" }} mode
+      </button>
+    </div>
+  </form>
+
+  <div *ngIf="errorMessage" class="alert alert-danger mt-4">
+    {{ errorMessage }}
+  </div>
+</div>

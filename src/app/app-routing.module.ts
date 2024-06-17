@@ -5,6 +5,8 @@ import { BabyActionsComponent } from './baby-actions/baby-actions.component';
 import { GrowthTrackingComponent } from './growth-tracking/growth-tracking.component';
 import { AuthGuardService } from './services/auth.guard.service';
 import { LoginComponent } from './login/login.component';
+import { AddBabyComponent } from './add-baby/add-baby.component';
+import { BabyInfoComponent } from './baby-info/baby-info.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -23,6 +25,16 @@ const routes: Routes = [
     path: 'baby-actions-preferences',
     component: BabyActionsPreferencesComponent,
 
+    canActivate: [AuthGuardService],
+  },
+  {
+    path: 'add-baby',
+    component: AddBabyComponent,
+    canActivate: [AuthGuardService],
+  },
+  {
+    path: 'baby-info',
+    component: BabyInfoComponent,
     canActivate: [AuthGuardService],
   },
 ];
