@@ -98,6 +98,36 @@ export class UserService implements OnDestroy {
     }
   }
 
+  public async deleteBabyOnlyFromUser(babyUid: string): Promise<boolean> {
+    const currentUser = this.userData.value;
+
+    if (!currentUser) {
+      console.error('No user is currently logged in.');
+      return false;
+    }
+
+    const babyIndex = currentUser.babiesUids.indexOf(babyUid);
+
+    if (babyIndex === -1) {
+      console.warn('The baby does not exist in the user data.');
+      return false;
+    }
+
+    currentUser.babiesUids.splice(babyIndex, 1);
+
+    const userRef = this.firestore.collection('users').doc(currentUser.uid);
+
+    try {
+      await userRef.update({ babiesUids: currentUser.babiesUids });
+      console.log('Baby removed from user successfully.');
+      this.userData.next(currentUser);
+      return true;
+    } catch (error) {
+      console.error('Error removing baby from user: ', error);
+      return false;
+    }
+  }
+
   private async firebaseAuthChangeListener(
     authData,
     router: Router

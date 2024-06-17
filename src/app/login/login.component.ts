@@ -2,8 +2,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import * as firebaseui from 'firebaseui';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { FacebookAuthProvider, GoogleAuthProvider } from 'firebase/auth';
-import { Router } from '@angular/router';
-import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-login',

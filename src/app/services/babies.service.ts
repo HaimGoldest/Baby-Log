@@ -145,6 +145,31 @@ export class BabiesService implements OnDestroy {
       });
   }
 
+  deleteBabyFromDb(baby: BabyModel): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      const babyRef: AngularFirestoreDocument<any> = this.babiesCollection.doc(
+        baby.uid
+      );
+
+      babyRef
+        .delete()
+        .then(() => {
+          console.log(
+            `Baby document with UID ${baby.uid} deleted successfully.`
+          );
+          this.babyData.next(null); // Reset babyData after deletion
+          resolve(true);
+        })
+        .catch((error) => {
+          console.error(
+            `Error deleting baby document with UID ${baby.uid}: `,
+            error
+          );
+          resolve(false);
+        });
+    });
+  }
+
   public addBabyActionDataToDb(babyActionData: BabyActionDataModel): void {
     const babyUid = this.babyData?.value?.uid;
     if (!babyUid) {
