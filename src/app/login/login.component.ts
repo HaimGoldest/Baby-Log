@@ -6,7 +6,7 @@ import { FacebookAuthProvider, GoogleAuthProvider } from 'firebase/auth';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit, OnDestroy {
   ui: firebaseui.auth.AuthUI;
@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.afAuth.app.then((app) => {
       const uiConfig = {
+        signInFlow: 'popup',
         signInOptions: [
           GoogleAuthProvider.PROVIDER_ID,
           FacebookAuthProvider.PROVIDER_ID,
@@ -29,6 +30,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.ui.start('#firebaseui-auth-container', uiConfig);
     });
   }
+
   ngOnDestroy() {
     this.ui.delete();
   }

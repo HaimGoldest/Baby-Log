@@ -1,50 +1,56 @@
 <div class="row">
-  <form (ngSubmit)="onSubmit(f)" #f="ngForm">
-    <div class="col-12 d-flex justify-content-between align-items-center">
-      <h6 class="mb-0">Add New Measurement:</h6>
-      <div class="mr-2">
-        <label for="height">Height</label>
-        <input
-          type="number"
-          id="height"
-          name="height"
-          ngModel
-          class="form-control"
-          style="width: 80px"
-          required
-        />
+  <form (ngSubmit)="onSubmit(f)" #f="ngForm" class="w-100">
+    <div
+      class="col-12 d-flex flex-column flex-xl-row justify-content-between align-items-center"
+    >
+      <div class="col-12 col-xl-auto text-center text-xl-start mb-2 mb-xl-0">
+        <h6 class="mb-0">Add New Measurement:</h6>
       </div>
-      <div class="mr-2">
-        <label for="weight">Weight</label>
-        <input
-          type="number"
-          id="weight"
-          name="weight"
-          ngModel
-          class="form-control"
-          style="width: 80px"
-          required
-        />
-      </div>
-      <div>
-        <label for="headMeasure">Head Measure</label>
-        <input
-          type="number"
-          id="headMeasure"
-          name="headMeasure"
-          ngModel
-          class="form-control"
-          style="width: 80px"
-          required
-        />
-      </div>
-      <button
-        class="btn btn-success"
-        type="submit"
-        [disabled]="!f.valid"
+      <div
+        class="d-flex flex-wrap justify-content-center justify-content-xl-center align-items-center col-12 col-xl"
       >
-        Add
-      </button>
+        <div class="mr-2 mb-2 mb-xl-0">
+          <label for="height">Height</label>
+          <input
+            type="number"
+            id="height"
+            name="height"
+            ngModel
+            class="form-control"
+            style="width: 90px"
+            required
+          />
+        </div>
+        <div class="mr-2 mb-2 mb-xl-0">
+          <label for="weight">Weight</label>
+          <input
+            type="number"
+            id="weight"
+            name="weight"
+            ngModel
+            class="form-control"
+            style="width: 90px"
+            required
+          />
+        </div>
+        <div class="mr-2 mb-2 mb-xl-0">
+          <label for="headMeasure">Head Measure</label>
+          <input
+            type="number"
+            id="headMeasure"
+            name="headMeasure"
+            ngModel
+            class="form-control"
+            style="width: 90px"
+            required
+          />
+        </div>
+      </div>
+      <div class="col-12 col-xl-auto text-center text-xl-end mt-2 mt-xl-0">
+        <button class="btn btn-success" type="submit" [disabled]="!f.valid">
+          Add
+        </button>
+      </div>
     </div>
   </form>
 </div>

@@ -1,17 +1,35 @@
 <div class="card mb-3">
-  <div class="row g-0 card-body">
-    <div class="col-3">
-      <p class="card-text">Date: {{ measurement.date | date : "dd/MM/yy" }}</p>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-12 text-center">
+        <p class="card-text date-text">
+          Date: {{ measurement.date | date : "dd/MM/yy" }}
+        </p>
+      </div>
     </div>
-    <div class="col-3">
-      <p class="card-text">Height: {{ measurement.height }}</p>
+    <div class="row">
+      <div class="col-4 text-center">
+        <p class="card-text"><strong>Weight:</strong></p>
+        <p class="card-text">{{ measurement.weight }}</p>
+      </div>
+      <div class="col-4 text-center">
+        <p class="card-text"><strong>Height:</strong></p>
+        <p class="card-text">{{ measurement.height }}</p>
+      </div>
+      <div class="col-4 text-center">
+        <p class="card-text"><strong>Head:</strong></p>
+        <p class="card-text">{{ measurement.headMeasure }}</p>
+      </div>
     </div>
-    <div class="col-3">
-      <p class="card-text">Weight: {{ measurement.weight }}</p>
+    <div class="row">
+      <div class="col-12 d-flex justify-content-between">
+        <button class="btn btn-warning btn-sm me-auto" (click)="onUpdate()">
+          Update
+        </button>
+        <button class="btn btn-danger btn-sm" (click)="onDelete()">
+          Delete
+        </button>
+      </div>
     </div>
-    <div class="col-3">
-      <p class="card-text">Head Measure: {{ measurement.headMeasure }}</p>
-    </div>
-    <button class="btn btn-danger" (click)="onDelete()">Delete</button>
   </div>
 </div>

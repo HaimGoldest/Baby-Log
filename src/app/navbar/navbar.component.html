@@ -1,77 +1,88 @@
 <nav class="navbar navbar-expand-lg" style="background-color: #e3f2fd">
   <div class="container-fluid">
-    <img
-      class="user-avatar"
-      *ngIf="isLoggedIn && pictureUrl"
-      [src]="pictureUrl"
-    />
-    <button
-      *ngIf="isLoggedIn"
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNav"
-      aria-controls="navbarNav"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav" *ngIf="isLoggedIn">
-      <ul class="nav nav-pills">
-        <li class="nav-item">
-          <a class="nav-link routerLinkActive" routerLink="/baby-actions"
-            >Baby Actions</a
-          >
-        </li>
-        <li class="nav-item">
-          <a class="nav-link routerLinkActive" routerLink="/growth-tracking"
-            >Growth Tracking</a
-          >
-        </li>
-      </ul>
-      <ul class="navbar-nav ms-auto">
+    <div class="d-flex align-items-center w-100">
+      <!-- Avatar Icon -->
+      <img
+        class="user-avatar me-3"
+        *ngIf="isLoggedIn && pictureUrl"
+        [src]="pictureUrl"
+        (error)="onImageError()"
+      />
+
+      <!-- Navbar Collapse (links) - Hidden on mobile screens, visible on larger screens -->
+      <div
+        class="collapse navbar-collapse flex-grow-1"
+        id="navbarNav"
+        *ngIf="isLoggedIn"
+      >
+        <ul class="nav nav-pills d-none d-lg-flex">
+          <li class="nav-item">
+            <a class="nav-link routerLinkActive" routerLink="/baby-actions"
+              >Baby Actions</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link routerLinkActive" routerLink="/growth-tracking"
+              >Growth Tracking</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <!-- Settings Menu -->
+      <ul class="navbar-nav ms-auto" *ngIf="isLoggedIn">
         <li class="nav-item dropdown">
           <a
-            class=".nav-link-active dropdown-toggle"
-            id="navbarDropdown"
+            class="nav-link dropdown-toggle"
+            id="settingsDropdown"
             role="button"
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-          Settings
-        </a>
-        <ul
-          class="dropdown-menu dropdown-menu-end"
-          aria-labelledby="navbarDropdown"
-        >
-          <li>
-            <a class="dropdown-item" routerLink="/baby-actions-preferences"
-              >Preferences</a
-            >
-          </li>
-          <li><hr class="dropdown-divider" /></li>
-          <li>
-            <a
-              class="dropdown-item"
-              routerLink="/add-baby"
-              [class.disabled]="userHaveBabies"
-              (click)="preventNavigation($event)"
-              >Add Baby</a
-            >
-          </li>
-          <li>
-            <a class="dropdown-item" routerLink="/baby-info"
-              >Baby Information</a
-            >
-          </li>
-          <li><hr class="dropdown-divider" /></li>
-          <li>
-            <a class="dropdown-item" (click)="logout()">Logout</a>
-          </li>
-        </ul>
-      </li>
-    </ul>
+            Menu
+          </a>
+          <ul
+            class="dropdown-menu dropdown-menu-end"
+            aria-labelledby="settingsDropdown"
+          >
+            <li>
+              <a class="dropdown-item" routerLink="/baby-actions"
+                >Baby Actions</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/growth-tracking"
+                >Growth Tracking</a
+              >
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <a class="dropdown-item" routerLink="/baby-actions-preferences"
+                >Preferences</a
+              >
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="/add-baby"
+                [class.disabled]="userHaveBabies"
+                (click)="preventNavigation($event)"
+                >Add Baby</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" routerLink="/baby-info"
+                >Baby Information</a
+              >
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <a class="dropdown-item" (click)="logout()">Logout</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
   </div>
-</div>
 </nav>

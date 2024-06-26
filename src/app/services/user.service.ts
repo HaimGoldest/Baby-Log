@@ -1,26 +1,31 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
+import {
+  AngularFirestore,
+  AngularFirestoreDocument,
+} from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import { UserModel } from '../models/user.model';
 import { BabyActionCategoriesService } from './baby-actions-categories.service';
 import { BabyActionCategoryModel } from '../models/baby-action-category.model';
 import { BabyModel } from '../models/baby.model';
 import { BabiesService } from './babies.service';
+import firebase from 'firebase/compat';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService implements OnDestroy {
-  userData = new BehaviorSubject<UserModel | null>(null);
+  public userData = new BehaviorSubject<UserModel | null>(null);
   isLoggedIn = new BehaviorSubject<boolean | null>(null);
   pictureUrl = new BehaviorSubject<string | null>(null);
 
   babyActionsCategoriesChanged: Subscription;
-  maxBabiesLimit = 1;
+  public maxBabiesLimit = 1;
 
   private isFirstCategoriesChanged = true;
+  private userChanged: Subscription | null = null;
 
   constructor(
     private angularFireAuth: AngularFireAuth,
@@ -33,17 +38,15 @@ export class UserService implements OnDestroy {
       this.firebaseAuthChangeListener(user, this.router)
     );
 
-    this.babyActionsCategoriesChanged =
-      this.categoriesService.babyActionsCategoriesChanged.subscribe(
-        (newBabyCategories: BabyActionCategoryModel[]) => {
-          this.updateUserBabyActionsPref(newBabyCategories);
-        }
-      );
+    this.subscribeBabyActionsCategoriesChanged();
   }
 
   public ngOnDestroy(): void {
     if (this.babyActionsCategoriesChanged) {
       this.babyActionsCategoriesChanged.unsubscribe();
+    }
+    if (this.userChanged) {
+      this.userChanged.unsubscribe();
     }
   }
 
@@ -129,7 +132,7 @@ export class UserService implements OnDestroy {
   }
 
   private async firebaseAuthChangeListener(
-    authData,
+    authData: firebase.User,
     router: Router
   ): Promise<void> {
     if (authData) {
@@ -167,8 +170,10 @@ export class UserService implements OnDestroy {
     }
   }
 
-  private updateUserData(authData): Promise<boolean> {
+  private updateUserData(authData: firebase.User): Promise<boolean> {
     const userRef = this.firestore.collection('users').doc(authData.uid);
+
+    this.subscribeUserChangedOnDb(userRef);
 
     return userRef
       .get()
@@ -183,6 +188,7 @@ export class UserService implements OnDestroy {
             []
           );
 
+          // create user in DB
           return userRef
             .set(newUserData.toJsObject())
             .then(() => {
@@ -208,21 +214,21 @@ export class UserService implements OnDestroy {
             });
         } else {
           // user already exists in DB, update this.userData with user data.
-          const userData = doc.data() as UserModel;
+          const data = doc.data() as UserModel;
 
-          if (!userData) {
+          if (!data) {
             console.error('Failed to upload user details from database!');
             return false;
           }
 
           const existingUser = new UserModel(
-            userData.uid,
-            userData.name,
-            userData.babyActionsPref,
-            userData.babiesUids
+            data.uid,
+            data.name,
+            data.babyActionsPref,
+            data.babiesUids
           );
           this.userData.next(existingUser);
-          this.categoriesService.updateCategories(userData.babyActionsPref);
+          this.categoriesService.updateCategories(data.babyActionsPref);
           console.log('User already exists in the database.');
           this.updateCurrentBabyInBabiesService();
           return true;
@@ -234,7 +240,7 @@ export class UserService implements OnDestroy {
       });
   }
 
-  private updateUserBabyActionsPref(
+  private updateUserBabyActionsPrefInDb(
     newBabyCategories: BabyActionCategoryModel[]
   ) {
     // if isFirstCategoriesChanged the Categories values are from the DB so the DB not need an update.
@@ -290,20 +296,44 @@ export class UserService implements OnDestroy {
         babiesUids: this.userData.value.babiesUids,
       })
       .then(() => {
-        console.log('Baby added to user successfully.');
+        this.userData.next(currentUser);
         return true;
       })
       .catch((error) => {
-        console.error('Error adding baby to user: ', error);
+        console.error('Error updating user babiesUids: ', error);
         return false;
       });
   }
 
-  private async updateCurrentBabyInBabiesService() {
-    const babyUid = this.userData?.value?.babiesUids?.[0] || null;
-
-    if (babyUid) {
-      this.babiesService.setBaby(babyUid);
+  private async updateCurrentBabyInBabiesService(): Promise<void> {
+    const babiesUids = this.userData.getValue().babiesUids;
+    if (babiesUids && babiesUids.length > 0) {
+      await this.babiesService.setBaby(babiesUids[0]);
     }
+  }
+
+  private subscribeUserChangedOnDb(
+    userRef: AngularFirestoreDocument<unknown>
+  ): void {
+    this.userChanged = userRef.valueChanges().subscribe((data: UserModel) => {
+      if (data) {
+        const updatedUser = new UserModel(
+          data.uid,
+          data.name,
+          data.babyActionsPref,
+          data.babiesUids
+        );
+        this.userData.next(updatedUser);
+      }
+    });
+  }
+
+  private subscribeBabyActionsCategoriesChanged() {
+    this.babyActionsCategoriesChanged =
+      this.categoriesService.babyActionsCategoriesChanged.subscribe(
+        (newBabyCategories: BabyActionCategoryModel[]) => {
+          this.updateUserBabyActionsPrefInDb(newBabyCategories);
+        }
+      );
   }
 }

@@ -7,7 +7,7 @@ import { UserService } from '../services/user.service';
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
-  isLoggedIn: boolean;
+  isLoggedIn: boolean | null;
   pictureUrl: string | null;
   userHaveBabies: boolean;
 
@@ -23,7 +23,7 @@ export class NavbarComponent {
     });
 
     this.userService.pictureUrl.subscribe((url) => {
-      this.pictureUrl = url;
+      this.pictureUrl = url ? `${url}?${new Date().getTime()}` : null;
     });
   }
 
@@ -35,5 +35,12 @@ export class NavbarComponent {
     if (this.userHaveBabies) {
       event.preventDefault();
     }
+  }
+
+  onImageError() {
+    console.warn('User image failed to load, retrying...');
+    const temp = this.pictureUrl;
+    this.pictureUrl = null;
+    this.pictureUrl = temp;
   }
 }
