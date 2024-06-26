@@ -16,4 +16,8 @@ export class GrowthTrackingInfoItemComponent {
   onDelete() {
     this.babyMeasurementsService.deleteBabyAction(this.measurement);
   }
+
+  onUpdate() {
+    console.warn('onUpdate method not implemented yet!');
+  }
 }
