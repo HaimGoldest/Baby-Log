@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { Subject, Subscription, map } from 'rxjs';
 import { BabyActionDataModel } from '../models/baby-action-data.model';
 import { BabiesService } from './babies.service';
+import { BabyActionCategoryModel } from '../models/baby-action-category.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BabyActionsDataService {
   public babyActionsDataChanged = new Subject<BabyActionDataModel[]>();
+  public FilteredBabyActionsDataChanged = new Subject<BabyActionDataModel[]>();
   babyDataChanged: Subscription;
   babyActionsData: BabyActionDataModel[] = [];
 
@@ -19,22 +21,29 @@ export class BabyActionsDataService {
     });
   }
 
-  getBabyActions() {
+  public getBabyActions() {
     return this.babyActionsData.slice();
   }
 
-  async addBabyAction(babyActionData: BabyActionDataModel) {
+  public async addBabyAction(babyActionData: BabyActionDataModel) {
     await this.babiesService.addBabyActionDataToDb(babyActionData);
   }
 
-  deleteBabyAction(babyActionData: BabyActionDataModel) {
+  public deleteBabyAction(babyActionData: BabyActionDataModel) {
     this.babiesService.deleteBabyActionDataFromDb(babyActionData);
   }
 
-  updatedBabyAction(babyActionData: BabyActionDataModel) {
+  public updatedBabyAction(babyActionData: BabyActionDataModel) {
     console.warn(babyActionData.creationTime);
     console.warn(babyActionData.creationTime.getTime());
     this.babiesService.updateBabyActionDataInDb(babyActionData);
+  }
+
+  public filterBabyActionsData(category: BabyActionCategoryModel): void {
+    let data = this.babyActionsData.filter(
+      (x) => x.category.name === category.name
+    );
+    this.FilteredBabyActionsDataChanged.next(data);
   }
 
   private setBabyActionsData(newBabyActionsData: BabyActionDataModel[]): void {
