@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { BabyActionCategoryModel } from '../../../models/baby-action-category.model';
-import { BabyActionDataModel } from '../../../models/baby-action-data.model';
 import { BabyActionsDataService } from '../../../services/baby-actions-data.service';
+import { BabyActionDataModel } from '../../../models/baby-action-data.model';
 
 @Component({
   selector: 'app-baby-actions-panel-item',
@@ -12,9 +12,9 @@ export class BabyActionsPanelItemComponent {
   @Input() babyActionCategory: BabyActionCategoryModel;
   @Input() index: number;
 
-  constructor(private babyActionDataService: BabyActionsDataService) {}
+  constructor(private babyActionsDataService: BabyActionsDataService) {}
 
-  onAddBabyAction() {
+  public onAddBabyAction(): void {
     try {
       const description = this.babyActionCategory.isDefaultDescriptionEnable
         ? this.babyActionCategory.defaultDescription
@@ -26,9 +26,14 @@ export class BabyActionsPanelItemComponent {
         new Date()
       );
 
-      this.babyActionDataService.addBabyAction(babyActionData);
+      this.babyActionsDataService.addBabyAction(babyActionData);
     } catch (error) {
-      console.error('Error adding baby action data:', Error);
+      console.error('Error adding baby action data:', error);
     }
+  }
+
+  public FilterBabyActionsData(event: MouseEvent): void {
+    event.preventDefault(); // Prevent the default context menu from appearing
+    this.babyActionsDataService.filterBabyActionsData(this.babyActionCategory);
   }
 }

@@ -11,10 +11,11 @@ import { BabyActionsDataService } from '../../services/baby-actions-data.service
 export class BabyActionsInfoComponent implements OnInit, OnDestroy {
   babyActionsData: BabyActionDataModel[] = [];
   babyActionsDataChanged: Subscription;
+  FilteredBabyActionsDataChanged: Subscription;
 
   constructor(private babyActionDataService: BabyActionsDataService) {}
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.babyActionsData = this.babyActionDataService.getBabyActions();
 
     this.babyActionsDataChanged =
@@ -22,9 +23,15 @@ export class BabyActionsInfoComponent implements OnInit, OnDestroy {
         (newBabyActions: BabyActionDataModel[]) =>
           (this.babyActionsData = newBabyActions)
       );
+
+    this.FilteredBabyActionsDataChanged =
+      this.babyActionDataService.FilteredBabyActionsDataChanged.subscribe(
+        (filteredBabyActions: BabyActionDataModel[]) =>
+          (this.babyActionsData = filteredBabyActions)
+      );
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.babyActionsDataChanged.unsubscribe;
   }
 }
