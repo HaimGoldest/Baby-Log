@@ -23,6 +23,12 @@ import { GrowthTrackingInfoItemComponent } from './growth-tracking/growth-tracki
 import { LoginComponent } from './login/login.component';
 import { AddBabyComponent } from './add-baby/add-baby.component';
 import { BabyInfoComponent } from './baby-info/baby-info.component';
+import { GrowthTrackingInfoItemUpdateComponent } from './growth-tracking/growth-tracking-info/growth-tracking-info-item/growth-tracking-info-item-update/growth-tracking-info-item-update.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -42,6 +48,7 @@ import { BabyInfoComponent } from './baby-info/baby-info.component';
     LoginComponent,
     AddBabyComponent,
     BabyInfoComponent,
+    GrowthTrackingInfoItemUpdateComponent,
   ],
   imports: [
     BrowserModule,
@@ -49,8 +56,11 @@ import { BabyInfoComponent } from './baby-info/baby-info.component';
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
+    MatDatepickerModule,
+    MatInputModule,
+    MatNativeDateModule,
   ],
-  providers: [],
+  providers: [provideAnimationsAsync()],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -7,6 +7,7 @@ import { AuthGuardService } from './services/auth.guard.service';
 import { LoginComponent } from './login/login.component';
 import { AddBabyComponent } from './add-baby/add-baby.component';
 import { BabyInfoComponent } from './baby-info/baby-info.component';
+import { GrowthTrackingInfoItemUpdateComponent } from './growth-tracking/growth-tracking-info/growth-tracking-info-item/growth-tracking-info-item-update/growth-tracking-info-item-update.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -19,6 +20,11 @@ const routes: Routes = [
   {
     path: 'growth-tracking',
     component: GrowthTrackingComponent,
+    canActivate: [AuthGuardService],
+  },
+  {
+    path: 'growth-tracking-update',
+    component: GrowthTrackingInfoItemUpdateComponent,
     canActivate: [AuthGuardService],
   },
   {

@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { BabyMeasurementModel } from '../../../models/baby-measurement.model';
 import { BabyMeasurementsService } from '../../../services/baby-measurements.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-growth-tracking-info-item',
@@ -11,13 +12,18 @@ export class GrowthTrackingInfoItemComponent {
   @Input() measurement: BabyMeasurementModel;
   @Input() index: number | undefined;
 
-  constructor(private babyMeasurementsService: BabyMeasurementsService) {}
+  constructor(
+    private babyMeasurementsService: BabyMeasurementsService,
+    private router: Router
+  ) {}
 
   onDelete() {
     this.babyMeasurementsService.deleteBabyAction(this.measurement);
   }
 
   onUpdate() {
-    console.warn('onUpdate method not implemented yet!');
+    this.router.navigate(['/growth-tracking-update'], {
+      state: { measurement: this.measurement },
+    });
   }
 }

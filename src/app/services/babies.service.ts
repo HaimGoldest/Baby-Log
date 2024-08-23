@@ -218,6 +218,68 @@ export class BabiesService implements OnDestroy {
       });
   }
 
+  public updateMeasurementDataInDb(
+    oldMeasurementData: BabyMeasurementModel,
+    updatedMeasurementData: BabyMeasurementModel
+  ): void {
+    const babyUid = this.babyData?.value?.uid;
+    if (!babyUid) {
+      const errorMsg = 'Error updating baby measurement, current baby is null!';
+      throw new Error(errorMsg);
+    }
+
+    const babyRef: AngularFirestoreDocument<any> =
+      this.babiesCollection.doc(babyUid);
+
+    babyRef
+      .get()
+      .toPromise()
+      .then((doc) => {
+        if (doc.exists) {
+          const babyData = doc.data() as BabyModel;
+
+          // Find the index of the measurement to be updated
+          const measurementIndex = babyData.measurementsData.findIndex(
+            (measurement) =>
+              new Date(measurement.date).getTime() ===
+                oldMeasurementData.date.getTime() &&
+              measurement.height === oldMeasurementData.height &&
+              measurement.weight === oldMeasurementData.weight &&
+              measurement.headMeasure === oldMeasurementData.headMeasure
+          );
+
+          if (measurementIndex !== -1) {
+            // Remove the old measurement data
+            babyRef.update({
+              measurementsData: firebase.firestore.FieldValue.arrayRemove(
+                oldMeasurementData.toJsObject()
+              ),
+            });
+
+            // Add the updated measurement data
+            babyRef.update({
+              measurementsData: firebase.firestore.FieldValue.arrayUnion(
+                updatedMeasurementData.toJsObject()
+              ),
+            });
+
+            console.log('Baby measurement updated successfully.');
+          } else {
+            console.error(
+              'Error updating baby measurement: Measurement not found.'
+            );
+          }
+        } else {
+          console.error(
+            'Error updating baby measurement: Baby document not found.'
+          );
+        }
+      })
+      .catch((error) => {
+        console.error('Error updating baby measurement:', error);
+      });
+  }
+
   public deleteBabyActionDataFromDb(babyActionData: BabyActionDataModel): void {
     const babyUid = this.babyData?.value?.uid;
     if (!babyUid) {
