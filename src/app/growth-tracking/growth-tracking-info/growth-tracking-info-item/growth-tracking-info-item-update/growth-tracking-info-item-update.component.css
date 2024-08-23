@@ -1,0 +1,87 @@
+.container-fluid {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Aligns content to the top */
+  padding-top: 2.5rem; /* Adds some padding from the top */
+}
+
+.container {
+  width: 100%;
+  max-width: 25rem; /* Adjust as needed */
+  text-align: center;
+}
+
+.update-measurement-container {
+  padding: 1.25rem;
+  background-color: #f9f9f9;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0.625rem rgba(0, 0, 0, 0.1);
+}
+
+.full-width {
+  width: 100%;
+}
+
+.number-input {
+  width: 6.25rem; /* Adjusted width to fit up to 7 digits */
+  margin: 0 auto; /* Center the input fields */
+}
+
+.date-picker-input {
+  width: 9.375rem; /* Adjusted width for Date Picker field */
+  margin: 0 auto; /* Center the date picker field */
+}
+
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.625rem; /* Adds space between the buttons */
+  margin-top: 1.25rem;
+}
+
+.date-text {
+  color: darkblue;
+  font-weight: bold;
+}
+
+.green-button {
+  background-color: green;
+  color: white;
+  border-radius: 0.75rem; /* Makes the button more rounded */
+  padding: 0.5rem 0.75rem; /* Adds padding for better look */
+  font-size: 0.875rem; /* Adjusts the font size */
+  border: none;
+  transition: background-color 0.3s ease; /* Smooth transition on hover */
+}
+
+.green-button:hover {
+  background-color: #28a745; /* Slightly lighter green on hover */
+}
+
+.blue-button {
+  background-color: darkblue;
+  color: white;
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.blue-button:hover {
+  background-color: #1e3c8a; /* Slightly lighter blue on hover */
+}
+
+.gray-button {
+  background-color: gray;
+  color: white;
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.gray-button:hover {
+  background-color: #6c757d; /* Slightly lighter gray on hover */
+}

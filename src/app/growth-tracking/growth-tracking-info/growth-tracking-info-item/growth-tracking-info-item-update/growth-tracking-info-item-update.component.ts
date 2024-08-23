@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { BabyMeasurementModel } from '../../../../models/baby-measurement.model';
 import { BabyMeasurementsService } from '../../../../services/baby-measurements.service';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-growth-tracking-info-item-update',
@@ -10,8 +12,13 @@ import { BabyMeasurementsService } from '../../../../services/baby-measurements.
 export class GrowthTrackingInfoItemUpdateComponent implements OnInit {
   oldMeasurement: BabyMeasurementModel;
   updetedMeasurement: BabyMeasurementModel;
+  dateToDisplay: string;
+  showDatePicker: boolean = false;
 
-  constructor(private babyMeasurementsService: BabyMeasurementsService) {}
+  constructor(
+    private babyMeasurementsService: BabyMeasurementsService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     const stateMeasurement = history.state.measurement;
@@ -22,38 +29,45 @@ export class GrowthTrackingInfoItemUpdateComponent implements OnInit {
       stateMeasurement.headMeasure
     );
 
-    // Initialize newMeasurement with formatted date
     this.updetedMeasurement = new BabyMeasurementModel(
       new Date(this.oldMeasurement.date),
       this.oldMeasurement.height,
       this.oldMeasurement.weight,
       this.oldMeasurement.headMeasure
     );
+
+    this.dateToDisplay = this.formatDateToDisplay(this.oldMeasurement.date);
   }
 
   public onUpdateMeasurement(): void {
-    this.convertDateFromFormattedStringToDate();
+    this.updetedMeasurement.date = new Date(this.dateToDisplay);
     this.babyMeasurementsService.updateMeasurement(
       this.oldMeasurement,
       this.updetedMeasurement
     );
+    this.router.navigate(['/growth-tracking']);
   }
 
-  private convertDateFromFormattedStringToDate() {
-    this.updetedMeasurement.date = new Date(this.updetedMeasurement.date);
+  public onCancel(): void {
+    this.router.navigate(['/growth-tracking']);
   }
 
-  // Utility function to format the date
-  public formatDateToDisplay(date: Date): string {
+  public onDateChange(event: MatDatepickerInputEvent<Date>): void {
+    this.dateToDisplay = this.formatDateToDisplay(event.value!);
+  }
+
+  public toggleDatePicker(): void {
+    this.showDatePicker = !this.showDatePicker;
+  }
+
+  private formatDateToDisplay(date: Date | null): string {
     const options: Intl.DateTimeFormatOptions = {
       day: '2-digit',
       month: 'short',
       year: 'numeric',
     };
-    return date.toLocaleDateString('en-GB', options).replace(/ /g, '-');
-  }
-
-  public parseDateFromDisplay(dateString: string): Date {
-    return new Date(dateString);
+    return date
+      ? date.toLocaleDateString('en-GB', options).replace(/ /g, '-')
+      : '';
   }
 }
