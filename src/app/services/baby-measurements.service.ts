@@ -27,6 +27,16 @@ export class BabyMeasurementsService {
     this.babiesService.addMeasurementDataToDb(newMeasurement);
   }
 
+  updateMeasurement(
+    oldMeasurement: BabyMeasurementModel,
+    updatedMeasurement: BabyMeasurementModel
+  ) {
+    this.babiesService.updateMeasurementDataInDb(
+      oldMeasurement,
+      updatedMeasurement
+    );
+  }
+
   deleteBabyAction(measurement: BabyMeasurementModel) {
     this.babiesService.deleteMeasurementDataFromDb(measurement);
   }
