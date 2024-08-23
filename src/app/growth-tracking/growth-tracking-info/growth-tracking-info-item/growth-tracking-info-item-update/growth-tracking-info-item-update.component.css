@@ -1,13 +1,13 @@
 .container-fluid {
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Aligns content to the top */
-  padding-top: 2.5rem; /* Adds some padding from the top */
+  align-items: flex-start;
+  padding-top: 2.5rem;
 }
 
 .container {
   width: 100%;
-  max-width: 25rem; /* Adjust as needed */
+  max-width: 25rem;
   text-align: center;
 }
 
@@ -23,19 +23,19 @@
 }
 
 .number-input {
-  width: 6.25rem; /* Adjusted width to fit up to 7 digits */
-  margin: 0 auto; /* Center the input fields */
+  width: 6.25rem;
+  margin: 0 auto;
 }
 
 .date-picker-input {
-  width: 9.375rem; /* Adjusted width for Date Picker field */
-  margin: 0 auto; /* Center the date picker field */
+  width: 9.375rem;
+  margin: 0 auto;
 }
 
 .button-row {
   display: flex;
   justify-content: space-between;
-  gap: 0.625rem; /* Adds space between the buttons */
+  gap: 0.625rem;
   margin-top: 1.25rem;
 }
 
@@ -47,15 +47,15 @@
 .green-button {
   background-color: green;
   color: white;
-  border-radius: 0.75rem; /* Makes the button more rounded */
-  padding: 0.5rem 0.75rem; /* Adds padding for better look */
-  font-size: 0.875rem; /* Adjusts the font size */
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
   border: none;
-  transition: background-color 0.3s ease; /* Smooth transition on hover */
+  transition: background-color 0.3s ease;
 }
 
 .green-button:hover {
-  background-color: #28a745; /* Slightly lighter green on hover */
+  background-color: #28a745;
 }
 
 .blue-button {
@@ -69,7 +69,7 @@
 }
 
 .blue-button:hover {
-  background-color: #1e3c8a; /* Slightly lighter blue on hover */
+  background-color: #1e3c8a;
 }
 
 .gray-button {
@@ -83,5 +83,5 @@
 }
 
 .gray-button:hover {
-  background-color: #6c757d; /* Slightly lighter gray on hover */
+  background-color: #6c757d;
 }

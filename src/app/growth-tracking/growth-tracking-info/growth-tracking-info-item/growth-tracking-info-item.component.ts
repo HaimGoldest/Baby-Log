@@ -22,7 +22,6 @@ export class GrowthTrackingInfoItemComponent {
   }
 
   onUpdate() {
-    // Assuming each measurement has a unique ID
     this.router.navigate(['/growth-tracking-update'], {
       state: { measurement: this.measurement },
     });
