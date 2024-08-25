@@ -136,7 +136,7 @@ export class UserService implements OnDestroy {
     router: Router
   ): Promise<void> {
     if (authData) {
-      console.log('Logged in :)');
+      console.log('Logged in:');
       console.log(authData);
 
       try {
@@ -153,7 +153,7 @@ export class UserService implements OnDestroy {
         throw new Error('Failed to get the user from database!');
       }
     } else {
-      console.log('Logged out :(');
+      console.log('Logged out: moving to login page.');
       this.isLoggedIn.next(false);
       this.pictureUrl.next(null);
       router.navigate(['./login']);
@@ -165,8 +165,10 @@ export class UserService implements OnDestroy {
 
     if (haveBabies) {
       router.navigate(['./baby-actions']);
+      console.log('Moving to baby-actions page.');
     } else {
       router.navigate(['./add-baby']);
+      console.log('Moving to add-baby page.');
     }
   }
 
