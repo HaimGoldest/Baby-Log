@@ -20,6 +20,7 @@ import { BabyActionCategoryPrefComponent } from './baby-actions/baby-actions-pre
 import { GrowthTrackingInfoComponent } from './growth-tracking/growth-tracking-info/growth-tracking-info.component';
 import { GrowthTrackingNewMeasurementComponent } from './growth-tracking/growth-tracking-new-measurement/growth-tracking-new-measurement.component';
 import { GrowthTrackingInfoItemComponent } from './growth-tracking/growth-tracking-info/growth-tracking-info-item/growth-tracking-info-item.component';
+import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { LoginComponent } from './login/login.component';
 import { AddBabyComponent } from './add-baby/add-baby.component';
 import { BabyInfoComponent } from './baby-info/baby-info.component';
@@ -29,6 +30,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -49,6 +51,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     AddBabyComponent,
     BabyInfoComponent,
     GrowthTrackingInfoItemUpdateComponent,
+    LoadingSpinnerComponent,
   ],
   imports: [
     BrowserModule,
@@ -59,7 +62,10 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatDatepickerModule,
     MatInputModule,
     MatNativeDateModule,
+    MatProgressSpinnerModule,
   ],
+  exports: [LoadingSpinnerComponent],
+
   providers: [provideAnimationsAsync()],
   bootstrap: [AppComponent],
 })
