@@ -14,6 +14,27 @@
           {{ babyActionData?.creationTime | date : "HH:mm:ss" }}
         </mat-card-subtitle>
       </span>
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="menu"
+        aria-label="Icon-button with a menu"
+      >
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item>
+          <mat-icon>edit</mat-icon>
+          <span>Edit</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>filter</mat-icon>
+          <span>Filter</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>delete</mat-icon>
+          <span>Delete</span>
+        </button>
+      </mat-menu>
     </div>
 
     <div class="description-section" *ngIf="!editMode">
