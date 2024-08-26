@@ -1,47 +1,52 @@
-<div class="card mb-3" (contextmenu)="onStartEditMode($event)">
-  <div class="row g-0 card-body">
-    <div class="col-3">
-      <!-- <h6 class="card-title">{{ babyActionData.type }}</h6> -->
+<mat-card class="baby-action-card" (contextmenu)="onStartEditMode($event)">
+  <div class="mat-card-content">
+    <div class="image-section">
+      <h4 class="card-title">{{ babyActionData.category.name }}</h4>
       <img
-        src="{{ babyActionData.category.imagePath }}"
-        class="img-fluid rounded-start actionImg"
-        alt="{{ babyActionData.category.name }}"
+        mat-card-image
+        src="{{ babyActionData?.category.imagePath }}"
+        alt="{{ babyActionData?.category.name }}"
+        class="action-img"
       />
       <span class="time-info">
-        <h6 class="card-subtitle text-body-secondary">
-          {{ babyActionData.creationTime | date : "dd/MM/yy" }} -
-          {{ babyActionData.creationTime | date : "HH:mm:ss" }}
-        </h6>
+        <mat-card-subtitle class="time-text">
+          {{ babyActionData?.creationTime | date : "dd/MM/yy" }} -
+          {{ babyActionData?.creationTime | date : "HH:mm:ss" }}
+        </mat-card-subtitle>
       </span>
     </div>
-    <div class="col-9" *ngIf="!editMode">
-      <p class="card-text">
-        {{ babyActionData.description }}
-      </p>
+
+    <div class="description-section" *ngIf="!editMode">
+      <p>{{ babyActionData?.description }}</p>
     </div>
-    <div class="col-9" *ngIf="editMode">
-      <div class="form-floating">
+
+    <div class="edit-section" *ngIf="editMode">
+      <mat-form-field class="full-width">
+        <mat-label>Description</mat-label>
         <textarea
+          matInput
           #descriptionTextarea
-          class="form-control"
-          id="description "
+          [(ngModel)]="babyActionData.description"
+          placeholder="Edit description"
           style="height: 80px"
         ></textarea>
-        <label for="description ">Description </label>
-      </div>
+      </mat-form-field>
 
       <div class="button-container">
         <button
-          class="btn btn-success"
+          mat-raised-button
+          color="primary"
           (click)="onEditSubmit(descriptionTextarea.value)"
         >
           Save
         </button>
-        <button class="btn btn-secondary" (click)="onCancelEdit()">
+        <button mat-raised-button color="accent" (click)="onCancelEdit()">
           Cancel
         </button>
-        <button class="btn btn-danger" (click)="onDelete()">Delete</button>
+        <button mat-raised-button color="warn" (click)="onDelete()">
+          Delete
+        </button>
       </div>
     </div>
   </div>
-</div>
+</mat-card>

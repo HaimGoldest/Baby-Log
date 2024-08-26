@@ -25,12 +25,14 @@ import { LoginComponent } from './login/login.component';
 import { AddBabyComponent } from './add-baby/add-baby.component';
 import { BabyInfoComponent } from './baby-info/baby-info.component';
 import { GrowthTrackingInfoItemUpdateComponent } from './growth-tracking/growth-tracking-info/growth-tracking-info-item/growth-tracking-info-item-update/growth-tracking-info-item-update.component';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -63,10 +65,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatInputModule,
     MatNativeDateModule,
     MatProgressSpinnerModule,
+    MatCardModule,
+    MatButtonModule,
+    BrowserAnimationsModule,
   ],
   exports: [LoadingSpinnerComponent],
-
-  providers: [provideAnimationsAsync()],
+  providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

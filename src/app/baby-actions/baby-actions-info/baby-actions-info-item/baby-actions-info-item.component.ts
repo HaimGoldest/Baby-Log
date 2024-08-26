@@ -5,7 +5,7 @@ import { BabyActionsDataService } from '../../../services/baby-actions-data.serv
 @Component({
   selector: 'app-baby-actions-info-item',
   templateUrl: './baby-actions-info-item.component.html',
-  styleUrl: './baby-actions-info-item.component.css',
+  styleUrls: ['./baby-actions-info-item.component.css'],
 })
 export class BabyActionsInfoItemComponent {
   @Input() babyActionData: BabyActionDataModel | undefined;
@@ -20,10 +20,13 @@ export class BabyActionsInfoItemComponent {
     event.preventDefault();
     this.editMode = true;
   }
+
   onEditSubmit(newDescription: string) {
-    this.babyActionData.description = newDescription;
-    this.editMode = false;
-    this.babyActionsDataService.updatedBabyAction(this.babyActionData);
+    if (this.babyActionData) {
+      this.babyActionData.description = newDescription;
+      this.editMode = false;
+      this.babyActionsDataService.updatedBabyAction(this.babyActionData);
+    }
   }
 
   onCancelEdit() {
@@ -31,6 +34,8 @@ export class BabyActionsInfoItemComponent {
   }
 
   onDelete() {
-    this.babyActionsDataService.deleteBabyAction(this.babyActionData);
+    if (this.babyActionData) {
+      this.babyActionsDataService.deleteBabyAction(this.babyActionData);
+    }
   }
 }
