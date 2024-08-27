@@ -6,7 +6,12 @@
 .image-section {
   display: flex;
   align-items: center;
+  justify-content: space-between; /* Align button to the right */
   margin-bottom: 10px;
+}
+
+.menu-button {
+  margin-left: auto; /* Ensure the button is aligned to the right */
 }
 
 .action-img {

@@ -1,4 +1,11 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChild,
+} from '@angular/core';
 import { BabyActionDataModel } from '../../../models/baby-action-data.model';
 import { BabyActionsDataService } from '../../../services/baby-actions-data.service';
 
@@ -10,14 +17,17 @@ import { BabyActionsDataService } from '../../../services/baby-actions-data.serv
 export class BabyActionsInfoItemComponent {
   @Input() babyActionData: BabyActionDataModel | undefined;
   @Input() index: number | undefined;
+  @Input() filterMode: boolean = false; // Receive shared filterMode
+  @Output() filter = new EventEmitter<any>();
+  @Output() unfilter = new EventEmitter<void>();
   @ViewChild('descriptionTextarea', { static: true })
   descriptionTextareaRef: ElementRef;
   editMode = false;
 
   constructor(private babyActionsDataService: BabyActionsDataService) {}
 
-  onStartEditMode(event: MouseEvent) {
-    event.preventDefault();
+  onStartEditMode(event?: MouseEvent) {
+    if (event) event.preventDefault();
     this.editMode = true;
   }
 
@@ -37,5 +47,15 @@ export class BabyActionsInfoItemComponent {
     if (this.babyActionData) {
       this.babyActionsDataService.deleteBabyAction(this.babyActionData);
     }
+  }
+
+  onFilter() {
+    if (this.babyActionData) {
+      this.filter.emit(this.babyActionData.category);
+    }
+  }
+
+  onUnfilter() {
+    this.unfilter.emit();
   }
 }

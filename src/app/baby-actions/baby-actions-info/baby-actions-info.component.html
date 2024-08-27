@@ -4,6 +4,9 @@
       *ngFor="let babyActionEl of babyActionsData; let i = index"
       [babyActionData]="babyActionEl"
       [index]="i"
+      [filterMode]="filterMode"
+      (filter)="onFilter($event)"
+      (unfilter)="onUnfilter()"
     ></app-baby-actions-info-item>
   </div>
 </div>

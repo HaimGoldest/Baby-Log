@@ -1,7 +1,11 @@
-<mat-card class="baby-action-card" (contextmenu)="onStartEditMode($event)">
+<mat-card
+  appearance="outlined"
+  class="baby-action-card"
+  (contextmenu)="onStartEditMode($event)"
+>
   <div class="mat-card-content">
     <div class="image-section">
-      <h4 class="card-title">{{ babyActionData.category.name }}</h4>
+      <h4 class="card-title">{{ babyActionData?.category.name }}</h4>
       <img
         mat-card-image
         src="{{ babyActionData?.category.imagePath }}"
@@ -18,19 +22,32 @@
         mat-icon-button
         [matMenuTriggerFor]="menu"
         aria-label="Icon-button with a menu"
+        class="menu-button"
       >
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
-        <button mat-menu-item>
+        <button mat-menu-item (click)="onStartEditMode()">
           <mat-icon>edit</mat-icon>
           <span>Edit</span>
         </button>
-        <button mat-menu-item>
+        <button
+          mat-menu-item
+          *ngIf="!filterMode"
+          (click)="onFilter()"
+        >
           <mat-icon>filter</mat-icon>
           <span>Filter</span>
         </button>
-        <button mat-menu-item>
+        <button
+          mat-menu-item
+          *ngIf="filterMode"
+          (click)="onUnfilter()"
+        >
+          <mat-icon>filter_none</mat-icon>
+          <span>Unfilter</span>
+        </button>
+        <button mat-menu-item (click)="onDelete()">
           <mat-icon>delete</mat-icon>
           <span>Delete</span>
         </button>
