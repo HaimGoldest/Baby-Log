@@ -3,11 +3,17 @@
   padding: 15px;
 }
 
-.image-section {
+.main-section {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Align button to the right */
   margin-bottom: 10px;
+}
+
+.card-title {
+  font-weight: bold;
+  margin: 0;
+  text-align: center;
+  align-self: center;
 }
 
 .menu-button {
@@ -33,6 +39,7 @@
 
 .description-section {
   margin-bottom: 10px;
+  text-align: center; /* Center the text within its container */
 }
 
 .edit-section {

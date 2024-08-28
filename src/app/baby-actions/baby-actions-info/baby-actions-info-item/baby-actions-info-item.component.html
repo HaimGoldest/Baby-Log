@@ -4,7 +4,7 @@
   (contextmenu)="onStartEditMode($event)"
 >
   <div class="mat-card-content">
-    <div class="image-section">
+    <div class="main-section">
       <h4 class="card-title">{{ babyActionData?.category.name }}</h4>
       <img
         mat-card-image
@@ -31,19 +31,11 @@
           <mat-icon>edit</mat-icon>
           <span>Edit</span>
         </button>
-        <button
-          mat-menu-item
-          *ngIf="!filterMode"
-          (click)="onFilter()"
-        >
+        <button mat-menu-item *ngIf="!filterMode" (click)="onFilter()">
           <mat-icon>filter</mat-icon>
           <span>Filter</span>
         </button>
-        <button
-          mat-menu-item
-          *ngIf="filterMode"
-          (click)="onUnfilter()"
-        >
+        <button mat-menu-item *ngIf="filterMode" (click)="onUnfilter()">
           <mat-icon>filter_none</mat-icon>
           <span>Unfilter</span>
         </button>
