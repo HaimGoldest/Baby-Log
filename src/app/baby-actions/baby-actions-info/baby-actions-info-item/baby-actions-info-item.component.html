@@ -1,47 +1,82 @@
-<div class="card mb-3" (contextmenu)="onStartEditMode($event)">
-  <div class="row g-0 card-body">
-    <div class="col-3">
-      <!-- <h6 class="card-title">{{ babyActionData.type }}</h6> -->
+<mat-card
+  appearance="outlined"
+  class="baby-action-card"
+  (contextmenu)="onStartEditMode($event)"
+>
+  <div class="mat-card-content">
+    <div class="main-section">
+      <h4 class="card-title">{{ babyActionData?.category.name }}</h4>
       <img
-        src="{{ babyActionData.category.imagePath }}"
-        class="img-fluid rounded-start actionImg"
-        alt="{{ babyActionData.category.name }}"
+        mat-card-image
+        src="{{ babyActionData?.category.imagePath }}"
+        alt="{{ babyActionData?.category.name }}"
+        class="action-img"
       />
       <span class="time-info">
-        <h6 class="card-subtitle text-body-secondary">
-          {{ babyActionData.creationTime | date : "dd/MM/yy" }} -
-          {{ babyActionData.creationTime | date : "HH:mm:ss" }}
-        </h6>
+        <mat-card-subtitle class="time-text">
+          {{ babyActionData?.creationTime | date : "dd/MM/yy" }} -
+          {{ babyActionData?.creationTime | date : "HH:mm:ss" }}
+        </mat-card-subtitle>
       </span>
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="menu"
+        aria-label="Icon-button with a menu"
+        class="menu-button"
+      >
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="onStartEditMode()">
+          <mat-icon>edit</mat-icon>
+          <span>Edit</span>
+        </button>
+        <button mat-menu-item *ngIf="!filterMode" (click)="onFilter()">
+          <mat-icon>filter</mat-icon>
+          <span>Filter</span>
+        </button>
+        <button mat-menu-item *ngIf="filterMode" (click)="onUnfilter()">
+          <mat-icon>filter_none</mat-icon>
+          <span>Unfilter</span>
+        </button>
+        <button mat-menu-item (click)="onDelete()">
+          <mat-icon>delete</mat-icon>
+          <span>Delete</span>
+        </button>
+      </mat-menu>
     </div>
-    <div class="col-9" *ngIf="!editMode">
-      <p class="card-text">
-        {{ babyActionData.description }}
-      </p>
+
+    <div class="description-section" *ngIf="!editMode">
+      <p>{{ babyActionData?.description }}</p>
     </div>
-    <div class="col-9" *ngIf="editMode">
-      <div class="form-floating">
+
+    <div class="edit-section" *ngIf="editMode">
+      <mat-form-field class="full-width">
+        <mat-label>Description</mat-label>
         <textarea
+          matInput
           #descriptionTextarea
-          class="form-control"
-          id="description "
+          [(ngModel)]="babyActionData.description"
+          placeholder="Edit description"
           style="height: 80px"
         ></textarea>
-        <label for="description ">Description </label>
-      </div>
+      </mat-form-field>
 
       <div class="button-container">
         <button
-          class="btn btn-success"
+          mat-raised-button
+          color="primary"
           (click)="onEditSubmit(descriptionTextarea.value)"
         >
           Save
         </button>
-        <button class="btn btn-secondary" (click)="onCancelEdit()">
+        <button mat-raised-button color="accent" (click)="onCancelEdit()">
           Cancel
         </button>
-        <button class="btn btn-danger" (click)="onDelete()">Delete</button>
+        <button mat-raised-button color="warn" (click)="onDelete()">
+          Delete
+        </button>
       </div>
     </div>
   </div>
-</div>
+</mat-card>

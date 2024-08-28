@@ -40,6 +40,11 @@ export class BabyActionsDataService {
   }
 
   public filterBabyActionsData(category: BabyActionCategoryModel): void {
+    if (category === null) {
+      this.FilteredBabyActionsDataChanged.next(this.babyActionsData.slice());
+      return;
+    }
+
     let data = this.babyActionsData.filter(
       (x) => x.category.name === category.name
     );

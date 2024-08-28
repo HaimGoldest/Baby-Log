@@ -6,12 +6,13 @@ import { BabyActionsDataService } from '../../services/baby-actions-data.service
 @Component({
   selector: 'app-baby-actions-info',
   templateUrl: './baby-actions-info.component.html',
-  styleUrl: './baby-actions-info.component.css',
+  styleUrls: ['./baby-actions-info.component.css'],
 })
 export class BabyActionsInfoComponent implements OnInit, OnDestroy {
   babyActionsData: BabyActionDataModel[] = [];
   babyActionsDataChanged: Subscription;
   FilteredBabyActionsDataChanged: Subscription;
+  filterMode = false;
 
   constructor(private babyActionDataService: BabyActionsDataService) {}
 
@@ -32,6 +33,17 @@ export class BabyActionsInfoComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    this.babyActionsDataChanged.unsubscribe;
+    this.babyActionsDataChanged.unsubscribe();
+    this.FilteredBabyActionsDataChanged.unsubscribe();
+  }
+
+  onFilter(category: any) {
+    this.filterMode = true;
+    this.babyActionDataService.filterBabyActionsData(category);
+  }
+
+  onUnfilter() {
+    this.filterMode = false;
+    this.babyActionDataService.filterBabyActionsData(null);
   }
 }

@@ -1,32 +1,69 @@
-/* MD and above */
-@media (min-width: 768px) {
-    .actionImg {
-      width: 90px;
-      height: 90px;
-      border-radius: 200px;
-      background-size: cover;
-    }
+.baby-action-card {
+  margin-bottom: 15px;
+  padding: 15px;
+}
+
+.main-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.card-title {
+  font-weight: bold;
+  margin: 0;
+  text-align: center;
+  align-self: center;
+}
+
+.menu-button {
+  margin-left: auto; /* Ensure the button is aligned to the right */
+}
+
+.action-img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.time-info {
+  margin-left: 15px;
+  font-size: 0.875rem;
+}
+
+.time-text {
+  color: darkblue;
+  font-weight: bold;
+}
+
+.description-section {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.edit-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.button-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+h4 {
+  font-weight: bold;
+}
+
+@media (max-width: 767.98px) {
+  .action-img {
+    width: 45px;
+    height: 45px;
   }
-  
-  /* SM and below */
-  @media (max-width: 767.98px) {
-    .actionImg {
-      width: 45px;
-      height: 45px;
-      border-radius: 100px;
-      background-size: cover;
-    }
-  }
-  
-  .time-info {
-    white-space: nowrap;
-  }
-  
-  .button-container {
-    display: inline-block;
-  }
-  
-  textarea {
-    width: 100%;
-  }
-  
+}
