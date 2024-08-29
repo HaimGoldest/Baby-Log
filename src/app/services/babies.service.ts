@@ -4,6 +4,7 @@ import {
   AngularFirestoreCollection,
   AngularFirestoreDocument,
 } from '@angular/fire/compat/firestore';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
 import firebase from 'firebase/compat/app';
 import { BabyModel } from '../models/baby.model';
 import { BabyActionCategoryModel } from '../models/baby-action-category.model';
@@ -19,7 +20,10 @@ export class BabiesService implements OnDestroy {
   private babiesCollection: AngularFirestoreCollection<unknown>;
   private babyChanged: Subscription | null = null;
 
-  constructor(private firestore: AngularFirestore) {
+  constructor(
+    private firestore: AngularFirestore,
+    private storage: AngularFireStorage
+  ) {
     this.babiesCollection = this.firestore.collection('babies');
   }
 
@@ -55,6 +59,20 @@ export class BabiesService implements OnDestroy {
         }
       );
     });
+  }
+
+  public uploadBabyImage(babyUid: string, image: File): Promise<void> {
+    const filePath = `baby_images/${babyUid}`;
+    const fileRef = this.storage.ref(filePath);
+    return this.storage
+      .upload(filePath, image)
+      .then(() => {
+        console.log('Baby image uploaded successfully.');
+      })
+      .catch((error) => {
+        console.error('Error uploading baby image:', error);
+        throw new Error('Failed to upload baby image');
+      });
   }
 
   private getBabyFromDb(babyUid: string): Observable<BabyModel | null> {
