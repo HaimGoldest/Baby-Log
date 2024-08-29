@@ -8,8 +8,17 @@
         <div class="col-sm-4">
           <strong>Baby Key:</strong>
         </div>
-        <div class="col-sm-8">
+        <div class="col-sm-8 d-flex align-items-center">
           {{ uid }}
+          <button
+            mat-icon-button
+            color="primary"
+            aria-label="Copy UID"
+            (click)="copyUIDToClipboard()"
+            style="margin-left: 10px"
+          >
+            <mat-icon>content_copy</mat-icon>
+          </button>
         </div>
       </div>
       <div class="row mb-3">
