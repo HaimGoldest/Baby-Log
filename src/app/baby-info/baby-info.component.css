@@ -1,4 +1,14 @@
+.card {
+  margin-top: 20px;
+  max-width: 600px;
+  margin: auto;
+}
+
 .card-header {
   background-color: #007bff;
   color: white;
+}
+
+.mat-icon-button {
+  color: #007bff;
 }
