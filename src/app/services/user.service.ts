@@ -124,6 +124,7 @@ export class UserService implements OnDestroy {
       await userRef.update({ babiesUids: currentUser.babiesUids });
       console.log('Baby removed from user successfully.');
       this.userData.next(currentUser);
+      this.babiesService.currentBabyimageUrl.next(null); // Reset currentBabyimageUrl after deletion
       return true;
     } catch (error) {
       console.error('Error removing baby from user: ', error);

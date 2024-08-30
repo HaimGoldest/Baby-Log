@@ -73,11 +73,12 @@ export class BabiesService implements OnDestroy {
 
   public uploadBabyImage(babyUid: string, image: File): Promise<void> {
     const filePath = `baby_images/${babyUid}`;
-    const fileRef = this.storage.ref(filePath);
     return this.storage
       .upload(filePath, image)
       .then(() => {
         console.log('Baby image uploaded successfully.');
+        // call getBabyImageUrl to set the currentBabyimageUrl
+        this.getBabyImageUrl(babyUid);
       })
       .catch((error) => {
         console.error('Error uploading baby image:', error);
@@ -94,6 +95,7 @@ export class BabiesService implements OnDestroy {
       .toPromise()
       .then((url: string) => {
         console.log('Retrieved baby image URL successfully:', url);
+        this.currentBabyimageUrl.next(url);
         return url;
       })
       .catch((error) => {
@@ -156,6 +158,7 @@ export class BabiesService implements OnDestroy {
             `Baby document with UID ${baby.uid} deleted successfully.`
           );
           this.babyData.next(null); // Reset babyData after deletion
+          this.currentBabyimageUrl.next(null); // Reset currentBabyimageUrl after deletion
           resolve(true);
         })
         .catch((error) => {
