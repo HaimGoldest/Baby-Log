@@ -18,10 +18,10 @@ import firebase from 'firebase/compat';
 })
 export class UserService implements OnDestroy {
   public userData = new BehaviorSubject<UserModel | null>(null);
-  isLoggedIn = new BehaviorSubject<boolean | null>(null);
-  pictureUrl = new BehaviorSubject<string | null>(null);
+  public isLoggedIn = new BehaviorSubject<boolean | null>(null);
+  public pictureUrl = new BehaviorSubject<string | null>(null);
 
-  babyActionsCategoriesChanged: Subscription;
+  public babyActionsCategoriesChanged: Subscription;
   public maxBabiesLimit = 1;
 
   private isFirstCategoriesChanged = true;

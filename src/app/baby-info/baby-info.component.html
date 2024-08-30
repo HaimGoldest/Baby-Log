@@ -8,7 +8,7 @@
         <div class="col-sm-4">
           <strong>Baby Key:</strong>
         </div>
-        <div class="col-sm-8 d-flex align-items-center">
+        <div class="col-sm-8 d-flex">
           {{ uid }}
           <button
             mat-icon-button
@@ -35,6 +35,34 @@
         </div>
         <div class="col-sm-8">
           {{ birthDate | date : "longDate" }}
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-4">
+            <strong>Baby Image:</strong>
+          </div>
+          <div class="col-sm-8">
+            <img
+              *ngIf="babyImageUrl"
+              [src]="babyImageUrl"
+              alt="Baby Image"
+              style="max-width: 100px; max-height: 100px"
+            />
+            <p *ngIf="!babyImageUrl">No image available</p>
+            <input
+              type="file"
+              accept="image/*"
+              (change)="onImageSelected($event)"
+              hidden
+              #fileInput
+            />
+            <button
+              class="btn btn-primary btn-sm mt-2 ms-2"
+              (click)="fileInput.click()"
+            >
+              Change Image
+            </button>
+          </div>
         </div>
       </div>
       <div class="text-end">

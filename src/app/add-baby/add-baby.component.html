@@ -6,7 +6,7 @@
   <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
     <div *ngIf="isNewBabyMode">
       <div class="form-group">
-        <label for="name">Name</label>
+        <label for="name">Name:</label>
         <input
           type="text"
           id="name"
@@ -17,7 +17,7 @@
         />
       </div>
       <div class="form-group">
-        <label for="birthDate">Birth Date</label>
+        <label for="birthDate">Birth Date:</label>
         <input
           type="date"
           id="birthDate"
@@ -26,6 +26,23 @@
           name="birthDate"
           required
         />
+      </div>
+      <hr />
+      <div class="form-group">
+        <label for="image">Baby Image:</label>
+        <input
+          type="file"
+          id="image"
+          accept="image/*"
+          (change)="onImageSelected($event)"
+        />
+        <div *ngIf="imagePreview" class="mt-2">
+          <img
+            [src]="imagePreview"
+            alt="Selected Image"
+            style="max-width: 100px; max-height: 100px"
+          />
+        </div>
       </div>
     </div>
     <div *ngIf="!isNewBabyMode">

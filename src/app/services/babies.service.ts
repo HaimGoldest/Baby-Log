@@ -4,6 +4,7 @@ import {
   AngularFirestoreCollection,
   AngularFirestoreDocument,
 } from '@angular/fire/compat/firestore';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
 import firebase from 'firebase/compat/app';
 import { BabyModel } from '../models/baby.model';
 import { BabyActionCategoryModel } from '../models/baby-action-category.model';
@@ -16,10 +17,14 @@ import { BabyMeasurementModel } from '../models/baby-measurement.model';
 })
 export class BabiesService implements OnDestroy {
   public babyData = new BehaviorSubject<BabyModel | null>(null);
+  public currentBabyimageUrl = new BehaviorSubject<string | null>(null);
   private babiesCollection: AngularFirestoreCollection<unknown>;
   private babyChanged: Subscription | null = null;
 
-  constructor(private firestore: AngularFirestore) {
+  constructor(
+    private firestore: AngularFirestore,
+    private storage: AngularFireStorage
+  ) {
     this.babiesCollection = this.firestore.collection('babies');
   }
 
@@ -41,6 +46,15 @@ export class BabiesService implements OnDestroy {
           if (baby) {
             console.log('Received baby data:', baby);
             this.babyData.next(baby);
+
+            this.getBabyImageUrl(babyUid)
+              .then((url) => {
+                this.currentBabyimageUrl.next(url);
+              })
+              .catch((error) => {
+                console.error('Failed to get baby image URL:', error);
+                this.currentBabyimageUrl.next(null);
+              });
             resolve(true);
           } else {
             console.log('Baby not found in DB');
@@ -57,59 +71,43 @@ export class BabiesService implements OnDestroy {
     });
   }
 
-  private getBabyFromDb(babyUid: string): Observable<BabyModel | null> {
-    const babyRef: AngularFirestoreDocument<BabyModel> =
-      this.babiesCollection.doc(babyUid);
-
-    return babyRef.snapshotChanges().pipe(
-      map((doc) => {
-        if (doc.payload.exists) {
-          const data = doc.payload.data() as BabyModel;
-
-          const actionsData = Array.isArray(data.actionsData)
-            ? data.actionsData
-            : [];
-          const measurementsData = Array.isArray(data.measurementsData)
-            ? data.measurementsData
-            : [];
-
-          return new BabyModel(
-            data.uid,
-            data.name,
-            new Date(data.birthDate),
-            actionsData.map(
-              (action) =>
-                new BabyActionDataModel(
-                  new BabyActionCategoryModel(
-                    action.category.name,
-                    action.category.defaultDescription,
-                    action.category.imagePath,
-                    action.category.isCategoryEnable,
-                    action.category.isDefaultDescriptionEnable
-                  ),
-                  action.description,
-                  new Date(action.creationTime)
-                )
-            ),
-            measurementsData.map(
-              (measurement) =>
-                new BabyMeasurementModel(
-                  new Date(measurement.date),
-                  measurement.height,
-                  measurement.weight,
-                  measurement.headMeasure
-                )
-            ),
-            data.usersUids
-          );
-        } else {
-          return null;
-        }
+  public uploadBabyImage(babyUid: string, image: File): Promise<void> {
+    const filePath = `baby_images/${babyUid}`;
+    const fileRef = this.storage.ref(filePath);
+    return this.storage
+      .upload(filePath, image)
+      .then(() => {
+        console.log('Baby image uploaded successfully.');
       })
-    );
+      .catch((error) => {
+        console.error('Error uploading baby image:', error);
+        throw new Error('Failed to upload baby image');
+      });
   }
 
-  addBabyToDb(
+  public getBabyImageUrl(babyUid: string): Promise<string | null> {
+    const filePath = `baby_images/${babyUid}`;
+    const fileRef = this.storage.ref(filePath);
+
+    return fileRef
+      .getDownloadURL()
+      .toPromise()
+      .then((url: string) => {
+        console.log('Retrieved baby image URL successfully:', url);
+        return url;
+      })
+      .catch((error) => {
+        if (error.code === 'storage/object-not-found') {
+          console.warn('Baby image not found in storage:', filePath);
+          return null;
+        } else {
+          console.error('Error retrieving baby image URL:', error);
+          return null;
+        }
+      });
+  }
+
+  public addBabyToDb(
     babyUid: string,
     name: string,
     birthDate: string,
@@ -145,7 +143,7 @@ export class BabiesService implements OnDestroy {
       });
   }
 
-  deleteBabyFromDb(baby: BabyModel): Promise<boolean> {
+  public deleteBabyFromDb(baby: BabyModel): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       const babyRef: AngularFirestoreDocument<any> = this.babiesCollection.doc(
         baby.uid
@@ -382,5 +380,57 @@ export class BabiesService implements OnDestroy {
       .catch((error) => {
         console.error('Error updating baby action:', error);
       });
+  }
+
+  private getBabyFromDb(babyUid: string): Observable<BabyModel | null> {
+    const babyRef: AngularFirestoreDocument<BabyModel> =
+      this.babiesCollection.doc(babyUid);
+
+    return babyRef.snapshotChanges().pipe(
+      map((doc) => {
+        if (doc.payload.exists) {
+          const data = doc.payload.data() as BabyModel;
+
+          const actionsData = Array.isArray(data.actionsData)
+            ? data.actionsData
+            : [];
+          const measurementsData = Array.isArray(data.measurementsData)
+            ? data.measurementsData
+            : [];
+
+          return new BabyModel(
+            data.uid,
+            data.name,
+            new Date(data.birthDate),
+            actionsData.map(
+              (action) =>
+                new BabyActionDataModel(
+                  new BabyActionCategoryModel(
+                    action.category.name,
+                    action.category.defaultDescription,
+                    action.category.imagePath,
+                    action.category.isCategoryEnable,
+                    action.category.isDefaultDescriptionEnable
+                  ),
+                  action.description,
+                  new Date(action.creationTime)
+                )
+            ),
+            measurementsData.map(
+              (measurement) =>
+                new BabyMeasurementModel(
+                  new Date(measurement.date),
+                  measurement.height,
+                  measurement.weight,
+                  measurement.headMeasure
+                )
+            ),
+            data.usersUids
+          );
+        } else {
+          return null;
+        }
+      })
+    );
   }
 }
