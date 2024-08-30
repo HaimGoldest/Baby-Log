@@ -17,6 +17,7 @@ import { BabyMeasurementModel } from '../models/baby-measurement.model';
 })
 export class BabiesService implements OnDestroy {
   public babyData = new BehaviorSubject<BabyModel | null>(null);
+  public currentBabyimageUrl = new BehaviorSubject<string | null>(null);
   private babiesCollection: AngularFirestoreCollection<unknown>;
   private babyChanged: Subscription | null = null;
 
@@ -45,6 +46,15 @@ export class BabiesService implements OnDestroy {
           if (baby) {
             console.log('Received baby data:', baby);
             this.babyData.next(baby);
+
+            this.getBabyImageUrl(babyUid)
+              .then((url) => {
+                this.currentBabyimageUrl.next(url);
+              })
+              .catch((error) => {
+                console.error('Failed to get baby image URL:', error);
+                this.currentBabyimageUrl.next(null);
+              });
             resolve(true);
           } else {
             console.log('Baby not found in DB');

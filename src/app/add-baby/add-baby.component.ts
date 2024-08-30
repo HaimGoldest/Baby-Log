@@ -12,13 +12,13 @@ import { BabiesService } from '../services/babies.service'; // Import BabiesServ
 export class AddBabyComponent {
   isNewBabyMode = true;
   errorMessage: string | null = null;
-  selectedImage: File | null = null; // Store the selected image
-  imagePreview: string | null = null; // Store the image preview
+  selectedImage: File | null = null;
+  imagePreview: string | null = null;
 
   constructor(
     private userService: UserService,
     private router: Router,
-    private babiesService: BabiesService // Inject BabiesService
+    private babiesService: BabiesService
   ) {}
 
   onSwitchMode() {
@@ -50,7 +50,7 @@ export class AddBabyComponent {
     }
 
     form.reset();
-    this.imagePreview = null; // Reset image preview after form submission
+    this.imagePreview = null;
   }
 
   private async addNewBaby(form: NgForm): Promise<void> {
@@ -59,7 +59,7 @@ export class AddBabyComponent {
     const userAdded = await this.userService.addNewBaby(name, birthDate);
 
     if (userAdded && this.selectedImage) {
-      await this.uploadBabyImage(); // Upload image after adding baby
+      await this.uploadBabyImage();
     }
 
     if (userAdded) {
@@ -74,7 +74,7 @@ export class AddBabyComponent {
     const userAdded = await this.userService.addExistingBaby(uid);
 
     if (userAdded && this.selectedImage) {
-      await this.uploadBabyImage(); // Upload image after adding existing baby
+      await this.uploadBabyImage();
     }
 
     if (userAdded) {

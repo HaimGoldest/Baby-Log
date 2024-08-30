@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { UserService } from '../services/user.service';
+import { BabiesService } from '../services/babies.service';
 
 @Component({
   selector: 'app-navbar',
@@ -8,10 +9,14 @@ import { UserService } from '../services/user.service';
 })
 export class NavbarComponent {
   isLoggedIn: boolean | null;
-  pictureUrl: string | null;
+  userImageUrl: string | null;
+  babyImageUrl: string | null;
   userHaveBabies: boolean;
 
-  constructor(private userService: UserService) {
+  constructor(
+    private userService: UserService,
+    private babiesService: BabiesService
+  ) {
     this.userService.userData.subscribe((userData) => {
       this.userHaveBabies = userData?.babiesUids?.length > 0;
     });
@@ -23,7 +28,11 @@ export class NavbarComponent {
     });
 
     this.userService.pictureUrl.subscribe((url) => {
-      this.pictureUrl = url ? `${url}?${new Date().getTime()}` : null;
+      this.userImageUrl = url ? `${url}?${new Date().getTime()}` : null;
+    });
+
+    this.babiesService.currentBabyimageUrl.subscribe((url) => {
+      this.babyImageUrl = url ? `${url}?${new Date().getTime()}` : null;
     });
   }
 
@@ -37,10 +46,17 @@ export class NavbarComponent {
     }
   }
 
-  onImageError() {
+  onUserImageError() {
     console.warn('User image failed to load, retrying...');
-    const temp = this.pictureUrl;
-    this.pictureUrl = null;
-    this.pictureUrl = temp;
+    const temp = this.userImageUrl;
+    this.userImageUrl = null;
+    this.userImageUrl = temp;
+  }
+
+  onBabyImageError() {
+    console.warn('Baby image failed to load, retrying...');
+    const temp = this.babyImageUrl;
+    this.babyImageUrl = null;
+    this.babyImageUrl = temp;
   }
 }

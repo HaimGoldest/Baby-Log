@@ -1,12 +1,18 @@
 <nav class="navbar navbar-expand-lg" style="background-color: #e3f2fd">
   <div class="container-fluid">
     <div class="d-flex align-items-center w-100">
-      <!-- Avatar Icon -->
+      <!-- Avatar Icons -->
       <img
         class="user-avatar me-3"
-        *ngIf="isLoggedIn && pictureUrl"
-        [src]="pictureUrl"
-        (error)="onImageError()"
+        *ngIf="isLoggedIn && userImageUrl"
+        [src]="userImageUrl"
+        (error)="onUserImageError()"
+      />
+      <img
+        class="user-avatar me-3"
+        *ngIf="isLoggedIn && babyImageUrl"
+        [src]="babyImageUrl"
+        (error)="onBabyImageError()"
       />
 
       <!-- Navbar Collapse (links) - Hidden on mobile screens, visible on larger screens -->
