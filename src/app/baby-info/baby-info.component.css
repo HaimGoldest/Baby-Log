@@ -5,6 +5,7 @@
 }
 
 .card-header {
+  text-align: center;
   background-color: #007bff;
   color: white;
 }

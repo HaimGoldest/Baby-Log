@@ -30,7 +30,12 @@
       <hr />
       <div class="form-group">
         <label for="image">Baby Image:</label>
-        <input type="file" id="image" (change)="onImageSelected($event)" />
+        <input
+          type="file"
+          id="image"
+          accept="image/*"
+          (change)="onImageSelected($event)"
+        />
         <div *ngIf="imagePreview" class="mt-2">
           <img
             [src]="imagePreview"

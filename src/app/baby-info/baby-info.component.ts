@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BabiesService } from '../services/babies.service';
 import { UserService } from '../services/user.service';
 import { Router } from '@angular/router';
@@ -10,10 +10,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   templateUrl: './baby-info.component.html',
   styleUrls: ['./baby-info.component.css'],
 })
-export class BabyInfoComponent {
+export class BabyInfoComponent implements OnInit {
   uid: string;
   name: string;
   birthDate: Date;
+  babyImageUrl: string | null = null;
 
   constructor(
     private babiesService: BabiesService,
@@ -22,9 +23,48 @@ export class BabyInfoComponent {
     private clipboard: Clipboard,
     private snackBar: MatSnackBar
   ) {
-    this.uid = this.babiesService.babyData.value.uid;
-    this.name = this.babiesService.babyData.value.name;
-    this.birthDate = this.babiesService.babyData.value.birthDate;
+    this.uid = this.babiesService.babyData.value?.uid;
+    this.name = this.babiesService.babyData.value?.name;
+    this.birthDate = this.babiesService.babyData.value?.birthDate;
+  }
+
+  ngOnInit(): void {
+    this.loadBabyImage();
+  }
+
+  private loadBabyImage(): void {
+    if (this.uid) {
+      this.babiesService.getBabyImageUrl(this.uid).then((url) => {
+        this.babyImageUrl = url;
+      });
+    }
+  }
+
+  public onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.uploadNewImage(file);
+    }
+  }
+
+  private uploadNewImage(file: File): void {
+    if (this.uid) {
+      this.babiesService
+        .uploadBabyImage(this.uid, file)
+        .then(() => {
+          this.loadBabyImage(); // Refresh the displayed image
+          this.snackBar.open('Image updated successfully', 'Close', {
+            duration: 2000,
+          });
+        })
+        .catch((error) => {
+          this.snackBar.open('Failed to update image', 'Close', {
+            duration: 2000,
+          });
+          console.error('Error uploading baby image:', error);
+        });
+    }
   }
 
   public deleteBaby(): void {
