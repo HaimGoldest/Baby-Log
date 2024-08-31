@@ -36,6 +36,10 @@ export class NavbarComponent {
     });
   }
 
+  navigateRoot() {
+    window.location.href = '';
+  }
+
   logout() {
     this.userService.logout();
   }
