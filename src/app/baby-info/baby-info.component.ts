@@ -77,7 +77,7 @@ export class BabyInfoComponent implements OnInit {
 
   public copyUIDToClipboard(): void {
     this.clipboard.copy(this.uid);
-    this.snackBar.open('UID copied to clipboard', 'Close', {
+    this.snackBar.open('Baby-Key copied to clipboard', 'Close', {
       duration: 2000,
     });
   }
