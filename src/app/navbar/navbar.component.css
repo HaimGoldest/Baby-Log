@@ -1,10 +1,43 @@
-.user-avatar {
-  max-height: 35px;
-  border-radius: 4px;
+.mat-toolbar {
+  background-color: #e3f2fd;
+  color: black;
 }
 
-.disabled {
-  pointer-events: none;
-  color: gray;
-  text-decoration: none;
+.mat-toolbar .nav-images {
+  max-height: 35px;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+/* Show navbar links only on screens larger than 600px */
+.mat-toolbar .navbar-links {
+  display: none;
+}
+
+@media (min-width: 600px) {
+  .mat-toolbar .navbar-links {
+    display: flex;
+    flex-grow: 1;
+  }
+}
+
+/* Active link styling */
+.mat-toolbar .router-link-active {
+  color: darkblue;
+}
+
+.mat-toolbar .spacer {
+  flex: 1;
+}
+
+.mat-toolbar .menu-icon {
+  color: black;
+}
+
+.mat-toolbar .mat-menu-item {
+  color: black;
+}
+
+.mat-toolbar .mat-divider {
+  margin: 5px 0;
 }
