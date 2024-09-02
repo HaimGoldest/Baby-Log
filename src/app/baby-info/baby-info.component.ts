@@ -15,6 +15,7 @@ export class BabyInfoComponent implements OnInit {
   name: string;
   birthDate: Date;
   babyImageUrl: string | null = null;
+  isLoading: boolean;
 
   constructor(
     private babiesService: BabiesService,
@@ -29,6 +30,7 @@ export class BabyInfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.loadBabyImage();
   }
 
@@ -36,6 +38,7 @@ export class BabyInfoComponent implements OnInit {
     if (this.uid) {
       this.babiesService.getBabyImageUrl(this.uid).then((url) => {
         this.babyImageUrl = url;
+        this.isLoading = false;
       });
     }
   }
@@ -43,6 +46,7 @@ export class BabyInfoComponent implements OnInit {
   public onImageSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
+      this.isLoading = true;
       const file = input.files[0];
       this.uploadNewImage(file);
     }
@@ -63,6 +67,9 @@ export class BabyInfoComponent implements OnInit {
             duration: 2000,
           });
           console.error('Error uploading baby image:', error);
+        })
+        .finally(() => {
+          this.isLoading = false;
         });
     }
   }

@@ -14,6 +14,7 @@ export class AddBabyComponent {
   errorMessage: string | null = null;
   selectedImage: File | null = null;
   imagePreview: string | null = null;
+  isLoading: boolean;
 
   constructor(
     private userService: UserService,
@@ -38,15 +39,20 @@ export class AddBabyComponent {
     }
   }
 
-  onSubmit(form: NgForm) {
+  public onSubmit(form: NgForm): void {
     if (!form.valid) {
       return;
     }
 
+    this.isLoading = true;
     if (this.isNewBabyMode) {
-      this.addNewBaby(form);
+      this.addNewBaby(form).finally(() => {
+        this.isLoading = false;
+      });
     } else {
-      this.addExistingBaby(form);
+      this.addExistingBaby(form).finally(() => {
+        this.isLoading = false;
+      });
     }
 
     form.reset();
