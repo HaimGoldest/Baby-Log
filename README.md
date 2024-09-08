@@ -11,9 +11,8 @@
 > It is built using "Angular" freamwork and "Bootstrap 5"/"Angular Materials" for the UI (Gradually we change the whole UI design from Bootstrap 5 to Angular Materials).
 
 ## Usage
-Baby-Log application is designed to meet the need to track relevant information of the baby and to share the information in a convenient and immediate way between the interested parties (parents/grandmothers, etc.).
-In this application, you can quickly and conveniently monitor everything that happens with the baby and when it happens.
-Also you can monitor your baby growth.
+The Baby-Log application is designed to simplify tracking important information about your baby and make it easy to share updates instantly with family members, such as parents and grandparents. 
+The app allows you to effortlessly keep track of all activities and events related to your baby, as well as monitor their growth over time.
 
 [Visit our Website Application](https://baby-log-management.web.app)
 
