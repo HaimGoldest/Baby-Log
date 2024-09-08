@@ -44,4 +44,6 @@ ng serve
 http://localhost:4200/
 ```
 
+## Contributing
 
+Our codebase is presently closed to external contributions. We anticipate welcoming community involvement starting in 2025.
