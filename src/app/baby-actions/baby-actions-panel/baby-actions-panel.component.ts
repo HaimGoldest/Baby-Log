@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { BabyActionCategoryModel } from '../../models/baby-action-category.model';
 import { BabyActionCategoriesService } from '../../services/baby-actions-categories.service';
@@ -12,6 +18,7 @@ import { BabyActionsDataService } from '../../services/baby-actions-data.service
 export class BabyActionsPanelComponent implements OnInit, OnDestroy {
   activeBabyActionsCategories: BabyActionCategoryModel[] = [];
   babyActionsCategoriesChanged: Subscription;
+  @Output() filter = new EventEmitter<any>();
 
   constructor(
     private babyActionCategoriesService: BabyActionCategoriesService
@@ -34,5 +41,9 @@ export class BabyActionsPanelComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.babyActionsCategoriesChanged.unsubscribe;
+  }
+
+  onFilter(category: any) {
+    this.filter.emit(category);
   }
 }

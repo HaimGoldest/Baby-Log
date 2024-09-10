@@ -1,4 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { BabyActionDataModel } from '../../models/baby-action-data.model';
 import { BabyActionsDataService } from '../../services/baby-actions-data.service';
@@ -12,7 +19,10 @@ export class BabyActionsInfoComponent implements OnInit, OnDestroy {
   babyActionsData: BabyActionDataModel[] = [];
   babyActionsDataChanged: Subscription;
   FilteredBabyActionsDataChanged: Subscription;
-  filterMode = false;
+  //filterMode = false;
+  @Input() filterMode: boolean = false; // Receive shared filterMode
+  @Output() filter = new EventEmitter<any>();
+  @Output() unfilter = new EventEmitter<void>();
 
   constructor(private babyActionDataService: BabyActionsDataService) {}
 
@@ -37,13 +47,21 @@ export class BabyActionsInfoComponent implements OnInit, OnDestroy {
     this.FilteredBabyActionsDataChanged.unsubscribe();
   }
 
+  // onFilter(category: any) {
+  //   this.filterMode = true;
+  //   this.babyActionDataService.filterBabyActionsData(category);
+  // }
+
+  // onUnfilter() {
+  //   this.filterMode = false;
+  //   this.babyActionDataService.filterBabyActionsData(null);
+  // }
+
   onFilter(category: any) {
-    this.filterMode = true;
-    this.babyActionDataService.filterBabyActionsData(category);
+    this.filter.emit(category);
   }
 
   onUnfilter() {
-    this.filterMode = false;
-    this.babyActionDataService.filterBabyActionsData(null);
+    this.unfilter.emit();
   }
 }
