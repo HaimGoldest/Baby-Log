@@ -17,6 +17,27 @@ export class BabyActionCategoriesService {
       false
     ),
     new BabyActionCategoryModel(
+      'Breastfeeding',
+      '',
+      '../../assets/images/icons8-breastfeeding-96.png',
+      true,
+      false
+    ),
+    new BabyActionCategoryModel(
+      'Breast Pump',
+      '',
+      '../../assets/images/icons8-breast-pump-96.png',
+      true,
+      false
+    ),
+    new BabyActionCategoryModel(
+      'Diaper',
+      '',
+      '../../assets/images/icons8-diaper-96.png',
+      true,
+      false
+    ),
+    new BabyActionCategoryModel(
       'Poo',
       '',
       '../../assets/images/icons8-pile-of-poo-3d-fluency-96.png',
