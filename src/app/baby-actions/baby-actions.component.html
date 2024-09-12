@@ -1,7 +1,11 @@
-<app-baby-actions-panel></app-baby-actions-panel>
-<hr>
+<app-baby-actions-panel (filter)="onFilter($event)"></app-baby-actions-panel>
+<hr />
 <div class="container-fluid">
   <div class="container">
-    <app-baby-actions-info></app-baby-actions-info>
+    <app-baby-actions-info
+      [filterMode]="filterMode"
+      (filter)="onFilter($event)"
+      (unfilter)="onUnfilter()"
+    ></app-baby-actions-info>
   </div>
 </div>

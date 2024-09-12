@@ -1,6 +1,7 @@
 <button
   class="col-1 btn rounded-circle img-btn"
   (click)="onAddBabyAction()"
+  (filter)="onFilter($event)"
   (contextmenu)="FilterBabyActionsData($event)"
   [style.background-image]="'url(' + babyActionCategory.imagePath + ')'"
 ></button>

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { BabyActionCategoryModel } from '../../../models/baby-action-category.model';
 import { BabyActionsDataService } from '../../../services/baby-actions-data.service';
 import { BabyActionDataModel } from '../../../models/baby-action-data.model';
@@ -11,6 +11,7 @@ import { BabyActionDataModel } from '../../../models/baby-action-data.model';
 export class BabyActionsPanelItemComponent {
   @Input() babyActionCategory: BabyActionCategoryModel;
   @Input() index: number;
+  @Output() filter = new EventEmitter<any>();
 
   constructor(private babyActionsDataService: BabyActionsDataService) {}
 
@@ -34,6 +35,10 @@ export class BabyActionsPanelItemComponent {
 
   public FilterBabyActionsData(event: MouseEvent): void {
     event.preventDefault(); // Prevent the default context menu from appearing
-    this.babyActionsDataService.filterBabyActionsData(this.babyActionCategory);
+    this.onFilter(this.babyActionCategory);
+  }
+
+  public onFilter(category: any): void {
+    this.filter.emit(category);
   }
 }
