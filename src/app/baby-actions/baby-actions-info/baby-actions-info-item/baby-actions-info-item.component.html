@@ -46,11 +46,14 @@
       </mat-menu>
     </div>
 
-    <div class="description-section" *ngIf="!editMode">
+    <div
+      class="description-section"
+      *ngIf="!editMode || index !== activeEditModeIndex"
+    >
       <p>{{ babyActionData?.description }}</p>
     </div>
 
-    <div class="edit-section" *ngIf="editMode">
+    <div class="edit-section" *ngIf="editMode && index === activeEditModeIndex">
       <mat-form-field class="full-width">
         <mat-label>Description</mat-label>
         <textarea

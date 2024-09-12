@@ -5,6 +5,8 @@
       [babyActionData]="babyActionEl"
       [index]="i"
       [filterMode]="filterMode"
+      [activeEditModeIndex]="activeEditModeIndex"
+      (editModeOpened)="onEditModeOpened($event)"
       (filter)="onFilter($event)"
       (unfilter)="onUnfilter()"
     ></app-baby-actions-info-item>

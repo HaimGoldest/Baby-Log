@@ -17,7 +17,9 @@ import { BabyActionsDataService } from '../../../services/baby-actions-data.serv
 export class BabyActionsInfoItemComponent {
   @Input() babyActionData: BabyActionDataModel | undefined;
   @Input() index: number | undefined;
-  @Input() filterMode: boolean = false; // Receive shared filterMode
+  @Input() activeEditModeIndex: number | null = null;
+  @Input() filterMode: boolean = false;
+  @Output() editModeOpened = new EventEmitter<number>();
   @Output() filter = new EventEmitter<any>();
   @Output() unfilter = new EventEmitter<void>();
   @ViewChild('descriptionTextarea', { static: true })
@@ -29,6 +31,10 @@ export class BabyActionsInfoItemComponent {
   onStartEditMode(event?: MouseEvent) {
     if (event) event.preventDefault();
     this.editMode = true;
+
+    if (this.index !== undefined) {
+      this.editModeOpened.emit(this.index);
+    }
   }
 
   onEditSubmit(newDescription: string) {

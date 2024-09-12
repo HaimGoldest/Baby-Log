@@ -19,8 +19,8 @@ export class BabyActionsInfoComponent implements OnInit, OnDestroy {
   babyActionsData: BabyActionDataModel[] = [];
   babyActionsDataChanged: Subscription;
   FilteredBabyActionsDataChanged: Subscription;
-  //filterMode = false;
-  @Input() filterMode: boolean = false; // Receive shared filterMode
+  activeEditModeIndex: number | null = null;
+  @Input() filterMode: boolean = false;
   @Output() filter = new EventEmitter<any>();
   @Output() unfilter = new EventEmitter<void>();
 
@@ -47,21 +47,15 @@ export class BabyActionsInfoComponent implements OnInit, OnDestroy {
     this.FilteredBabyActionsDataChanged.unsubscribe();
   }
 
-  // onFilter(category: any) {
-  //   this.filterMode = true;
-  //   this.babyActionDataService.filterBabyActionsData(category);
-  // }
-
-  // onUnfilter() {
-  //   this.filterMode = false;
-  //   this.babyActionDataService.filterBabyActionsData(null);
-  // }
-
-  onFilter(category: any) {
+  public onFilter(category: any): void {
     this.filter.emit(category);
   }
 
-  onUnfilter() {
+  public onUnfilter(): void {
     this.unfilter.emit();
+  }
+
+  onEditModeOpened(index: number) {
+    this.activeEditModeIndex = index;
   }
 }
