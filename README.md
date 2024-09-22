@@ -20,25 +20,31 @@ The app allows you to effortlessly keep track of all activities and events relat
 
 To install Baby-Log, follow these steps:
 
-1. Navigate im Console/CMD to the desired location and clone the repository:
+1. Navigate in Console/CMD to the desired location and clone the repository:
 
 ```bash
 git clone https://github.com/HaimGoldest/baby-log.git
 ```
 
-2. Install dependencies:
+2. Open the baby-log folder:
+
+```bash
+cd baby-log
+```
+
+3. Install dependencies:
 
 ```bash
 npm install
 ```
 
-3. Build and Run the Application Locally:
+4. Build and Run the Application Locally:
 
 ```bash
 ng serve
 ```
 
-4. Navigate your browser to the local address you received in the previous step, for example:
+5. Navigate your browser to the local address you received in the previous step, for example:
 
 ```bash
 http://localhost:4200/
