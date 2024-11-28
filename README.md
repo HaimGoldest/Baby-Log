@@ -5,16 +5,13 @@
 </p>
 
 # Baby-Log
-> Baby-Log is a web application that is combination of a personal problem for which we have not found an existing solution that is good enough (not even for a fee).
-> That's why we decided to develop a dedicated application for the problem, and at the same time also use it for our final project in our Bachelor's degree in Information Systems.
-> website. Created by Haim Goldsten & Kfir Maziar.
-> It is built using "Angular" freamwork and "Bootstrap 5"/"Angular Materials" for the UI (Gradually we change the whole UI design from Bootstrap 5 to Angular Materials).
+> Baby-Log is a web application born from a personal challenge. Recognizing the lack of adequate solutions in the market—both free and paid—I developed this dedicated application to address a specific need. Built using Angular framework and currently leveraging Bootstrap 5 and Angular Materials for its user interface (with plans to transition exclusively to Angular Materials), Baby-Log represents a tailored solution to a problem that demanded a custom approach
 
 ## Usage
 The Baby-Log application is designed to simplify tracking important information about your baby and make it easy to share updates instantly with family members, such as parents and grandparents. 
 The app allows you to effortlessly keep track of all activities and events related to your baby, as well as monitor their growth over time.
 
-[Visit our Website Application](https://baby-log-management.web.app)
+[Visit the Website Application](https://baby-log-management.web.app)
 
 ## Installation On Local Machine
 
@@ -52,4 +49,26 @@ http://localhost:4200/
 
 ## Contributing
 
-Our codebase is presently closed to external contributions. We anticipate welcoming community involvement starting in 2025.
+If you would like to contribute to Baby-Log, please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch:
+
+```bash
+git checkout -b new-branch-name
+```
+
+3. Make your changes and commit them:
+
+```bash
+git commit -m "Your commit message"
+```
+
+4. Push your changes:
+
+```bash
+git push origin new-branch-name
+```
+
+5. Create a pull request from your branch to the main branch of the original repository.
+6. Wait for feedback and approval.
