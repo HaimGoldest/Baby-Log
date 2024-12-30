@@ -1,25 +1,38 @@
 .mat-toolbar {
+  display: flex;
+  align-items: center;
   background-color: #e3f2fd;
   color: black;
 }
 
-.mat-toolbar .nav-images {
-  max-height: 45px;
-  max-width: 45px;
-  /* border-radius: 50%; */
-  border-radius: 4px;
-  margin-right: 20px;
+.navbar-logo {
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
 }
 
-/* Show navbar links only on screens larger than 600px */
+nav a {
+  display: inline-block;
+  text-decoration: none;
+}
+
+.mat-toolbar .nav-image {
+  max-height: 50px;
+  max-width: 50px;
+  border-radius: 4px;
+  margin: 0px 10px;
+}
+
+/* Disable navbar links by default */
 .mat-toolbar .navbar-links {
   display: none;
 }
 
 @media (min-width: 600px) {
+  /* Show navbar links only on larger screens */
   .mat-toolbar .navbar-links {
     display: flex;
-    flex-grow: 1;
+    gap: 10px;
   }
 }
 
@@ -28,12 +41,9 @@
   color: darkblue;
 }
 
-.mat-toolbar .spacer {
-  flex: 1;
-}
-
 .mat-toolbar .menu-icon {
   color: black;
+  margin-left: auto;
 }
 
 .mat-toolbar .mat-menu-item {

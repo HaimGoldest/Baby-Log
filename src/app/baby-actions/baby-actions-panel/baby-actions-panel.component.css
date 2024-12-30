@@ -1,4 +1,5 @@
-.d-flex {
+.panel {
   display: flex;
-  flex-wrap: wrap;  
+  flex-wrap: wrap;
+  justify-content: center;
 }
