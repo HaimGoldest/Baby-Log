@@ -5,10 +5,17 @@
   color: black;
 }
 
+.nav-buttons {
+  cursor: pointer;
+}
+
+.nav-buttons:hover {
+  background-color: #afbeca;
+}
+
 .navbar-logo {
   width: 50px;
   height: 50px;
-  cursor: pointer;
 }
 
 nav a {

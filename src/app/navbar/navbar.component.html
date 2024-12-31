@@ -1,6 +1,6 @@
 <mat-toolbar class="mat-elevation-z4">
   <!-- App Icon -->
-  <a routerLink="baby-actions" aria-label="Go to homepage">
+  <a class="nav-buttons" routerLink="baby-actions" aria-label="Go to homepage">
     <img src="favicon.ico" alt="App Logo" class="navbar-logo" />
   </a>
 
@@ -42,7 +42,7 @@
     *ngIf="isLoggedIn$ | async"
     mat-icon-button
     [matMenuTriggerFor]="menu"
-    class="menu-icon"
+    class="nav-buttons menu-icon"
     aria-label="Menu"
   >
     <mat-icon>menu</mat-icon>
