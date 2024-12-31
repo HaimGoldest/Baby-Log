@@ -9,6 +9,7 @@
       <label for="cateroryNameCheckbox" style="margin-right: 10px">
         Enable {{ babyActionCategory.name }}:
         <input
+          (click)="onChanged()"
           type="checkbox"
           id="cateroryNameCheckbox"
           [(ngModel)]="babyActionCategory.isCategoryEnable"
@@ -19,6 +20,7 @@
         *ngIf="babyActionCategory.isCategoryEnable"
         >| Enable Default Description
         <input
+          (click)="onChanged()"
           type="checkbox"
           id="cateroryDescCheckbox"
           [(ngModel)]="babyActionCategory.isDefaultDescriptionEnable"

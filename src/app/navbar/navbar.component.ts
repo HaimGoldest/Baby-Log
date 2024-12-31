@@ -61,4 +61,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
       event.preventDefault();
     }
   }
+
+  onUserImageError() {
+    console.warn('User image failed to load, retrying...');
+    this.userImageUrl$ = null;
+  }
+
+  onBabyImageError() {
+    console.warn('Baby image failed to load.');
+    this.babyImageUrl$ = null;
+  }
 }

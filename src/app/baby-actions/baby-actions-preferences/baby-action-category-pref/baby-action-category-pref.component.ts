@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BabyActionCategoryModel } from '../../../models/baby-action-category.model';
 import { BabyActionCategoriesService } from '../../../services/baby-actions-categories.service';
 
@@ -10,17 +10,23 @@ import { BabyActionCategoriesService } from '../../../services/baby-actions-cate
 export class BabyActionCategoryPrefComponent implements OnInit {
   @Input() babyActionCategory: BabyActionCategoryModel | undefined;
   @Input() index: number | undefined;
+  @Output() modified = new EventEmitter<boolean>();
 
   constructor(
     private babyActionCategoriesService: BabyActionCategoriesService
   ) {}
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.babyActionCategory =
       this.babyActionCategoriesService.getCategories()[this.index];
   }
 
-  updateDefaultDescription(newValue: string) {
+  public updateDefaultDescription(newValue: string): void {
     this.babyActionCategory.defaultDescription = newValue;
+    this.onChanged();
+  }
+
+  public onChanged(): void {
+    this.modified.emit(true);
   }
 }
