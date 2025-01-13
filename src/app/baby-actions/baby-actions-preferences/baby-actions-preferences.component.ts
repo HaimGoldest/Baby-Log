@@ -9,6 +9,7 @@ import { BabyActionCategoriesService } from '../../services/baby-actions-categor
   styleUrl: './baby-actions-preferences.component.css',
 })
 export class BabyActionsPreferencesComponent implements OnInit, OnDestroy {
+  private hasChanged = false;
   babyActionsCategories: BabyActionCategoryModel[];
   babyActionsCategoriesChanged: Subscription;
 
@@ -28,9 +29,18 @@ export class BabyActionsPreferencesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.babyActionCategoriesService.updateCategories(
-      this.babyActionsCategories
-    );
+    if (this.hasChanged) {
+      this.babyActionCategoriesService.updateCategories(
+        this.babyActionsCategories
+      );
+    }
+
     this.babyActionsCategoriesChanged.unsubscribe;
+  }
+
+  public onChanged(): void {
+    if (!this.hasChanged) {
+      this.hasChanged = true;
+    }
   }
 }

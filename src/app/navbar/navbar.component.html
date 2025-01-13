@@ -9,14 +9,14 @@
     class="nav-image"
     *ngIf="(isLoggedIn$ | async) && (userImageUrl$ | async)"
     [src]="userImageUrl$ | async"
-    (error)="userImageUrl$ = of(null)"
+    (error)="onUserImageError()"
   />
 
   <img
     class="nav-image"
     *ngIf="(isLoggedIn$ | async) && (babyImageUrl$ | async)"
     [src]="babyImageUrl$ | async"
-    (error)="babyImageUrl$ = of(null)"
+    (error)="onBabyImageError()"
   />
 
   <!-- Navbar Links (Visible on larger screens) -->

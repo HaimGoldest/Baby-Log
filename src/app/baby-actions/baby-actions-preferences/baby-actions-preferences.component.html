@@ -7,6 +7,7 @@
         *ngFor="let category of babyActionsCategories; let i = index"
         [babyActionCategory]="category"
         [index]="i"
+        (modified)="onChanged()"
       ></app-baby-action-category-pref>
     </div>
   </div>
