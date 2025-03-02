@@ -4,9 +4,10 @@ import { BabyActionDataModel } from '../../../../../models/baby-action-data.mode
 import { BabyActionsDataService } from '../../../../../services/baby-actions-data.service';
 
 @Component({
-  selector: 'app-baby-actions-panel-item',
-  templateUrl: './baby-actions-panel-item.component.html',
-  styleUrl: './baby-actions-panel-item.component.scss',
+    selector: 'app-baby-actions-panel-item',
+    templateUrl: './baby-actions-panel-item.component.html',
+    styleUrl: './baby-actions-panel-item.component.scss',
+    standalone: false
 })
 export class BabyActionsPanelItemComponent {
   @Input() babyActionCategory: BabyActionCategoryModel;

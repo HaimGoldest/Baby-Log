@@ -6,9 +6,10 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'app-baby-info',
-  templateUrl: './baby-info.component.html',
-  styleUrls: ['./baby-info.component.scss'],
+    selector: 'app-baby-info',
+    templateUrl: './baby-info.component.html',
+    styleUrls: ['./baby-info.component.scss'],
+    standalone: false
 })
 export class BabyInfoComponent implements OnInit {
   uid: string;

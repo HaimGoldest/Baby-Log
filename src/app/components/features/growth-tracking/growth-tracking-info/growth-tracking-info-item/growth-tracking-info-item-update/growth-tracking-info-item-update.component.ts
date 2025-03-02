@@ -5,9 +5,10 @@ import { BabyMeasurementModel } from '../../../../../../models/baby-measurement.
 import { BabyMeasurementsService } from '../../../../../../services/baby-measurements.service';
 
 @Component({
-  selector: 'app-growth-tracking-info-item-update',
-  templateUrl: './growth-tracking-info-item-update.component.html',
-  styleUrls: ['./growth-tracking-info-item-update.component.scss'],
+    selector: 'app-growth-tracking-info-item-update',
+    templateUrl: './growth-tracking-info-item-update.component.html',
+    styleUrls: ['./growth-tracking-info-item-update.component.scss'],
+    standalone: false
 })
 export class GrowthTrackingInfoItemUpdateComponent implements OnInit {
   oldMeasurement: BabyMeasurementModel;

@@ -3,9 +3,10 @@ import { BabyActionCategoryModel } from '../../../../../models/baby-action-categ
 import { BabyActionCategoriesService } from '../../../../../services/baby-actions-categories.service';
 
 @Component({
-  selector: 'app-baby-action-category-pref',
-  templateUrl: './baby-action-category-pref.component.html',
-  styleUrl: './baby-action-category-pref.component.scss',
+    selector: 'app-baby-action-category-pref',
+    templateUrl: './baby-action-category-pref.component.html',
+    styleUrl: './baby-action-category-pref.component.scss',
+    standalone: false
 })
 export class BabyActionCategoryPrefComponent implements OnInit {
   @Input() babyActionCategory: BabyActionCategoryModel | undefined;

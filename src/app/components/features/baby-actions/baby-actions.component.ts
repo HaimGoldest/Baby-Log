@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { BabyActionsDataService } from '../../../services/baby-actions-data.service';
 
 @Component({
-  selector: 'app-baby-actions',
-  templateUrl: './baby-actions.component.html',
-  styleUrl: './baby-actions.component.scss',
+    selector: 'app-baby-actions',
+    templateUrl: './baby-actions.component.html',
+    styleUrl: './baby-actions.component.scss',
+    standalone: false
 })
 export class BabyActionsComponent {
   filterMode = false;

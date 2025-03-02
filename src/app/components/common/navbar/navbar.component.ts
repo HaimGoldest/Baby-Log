@@ -5,9 +5,10 @@ import { BabiesService } from '../../../services/babies.service';
 import { UserService } from '../../../services/user.service';
 
 @Component({
-  selector: 'app-navbar',
-  templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss',
+    selector: 'app-navbar',
+    templateUrl: './navbar.component.html',
+    styleUrl: './navbar.component.scss',
+    standalone: false
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   isLoggedIn$: Observable<boolean | null>;

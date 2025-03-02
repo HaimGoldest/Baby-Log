@@ -10,9 +10,10 @@ import { BabyActionDataModel } from '../../../../../models/baby-action-data.mode
 import { BabyActionsDataService } from '../../../../../services/baby-actions-data.service';
 
 @Component({
-  selector: 'app-baby-actions-info-item',
-  templateUrl: './baby-actions-info-item.component.html',
-  styleUrls: ['./baby-actions-info-item.component.scss'],
+    selector: 'app-baby-actions-info-item',
+    templateUrl: './baby-actions-info-item.component.html',
+    styleUrls: ['./baby-actions-info-item.component.scss'],
+    standalone: false
 })
 export class BabyActionsInfoItemComponent {
   @Input() babyActionData: BabyActionDataModel | undefined;

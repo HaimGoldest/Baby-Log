@@ -4,9 +4,10 @@ import { BabyMeasurementsService } from '../../../../services/baby-measurements.
 import { BabyMeasurementModel } from '../../../../models/baby-measurement.model';
 
 @Component({
-  selector: 'app-growth-tracking-new-measurement',
-  templateUrl: './growth-tracking-new-measurement.component.html',
-  styleUrl: './growth-tracking-new-measurement.component.scss',
+    selector: 'app-growth-tracking-new-measurement',
+    templateUrl: './growth-tracking-new-measurement.component.html',
+    styleUrl: './growth-tracking-new-measurement.component.scss',
+    standalone: false
 })
 export class GrowthTrackingNewMeasurementComponent {
   @ViewChild('f', { static: true }) form: NgForm;

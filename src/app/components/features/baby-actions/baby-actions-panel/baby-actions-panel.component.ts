@@ -10,9 +10,10 @@ import { BabyActionCategoryModel } from '../../../../models/baby-action-category
 import { BabyActionCategoriesService } from '../../../../services/baby-actions-categories.service';
 
 @Component({
-  selector: 'app-baby-actions-panel',
-  templateUrl: './baby-actions-panel.component.html',
-  styleUrl: './baby-actions-panel.component.scss',
+    selector: 'app-baby-actions-panel',
+    templateUrl: './baby-actions-panel.component.html',
+    styleUrl: './baby-actions-panel.component.scss',
+    standalone: false
 })
 export class BabyActionsPanelComponent implements OnInit, OnDestroy {
   activeBabyActionsCategories: BabyActionCategoryModel[] = [];

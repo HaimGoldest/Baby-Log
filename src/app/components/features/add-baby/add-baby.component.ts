@@ -5,9 +5,10 @@ import { BabiesService } from '../../../services/babies.service';
 import { UserService } from '../../../services/user.service';
 
 @Component({
-  selector: 'app-add-baby',
-  templateUrl: './add-baby.component.html',
-  styleUrls: ['./add-baby.component.scss'],
+    selector: 'app-add-baby',
+    templateUrl: './add-baby.component.html',
+    styleUrls: ['./add-baby.component.scss'],
+    standalone: false
 })
 export class AddBabyComponent {
   isNewBabyMode = true;

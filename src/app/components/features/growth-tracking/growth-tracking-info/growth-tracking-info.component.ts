@@ -4,9 +4,10 @@ import { BabyMeasurementsService } from '../../../../services/baby-measurements.
 import { BabyMeasurementModel } from '../../../../models/baby-measurement.model';
 
 @Component({
-  selector: 'app-growth-tracking-info',
-  templateUrl: './growth-tracking-info.component.html',
-  styleUrl: './growth-tracking-info.component.scss',
+    selector: 'app-growth-tracking-info',
+    templateUrl: './growth-tracking-info.component.html',
+    styleUrl: './growth-tracking-info.component.scss',
+    standalone: false
 })
 export class GrowthTrackingInfoComponent implements OnInit, OnDestroy {
   measurements: BabyMeasurementModel[] = [];

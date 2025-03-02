@@ -4,9 +4,10 @@ import { BabyActionCategoryModel } from '../../../../models/baby-action-category
 import { BabyActionCategoriesService } from '../../../../services/baby-actions-categories.service';
 
 @Component({
-  selector: 'app-baby-actions-preferences',
-  templateUrl: './baby-actions-preferences.component.html',
-  styleUrl: './baby-actions-preferences.component.scss',
+    selector: 'app-baby-actions-preferences',
+    templateUrl: './baby-actions-preferences.component.html',
+    styleUrl: './baby-actions-preferences.component.scss',
+    standalone: false
 })
 export class BabyActionsPreferencesComponent implements OnInit, OnDestroy {
   private hasChanged = false;
