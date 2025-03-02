@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { BabiesService } from '../services/babies.service';
-import { UserService } from '../services/user.service';
+import { BabiesService } from '../../services/babies.service';
+import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';

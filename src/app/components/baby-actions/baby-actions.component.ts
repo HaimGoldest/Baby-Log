@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { BabyActionsDataService } from '../services/baby-actions-data.service';
+import { BabyActionsDataService } from '../../services/baby-actions-data.service';
 
 @Component({
   selector: 'app-baby-actions',

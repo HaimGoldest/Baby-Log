@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UserService } from '../services/user.service';
-import { BabiesService } from '../services/babies.service';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil, map } from 'rxjs/operators';
+import { BabiesService } from '../../../services/babies.service';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-navbar',

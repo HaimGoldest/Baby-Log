@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { BabyMeasurementModel } from '../../../models/baby-measurement.model';
-import { BabyMeasurementsService } from '../../../services/baby-measurements.service';
 import { Router } from '@angular/router';
+import { BabyMeasurementModel } from '../../../../models/baby-measurement.model';
+import { BabyMeasurementsService } from '../../../../services/baby-measurements.service';
 
 @Component({
   selector: 'app-growth-tracking-info-item',
