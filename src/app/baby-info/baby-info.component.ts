@@ -8,7 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-baby-info',
   templateUrl: './baby-info.component.html',
-  styleUrls: ['./baby-info.component.css'],
+  styleUrls: ['./baby-info.component.scss'],
 })
 export class BabyInfoComponent implements OnInit {
   uid: string;

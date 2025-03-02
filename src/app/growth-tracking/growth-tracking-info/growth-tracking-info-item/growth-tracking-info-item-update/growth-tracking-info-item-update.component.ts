@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-growth-tracking-info-item-update',
   templateUrl: './growth-tracking-info-item-update.component.html',
-  styleUrls: ['./growth-tracking-info-item-update.component.css'],
+  styleUrls: ['./growth-tracking-info-item-update.component.scss'],
 })
 export class GrowthTrackingInfoItemUpdateComponent implements OnInit {
   oldMeasurement: BabyMeasurementModel;

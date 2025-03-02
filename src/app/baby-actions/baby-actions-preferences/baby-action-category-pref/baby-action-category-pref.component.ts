@@ -5,7 +5,7 @@ import { BabyActionCategoriesService } from '../../../services/baby-actions-cate
 @Component({
   selector: 'app-baby-action-category-pref',
   templateUrl: './baby-action-category-pref.component.html',
-  styleUrl: './baby-action-category-pref.component.css',
+  styleUrl: './baby-action-category-pref.component.scss',
 })
 export class BabyActionCategoryPrefComponent implements OnInit {
   @Input() babyActionCategory: BabyActionCategoryModel | undefined;

@@ -8,12 +8,11 @@ import {
 import { Subscription } from 'rxjs';
 import { BabyActionCategoryModel } from '../../models/baby-action-category.model';
 import { BabyActionCategoriesService } from '../../services/baby-actions-categories.service';
-import { BabyActionsDataService } from '../../services/baby-actions-data.service';
 
 @Component({
   selector: 'app-baby-actions-panel',
   templateUrl: './baby-actions-panel.component.html',
-  styleUrl: './baby-actions-panel.component.css',
+  styleUrl: './baby-actions-panel.component.scss',
 })
 export class BabyActionsPanelComponent implements OnInit, OnDestroy {
   activeBabyActionsCategories: BabyActionCategoryModel[] = [];

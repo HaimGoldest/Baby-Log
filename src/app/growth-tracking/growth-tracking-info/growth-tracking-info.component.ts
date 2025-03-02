@@ -6,7 +6,7 @@ import { BabyMeasurementsService } from '../../services/baby-measurements.servic
 @Component({
   selector: 'app-growth-tracking-info',
   templateUrl: './growth-tracking-info.component.html',
-  styleUrl: './growth-tracking-info.component.css',
+  styleUrl: './growth-tracking-info.component.scss',
 })
 export class GrowthTrackingInfoComponent implements OnInit, OnDestroy {
   measurements: BabyMeasurementModel[] = [];

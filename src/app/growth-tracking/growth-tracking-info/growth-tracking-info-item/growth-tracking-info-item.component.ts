@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-growth-tracking-info-item',
   templateUrl: './growth-tracking-info-item.component.html',
-  styleUrl: './growth-tracking-info-item.component.css',
+  styleUrl: './growth-tracking-info-item.component.scss',
 })
 export class GrowthTrackingInfoItemComponent {
   @Input() measurement: BabyMeasurementModel;

@@ -6,7 +6,7 @@ import { BabyActionDataModel } from '../../../models/baby-action-data.model';
 @Component({
   selector: 'app-baby-actions-panel-item',
   templateUrl: './baby-actions-panel-item.component.html',
-  styleUrl: './baby-actions-panel-item.component.css',
+  styleUrl: './baby-actions-panel-item.component.scss',
 })
 export class BabyActionsPanelItemComponent {
   @Input() babyActionCategory: BabyActionCategoryModel;

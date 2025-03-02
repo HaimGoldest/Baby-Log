@@ -7,7 +7,7 @@ import { BabiesService } from '../services/babies.service';
 @Component({
   selector: 'app-add-baby',
   templateUrl: './add-baby.component.html',
-  styleUrls: ['./add-baby.component.css'],
+  styleUrls: ['./add-baby.component.scss'],
 })
 export class AddBabyComponent {
   isNewBabyMode = true;
