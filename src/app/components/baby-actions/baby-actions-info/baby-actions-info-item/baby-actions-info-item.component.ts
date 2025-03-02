@@ -6,8 +6,8 @@ import {
   EventEmitter,
   ViewChild,
 } from '@angular/core';
-import { BabyActionDataModel } from '../../../models/baby-action-data.model';
-import { BabyActionsDataService } from '../../../services/baby-actions-data.service';
+import { BabyActionDataModel } from '../../../../models/baby-action-data.model';
+import { BabyActionsDataService } from '../../../../services/baby-actions-data.service';
 
 @Component({
   selector: 'app-baby-actions-info-item',

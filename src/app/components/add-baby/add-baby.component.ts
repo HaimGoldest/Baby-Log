@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { UserService } from '../services/user.service';
 import { Router } from '@angular/router';
-import { BabiesService } from '../services/babies.service';
+import { BabiesService } from '../../services/babies.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-add-baby',

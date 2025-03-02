@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { BabyMeasurementModel } from '../../models/baby-measurement.model';
-import { BabyMeasurementsService } from '../../services/baby-measurements.service';
+import { BabyMeasurementsService } from '../../../services/baby-measurements.service';
+import { BabyMeasurementModel } from '../../../models/baby-measurement.model';
 
 @Component({
   selector: 'app-growth-tracking-info',
