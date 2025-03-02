@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { BabyActionCategoryModel } from '../../../../models/baby-action-category.model';
-import { BabyActionDataModel } from '../../../../models/baby-action-data.model';
-import { BabyActionsDataService } from '../../../../services/baby-actions-data.service';
+import { BabyActionCategoryModel } from '../../../../../models/baby-action-category.model';
+import { BabyActionDataModel } from '../../../../../models/baby-action-data.model';
+import { BabyActionsDataService } from '../../../../../services/baby-actions-data.service';
 
 @Component({
   selector: 'app-baby-actions-panel-item',

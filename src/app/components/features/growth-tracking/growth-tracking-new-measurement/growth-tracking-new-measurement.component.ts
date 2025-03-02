@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { BabyMeasurementsService } from '../../../services/baby-measurements.service';
-import { BabyMeasurementModel } from '../../../models/baby-measurement.model';
+import { BabyMeasurementsService } from '../../../../services/baby-measurements.service';
+import { BabyMeasurementModel } from '../../../../models/baby-measurement.model';
 
 @Component({
   selector: 'app-growth-tracking-new-measurement',

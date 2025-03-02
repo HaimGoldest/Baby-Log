@@ -6,8 +6,8 @@ import {
   Output,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { BabyActionCategoryModel } from '../../../models/baby-action-category.model';
-import { BabyActionCategoriesService } from '../../../services/baby-actions-categories.service';
+import { BabyActionCategoryModel } from '../../../../models/baby-action-category.model';
+import { BabyActionCategoriesService } from '../../../../services/baby-actions-categories.service';
 
 @Component({
   selector: 'app-baby-actions-panel',

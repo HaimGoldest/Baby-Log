@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { Router } from '@angular/router';
-import { BabyMeasurementModel } from '../../../../../models/baby-measurement.model';
-import { BabyMeasurementsService } from '../../../../../services/baby-measurements.service';
+import { BabyMeasurementModel } from '../../../../../../models/baby-measurement.model';
+import { BabyMeasurementsService } from '../../../../../../services/baby-measurements.service';
 
 @Component({
   selector: 'app-growth-tracking-info-item-update',
