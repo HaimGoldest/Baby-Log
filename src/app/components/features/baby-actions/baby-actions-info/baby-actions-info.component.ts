@@ -7,8 +7,8 @@ import {
   Output,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { BabyActionDataModel } from '../../../models/baby-action-data.model';
-import { BabyActionsDataService } from '../../../services/baby-actions-data.service';
+import { BabyActionDataModel } from '../../../../models/baby-action-data.model';
+import { BabyActionsDataService } from '../../../../services/baby-actions-data.service';
 
 @Component({
   selector: 'app-baby-actions-info',
