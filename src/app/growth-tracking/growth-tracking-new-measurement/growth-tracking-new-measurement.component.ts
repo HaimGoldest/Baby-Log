@@ -6,7 +6,7 @@ import { BabyMeasurementsService } from '../../services/baby-measurements.servic
 @Component({
   selector: 'app-growth-tracking-new-measurement',
   templateUrl: './growth-tracking-new-measurement.component.html',
-  styleUrl: './growth-tracking-new-measurement.component.css',
+  styleUrl: './growth-tracking-new-measurement.component.scss',
 })
 export class GrowthTrackingNewMeasurementComponent {
   @ViewChild('f', { static: true }) form: NgForm;

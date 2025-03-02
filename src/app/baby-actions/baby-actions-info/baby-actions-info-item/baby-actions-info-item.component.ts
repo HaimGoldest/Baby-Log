@@ -12,7 +12,7 @@ import { BabyActionsDataService } from '../../../services/baby-actions-data.serv
 @Component({
   selector: 'app-baby-actions-info-item',
   templateUrl: './baby-actions-info-item.component.html',
-  styleUrls: ['./baby-actions-info-item.component.css'],
+  styleUrls: ['./baby-actions-info-item.component.scss'],
 })
 export class BabyActionsInfoItemComponent {
   @Input() babyActionData: BabyActionDataModel | undefined;

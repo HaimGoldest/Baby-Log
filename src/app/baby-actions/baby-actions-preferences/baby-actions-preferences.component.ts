@@ -6,7 +6,7 @@ import { BabyActionCategoriesService } from '../../services/baby-actions-categor
 @Component({
   selector: 'app-baby-actions-preferences',
   templateUrl: './baby-actions-preferences.component.html',
-  styleUrl: './baby-actions-preferences.component.css',
+  styleUrl: './baby-actions-preferences.component.scss',
 })
 export class BabyActionsPreferencesComponent implements OnInit, OnDestroy {
   private hasChanged = false;

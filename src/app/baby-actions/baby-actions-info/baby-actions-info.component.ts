@@ -13,7 +13,7 @@ import { BabyActionsDataService } from '../../services/baby-actions-data.service
 @Component({
   selector: 'app-baby-actions-info',
   templateUrl: './baby-actions-info.component.html',
-  styleUrls: ['./baby-actions-info.component.css'],
+  styleUrls: ['./baby-actions-info.component.scss'],
 })
 export class BabyActionsInfoComponent implements OnInit, OnDestroy {
   babyActionsData: BabyActionDataModel[] = [];
