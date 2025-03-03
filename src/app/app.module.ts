@@ -33,10 +33,6 @@ import { BabyActionsPreferencesComponent } from './components/features/baby-acti
 import { BabyActionsComponent } from './components/features/baby-actions/baby-actions.component';
 import { BabyInfoComponent } from './components/features/baby-info/baby-info.component';
 import { GrowthTrackingInfoItemUpdateComponent } from './components/features/growth-tracking/growth-tracking-info/growth-tracking-info-item/growth-tracking-info-item-update/growth-tracking-info-item-update.component';
-import { GrowthTrackingInfoItemComponent } from './components/features/growth-tracking/growth-tracking-info/growth-tracking-info-item/growth-tracking-info-item.component';
-import { GrowthTrackingInfoComponent } from './components/features/growth-tracking/growth-tracking-info/growth-tracking-info.component';
-import { GrowthTrackingNewMeasurementComponent } from './components/features/growth-tracking/growth-tracking-new-measurement/growth-tracking-new-measurement.component';
-import { GrowthTrackingComponent } from './components/features/growth-tracking/growth-tracking.component';
 import { LoginComponent } from './components/features/login/login.component';
 
 @NgModule({
@@ -48,12 +44,8 @@ import { LoginComponent } from './components/features/login/login.component';
     BabyActionsInfoComponent,
     BabyActionsInfoItemComponent,
     BabyActionsPanelItemComponent,
-    GrowthTrackingComponent,
     BabyActionsPreferencesComponent,
     BabyActionCategoryPrefComponent,
-    GrowthTrackingInfoComponent,
-    GrowthTrackingNewMeasurementComponent,
-    GrowthTrackingInfoItemComponent,
     LoginComponent,
     AddBabyComponent,
     BabyInfoComponent,

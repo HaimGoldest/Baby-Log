@@ -22,8 +22,8 @@ export class GrowthTrackingInfoItemComponent {
   }
 
   onUpdate() {
-    this.router.navigate(['/growth-tracking-update'], {
-      state: { measurement: this.measurement },
-    });
+    // this.router.navigate(['/growth-tracking', '/update'], {
+    //   state: { measurement: this.measurement },
+    // });
   }
 }
