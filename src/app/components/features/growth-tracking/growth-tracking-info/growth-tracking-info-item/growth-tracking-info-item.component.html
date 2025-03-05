@@ -1,35 +1,46 @@
-<div class="card mb-3">
-  <div class="card-body">
-    <div class="row">
-      <div class="col-12 text-center">
-        <p class="card-text date-text">
-          Date: {{ measurement.date | date : "dd/MM/yy" }}
-        </p>
+<mat-card
+  appearance="outlined"
+  class="growth-tracking-card"
+  (contextmenu)="onStartEditMode($event)"
+>
+  <div class="mat-card-content">
+    <div class="date">
+      {{ measurement?.date | date : "dd/MM/yy" }}
+    </div>
+
+    <div class="measurements-container">
+      <div class="measurement">
+        <p class="measurement-title">Weight</p>
+        <p class="measurement-value">{{ measurement.weight }}</p>
+      </div>
+      <div class="measurement">
+        <p class="measurement-title">Height</p>
+        <p class="measurement-value">{{ measurement.height }}</p>
+      </div>
+      <div class="measurement">
+        <p class="measurement-title">Head</p>
+        <p class="measurement-value">{{ measurement.headMeasure }}</p>
       </div>
     </div>
-    <div class="row">
-      <div class="col-4 text-center">
-        <p class="card-text"><strong>Weight:</strong></p>
-        <p class="card-text">{{ measurement.weight }}</p>
-      </div>
-      <div class="col-4 text-center">
-        <p class="card-text"><strong>Height:</strong></p>
-        <p class="card-text">{{ measurement.height }}</p>
-      </div>
-      <div class="col-4 text-center">
-        <p class="card-text"><strong>Head:</strong></p>
-        <p class="card-text">{{ measurement.headMeasure }}</p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12 d-flex justify-content-between">
-        <button class="btn btn-warning btn-sm me-auto" (click)="onUpdate()">
-          Update
-        </button>
-        <button class="btn btn-danger btn-sm" (click)="onDelete()">
-          Delete
-        </button>
-      </div>
-    </div>
+
+    <!-- Menu Button  -->
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="menu"
+      aria-label="Icon-button with a menu"
+      class="menu-button"
+    >
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="onStartEditMode()">
+        <mat-icon color="primary">edit</mat-icon>
+        <span>Edit</span>
+      </button>
+      <button mat-menu-item (click)="onDelete()">
+        <mat-icon color="warn">delete</mat-icon>
+        <span>Delete</span>
+      </button>
+    </mat-menu>
   </div>
-</div>
+</mat-card>

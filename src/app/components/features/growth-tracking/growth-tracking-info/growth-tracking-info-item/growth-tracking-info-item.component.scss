@@ -1,13 +1,42 @@
-.card-text {
-  margin: 0;
-}
+.growth-tracking-card {
+  margin-bottom: 5px;
+  padding: 5px;
 
-.date-text {
-  color: darkblue;
-  font-weight: bold;
-}
+  .mat-card-content {
+    display: flex;
+    align-items: center;
+    width: 100%;
 
-.btn-sm {
-  font-size: 0.875rem;
-  padding: 0.25rem 0.5rem;
+    .date {
+      flex: 0 0 auto;
+      font-size: 1rem;
+      color: darkblue;
+      font-weight: bold;
+    }
+
+    .measurements-container {
+      flex: 1 1 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+
+      > .measurement {
+        text-align: center;
+      }
+
+      .measurement-title {
+        font-weight: bold;
+        font-size: 0.85rem;
+      }
+
+      .measurement-value {
+        font-size: 0.75rem;
+      }
+    }
+
+    .menu-button {
+      flex: 0 0 auto;
+    }
+  }
 }
