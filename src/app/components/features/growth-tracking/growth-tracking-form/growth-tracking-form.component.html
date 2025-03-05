@@ -1,0 +1,55 @@
+<h2 mat-dialog-title>{{ data ? "Edit Measurement" : "Add Measurement" }}</h2>
+<hr />
+<mat-dialog-content>
+  <form [formGroup]="measurementForm">
+    <mat-form-field appearance="outline">
+      <mat-label>Weight (kg)</mat-label>
+      <input type="number" matInput formControlName="weight" required />
+      <mat-error *ngIf="measurementForm.get('weight')?.hasError('required')">
+        Weight is required.
+      </mat-error>
+      <mat-error *ngIf="measurementForm.get('weight')?.hasError('pattern')">
+        Please enter a valid number.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Height (cm)</mat-label>
+      <input type="number" matInput formControlName="height" required />
+      <mat-error *ngIf="measurementForm.get('height')?.hasError('required')">
+        Height is required.
+      </mat-error>
+      <mat-error *ngIf="measurementForm.get('height')?.hasError('pattern')">
+        Please enter a valid number.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Head Measure (cm)</mat-label>
+      <input type="number" matInput formControlName="headMeasure" required />
+      <mat-error
+        *ngIf="measurementForm.get('headMeasure')?.hasError('required')"
+      >
+        Head Measure is required.
+      </mat-error>
+      <mat-error
+        *ngIf="measurementForm.get('headMeasure')?.hasError('pattern')"
+      >
+        Please enter a valid number.
+      </mat-error>
+    </mat-form-field>
+    >
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="dialogRef.close()">Cancel</button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="onSubmit()"
+    [disabled]="measurementForm.invalid"
+  >
+    {{ data ? "Update" : "Add" }}
+  </button>
+</mat-dialog-actions>
