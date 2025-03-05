@@ -32,7 +32,6 @@ import { BabyActionCategoryPrefComponent } from './components/features/baby-acti
 import { BabyActionsPreferencesComponent } from './components/features/baby-actions/baby-actions-preferences/baby-actions-preferences.component';
 import { BabyActionsComponent } from './components/features/baby-actions/baby-actions.component';
 import { BabyInfoComponent } from './components/features/baby-info/baby-info.component';
-import { GrowthTrackingInfoItemUpdateComponent } from './components/features/growth-tracking/growth-tracking-info/growth-tracking-info-item/growth-tracking-info-item-update/growth-tracking-info-item-update.component';
 import { LoginComponent } from './components/features/login/login.component';
 
 @NgModule({
@@ -49,7 +48,6 @@ import { LoginComponent } from './components/features/login/login.component';
     LoginComponent,
     AddBabyComponent,
     BabyInfoComponent,
-    GrowthTrackingInfoItemUpdateComponent,
     LoadingSpinnerComponent,
   ],
   imports: [
