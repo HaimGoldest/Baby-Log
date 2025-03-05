@@ -1,8 +1,4 @@
-<mat-card
-  appearance="outlined"
-  class="growth-tracking-card"
-  (contextmenu)="onStartEditMode($event)"
->
+<mat-card appearance="outlined" class="growth-tracking-card">
   <div class="mat-card-content">
     <div class="date">
       {{ measurement?.date | date : "dd/MM/yy" }}
@@ -33,7 +29,7 @@
       <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item (click)="onStartEditMode()">
+      <button mat-menu-item (click)="openEditMeasurementForm()">
         <mat-icon color="primary">edit</mat-icon>
         <span>Edit</span>
       </button>

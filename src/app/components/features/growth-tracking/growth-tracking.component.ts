@@ -13,20 +13,17 @@ import { MatDialog } from '@angular/material/dialog';
 export class GrowthTrackingComponent implements OnDestroy {
   private destroy$ = new Subject<void>();
 
-  constructor(
+  public constructor(
     private babyMeasurementsService: BabyMeasurementsService,
     private dialog: MatDialog
   ) {}
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-  /**
-   * Opens the measurement form dialog for adding new measurement.
-   */
-  public openMeasurementForm(): void {
+  public openAddMeasurementForm(): void {
     const dialogRef = this.dialog.open(GrowthTrackingFormComponent, {
       width: '90vw',
       maxWidth: '300px',

@@ -50,12 +50,13 @@ export class GrowthTrackingFormComponent {
 
   private initForm(data: BabyMeasurementModel | null): void {
     this.measurementForm = this.fb.group({
-      height: [
-        data?.height || '',
-        [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]+)?$')],
-      ],
+      date: [data?.date || ''],
       weight: [
         data?.weight || '',
+        [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]+)?$')],
+      ],
+      height: [
+        data?.height || '',
         [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]+)?$')],
       ],
       headMeasure: [

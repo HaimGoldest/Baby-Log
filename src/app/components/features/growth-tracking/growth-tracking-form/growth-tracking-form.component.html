@@ -3,23 +3,23 @@
 <mat-dialog-content>
   <form [formGroup]="measurementForm">
     <mat-form-field appearance="outline">
-      <mat-label>Height (cm)</mat-label>
-      <input type="number" matInput formControlName="height" required />
-      <mat-error *ngIf="measurementForm.get('height')?.hasError('required')">
-        Height is required.
-      </mat-error>
-      <mat-error *ngIf="measurementForm.get('height')?.hasError('pattern')">
-        Please enter a valid number.
-      </mat-error>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
       <mat-label>Weight (kg)</mat-label>
       <input type="number" matInput formControlName="weight" required />
       <mat-error *ngIf="measurementForm.get('weight')?.hasError('required')">
         Weight is required.
       </mat-error>
       <mat-error *ngIf="measurementForm.get('weight')?.hasError('pattern')">
+        Please enter a valid number.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Height (cm)</mat-label>
+      <input type="number" matInput formControlName="height" required />
+      <mat-error *ngIf="measurementForm.get('height')?.hasError('required')">
+        Height is required.
+      </mat-error>
+      <mat-error *ngIf="measurementForm.get('height')?.hasError('pattern')">
         Please enter a valid number.
       </mat-error>
     </mat-form-field>
