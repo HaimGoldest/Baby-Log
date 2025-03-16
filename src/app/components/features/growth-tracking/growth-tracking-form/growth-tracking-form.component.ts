@@ -14,12 +14,45 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+} from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+import {
+  MatMomentDateModule,
+  MomentDateAdapter,
+  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+} from '@angular/material-moment-adapter';
 import { BabyMeasurementModel } from '../../../../models/baby-measurement.model';
+
+export const DATE_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @Component({
   selector: 'app-growth-tracking-form',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+    },
+    { provide: MAT_DATE_FORMATS, useValue: DATE_FORMATS },
+  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -27,6 +60,9 @@ import { BabyMeasurementModel } from '../../../../models/baby-measurement.model'
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatDatepickerModule,
+    MatMomentDateModule,
+    MatIconModule,
   ],
   templateUrl: './growth-tracking-form.component.html',
   styleUrls: ['./growth-tracking-form.component.scss'],
@@ -50,7 +86,7 @@ export class GrowthTrackingFormComponent {
 
   private initForm(data: BabyMeasurementModel | null): void {
     this.measurementForm = this.fb.group({
-      date: [data?.date || ''],
+      date: [data?.date || new Date()],
       weight: [
         data?.weight || '',
         [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]+)?$')],
