@@ -41,7 +41,7 @@ export class GrowthTrackingComponent implements OnDestroy {
 
   private addMeasurement(data: BabyMeasurementModel) {
     const measurement = new BabyMeasurementModel(
-      new Date(),
+      data.date,
       data.height,
       data.weight,
       data.headMeasure
