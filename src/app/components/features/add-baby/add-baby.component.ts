@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BabiesService } from '../../../services/babies.service';
 import { UserService } from '../../../services/user.service';
 
 @Component({
+  standalone: true,
+  imports: [FormsModule],
   selector: 'app-add-baby',
   templateUrl: './add-baby.component.html',
   styleUrls: ['./add-baby.component.scss'],
