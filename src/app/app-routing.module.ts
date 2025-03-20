@@ -2,14 +2,15 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoadingSpinnerComponent } from './components/common/loading-spinner/loading-spinner.component';
 import { AppGuardService } from './services/app-guard.service';
-import { AddBabyComponent } from './components/features/add-baby/add-baby.component';
 import { BabyActionsPreferencesComponent } from './components/features/baby-actions/baby-actions-preferences/baby-actions-preferences.component';
 import { BabyActionsComponent } from './components/features/baby-actions/baby-actions.component';
-import { BabyInfoComponent } from './components/features/baby-info/baby-info.component';
 import { LoginComponent } from './components/features/login/login.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/loading', pathMatch: 'full' },
+
+  // Eager loading paths
+  { path: 'loading', component: LoadingSpinnerComponent },
   { path: 'login', component: LoginComponent },
   {
     path: 'baby-actions',
@@ -17,28 +18,35 @@ const routes: Routes = [
     canActivate: [AppGuardService],
   },
   {
-    path: 'growth-tracking',
-    loadChildren: () =>
-      import(
-        './components/features/growth-tracking/growth-tracking.module'
-      ).then((m) => m.GrowthTrackingModule),
-  },
-  {
     path: 'baby-actions-preferences',
     component: BabyActionsPreferencesComponent,
     canActivate: [AppGuardService],
   },
+
+  // Lazy loading paths
+  {
+    path: 'growth-tracking',
+    loadChildren: () =>
+      import(
+        './components/features/growth-tracking/growth-tracking.module'
+      ).then((module) => module.GrowthTrackingModule),
+  },
   {
     path: 'add-baby',
-    component: AddBabyComponent,
+    loadComponent: () =>
+      import('./components/features/add-baby/add-baby.component').then(
+        (module) => module.AddBabyComponent
+      ),
     canActivate: [AppGuardService],
   },
   {
     path: 'baby-info',
-    component: BabyInfoComponent,
+    loadComponent: () =>
+      import('./components/features/baby-info/baby-info.component').then(
+        (module) => module.BabyInfoComponent
+      ),
     canActivate: [AppGuardService],
   },
-  { path: 'loading', component: LoadingSpinnerComponent },
 ];
 
 @NgModule({

@@ -1,76 +1,61 @@
-<div class="container mt-4">
-  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-  <div class="card">
-    <div class="card-header">
-      <h5>Baby Information</h5>
-    </div>
-    <div class="card-body">
-      <div class="row mb-3">
-        <div class="col-sm-4">
-          <strong>Baby Key:</strong>
-        </div>
-        <div class="col-sm-8 d-flex">
-          {{ uid }}
-          <button
-            mat-icon-button
-            color="primary"
-            aria-label="Copy UID"
-            (click)="copyUIDToClipboard()"
-            style="margin-left: 10px"
-          >
-            <mat-icon>content_copy</mat-icon>
-          </button>
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-sm-4">
-          <strong>Name:</strong>
-        </div>
-        <div class="col-sm-8">
-          {{ name }}
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-sm-4">
-          <strong>Birth Date:</strong>
-        </div>
-        <div class="col-sm-8">
-          {{ birthDate | date : "longDate" }}
-        </div>
-        <hr />
-        <div class="row">
-          <div class="col-sm-4">
-            <strong>Baby Image:</strong>
-          </div>
-          <div class="col-sm-8">
-            <img
-              *ngIf="babyImageUrl"
-              [src]="babyImageUrl"
-              alt="Baby Image"
-              style="max-width: 100px; max-height: 100px"
-            />
-            <p *ngIf="!babyImageUrl">No image available</p>
-            <input
-              type="file"
-              accept="image/*"
-              (change)="onImageSelected($event)"
-              hidden
-              #fileInput
-            />
-            <button
-              class="btn btn-primary btn-sm mt-2 ms-2"
-              (click)="fileInput.click()"
-            >
-              Change Image
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="text-end">
-        <button class="btn btn-danger btn-sm" (click)="deleteBaby()">
-          Delete
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Baby Information</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="info-row">
+      <span class="label">Baby Key:</span>
+      <span class="value">
+        {{ uid }}
+        <button
+          mat-icon-button
+          color="primary"
+          aria-label="Copy UID"
+          (click)="copyUIDToClipboard()"
+        >
+          <mat-icon>content_copy</mat-icon>
         </button>
-      </div>
+      </span>
     </div>
-  </div>
-</div>
+    <div class="info-row">
+      <span class="label">Name:</span>
+      <span class="value">{{ name }}</span>
+    </div>
+    <div class="info-row">
+      <span class="label">Birth Date:</span>
+      <span class="value">{{ birthDate | date : "longDate" }}</span>
+    </div>
+    <hr />
+    <div class="info-row">
+      <span class="label">Baby Image:</span>
+      <span class="value">
+        <ng-container *ngIf="babyImageUrl; else noImage">
+          <img [src]="babyImageUrl" alt="Baby Image" class="baby-image" />
+        </ng-container>
+        <ng-template #noImage>
+          <span>No image available</span>
+        </ng-template>
+        <input
+          type="file"
+          accept="image/*"
+          (change)="onImageSelected($event)"
+          hidden
+          #fileInput
+        />
+        <button
+          mat-raised-button
+          class="change-image-button"
+          (click)="fileInput.click()"
+        >
+          Change Image
+        </button>
+      </span>
+    </div>
+  </mat-card-content>
+  <mat-card-actions align="end">
+    <button mat-raised-button color="warn" (click)="deleteBaby()">
+      Delete
+    </button>
+  </mat-card-actions>
+</mat-card>
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>

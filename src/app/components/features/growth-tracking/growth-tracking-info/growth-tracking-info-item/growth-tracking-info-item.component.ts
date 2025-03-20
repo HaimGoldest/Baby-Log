@@ -1,10 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  Output,
-} from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { BabyMeasurementModel } from '../../../../../models/baby-measurement.model';
 import { BabyMeasurementsService } from '../../../../../services/baby-measurements.service';
 import { Subject, takeUntil } from 'rxjs';

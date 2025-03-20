@@ -1,11 +1,24 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { BabiesService } from '../../../services/babies.service';
 import { UserService } from '../../../services/user.service';
 import { Router } from '@angular/router';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { LoadingSpinnerComponent } from '../../common/loading-spinner/loading-spinner.component';
 
 @Component({
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatButtonModule,
+    MatCardModule,
+    LoadingSpinnerComponent,
+  ],
   selector: 'app-baby-info',
   templateUrl: './baby-info.component.html',
   styleUrls: ['./baby-info.component.scss'],
@@ -76,7 +89,6 @@ export class BabyInfoComponent implements OnInit {
 
   public deleteBaby(): void {
     let userDeleted = this.userService.deleteBabyOnlyFromUser(this.uid);
-
     if (userDeleted) {
       this.navigateAfterBabyDeletion();
     }

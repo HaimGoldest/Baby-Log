@@ -1,10 +1,14 @@
 import { Component } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { BabiesService } from '../../../services/babies.service';
 import { UserService } from '../../../services/user.service';
+import { LoadingSpinnerComponent } from '../../common/loading-spinner/loading-spinner.component';
+import { FormsModule, NgForm } from '@angular/forms';
 
 @Component({
+  standalone: true,
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
   selector: 'app-add-baby',
   templateUrl: './add-baby.component.html',
   styleUrls: ['./add-baby.component.scss'],
