@@ -7,6 +7,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { LoadingSpinnerComponent } from '../../common/loading-spinner/loading-spinner.component';
 
 @Component({
@@ -15,6 +16,7 @@ import { LoadingSpinnerComponent } from '../../common/loading-spinner/loading-sp
     CommonModule,
     MatIconModule,
     MatButtonModule,
+    MatCardModule,
     LoadingSpinnerComponent,
   ],
   selector: 'app-baby-info',
@@ -87,7 +89,6 @@ export class BabyInfoComponent implements OnInit {
 
   public deleteBaby(): void {
     let userDeleted = this.userService.deleteBabyOnlyFromUser(this.uid);
-
     if (userDeleted) {
       this.navigateAfterBabyDeletion();
     }

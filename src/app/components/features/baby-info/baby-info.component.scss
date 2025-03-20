@@ -1,15 +1,52 @@
-.card {
-  margin-top: 20px;
-  max-width: 600px;
-  margin: auto;
+mat-card {
+  max-width: 350px;
+  margin: 10px auto;
 }
 
-.card-header {
-  text-align: center;
-  background-color: #007bff;
+mat-card-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: blue;
   color: white;
+  height: 80px;
+  padding: 0;
 }
 
-.mat-icon-button {
-  color: #007bff;
+mat-card-title {
+  margin: 0;
+  text-align: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.info-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 16px;
+}
+
+.label {
+  font-weight: bold;
+}
+
+.value {
+  display: flex;
+  align-items: center;
+}
+
+.baby-image {
+  max-width: 100px;
+  max-height: 100px;
+}
+
+.change-image-button {
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  margin-inline-start: 10px;
+  min-width: auto;
+  color: blue;
 }
