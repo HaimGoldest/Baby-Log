@@ -21,20 +21,19 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDividerModule } from '@angular/material/divider';
 
 import { AppComponent } from './app.component';
-import { NavbarComponent } from './components/common/navbar/navbar.component';
-import { BabyActionsInfoItemComponent } from './components/features/baby-actions/baby-actions-info/baby-actions-info-item/baby-actions-info-item.component';
-import { BabyActionsInfoComponent } from './components/features/baby-actions/baby-actions-info/baby-actions-info.component';
-import { BabyActionsPanelItemComponent } from './components/features/baby-actions/baby-actions-panel/baby-actions-panel-item/baby-actions-panel-item.component';
-import { BabyActionsPanelComponent } from './components/features/baby-actions/baby-actions-panel/baby-actions-panel.component';
-import { BabyActionCategoryPrefComponent } from './components/features/baby-actions/baby-actions-preferences/baby-action-category-pref/baby-action-category-pref.component';
-import { BabyActionsPreferencesComponent } from './components/features/baby-actions/baby-actions-preferences/baby-actions-preferences.component';
-import { BabyActionsComponent } from './components/features/baby-actions/baby-actions.component';
-import { LoginComponent } from './components/features/login/login.component';
+import { LoginComponent } from './features/login/login.component';
+import { NavbarComponent } from './features/navbar/navbar.component';
+import { BabyActionsInfoItemComponent } from './features/baby-actions/baby-actions-info/baby-actions-info-item/baby-actions-info-item.component';
+import { BabyActionsInfoComponent } from './features/baby-actions/baby-actions-info/baby-actions-info.component';
+import { BabyActionsPanelItemComponent } from './features/baby-actions/baby-actions-panel/baby-actions-panel-item/baby-actions-panel-item.component';
+import { BabyActionsPanelComponent } from './features/baby-actions/baby-actions-panel/baby-actions-panel.component';
+import { BabyActionCategoryPrefComponent } from './features/baby-actions/baby-actions-preferences/baby-action-category-pref/baby-action-category-pref.component';
+import { BabyActionsPreferencesComponent } from './features/baby-actions/baby-actions-preferences/baby-actions-preferences.component';
+import { BabyActionsComponent } from './features/baby-actions/baby-actions.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent,
     BabyActionsComponent,
     BabyActionsPanelComponent,
     BabyActionsInfoComponent,
@@ -50,6 +49,7 @@ import { LoginComponent } from './components/features/login/login.component';
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
+    NavbarComponent,
     MatDatepickerModule,
     MatInputModule,
     MatNativeDateModule,
