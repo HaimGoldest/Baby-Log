@@ -1,51 +1,54 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoadingSpinnerComponent } from './components/common/loading-spinner/loading-spinner.component';
-import { AppGuardService } from './services/app-guard.service';
-import { BabyActionsPreferencesComponent } from './components/features/baby-actions/baby-actions-preferences/baby-actions-preferences.component';
-import { BabyActionsComponent } from './components/features/baby-actions/baby-actions.component';
-import { LoginComponent } from './components/features/login/login.component';
+import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
+import { AppGuard } from './core/guards/app.guard';
+import { LoginPage } from './features/login/login.page';
+import { BabyActionsPage } from './features/baby-actions/pages/baby-actions.page';
 
 const routes: Routes = [
   { path: '', redirectTo: '/loading', pathMatch: 'full' },
 
   // Eager loading paths
   { path: 'loading', component: LoadingSpinnerComponent },
-  { path: 'login', component: LoginComponent },
+  { path: 'login', component: LoginPage },
   {
     path: 'baby-actions',
-    component: BabyActionsComponent,
-    canActivate: [AppGuardService],
-  },
-  {
-    path: 'baby-actions-preferences',
-    component: BabyActionsPreferencesComponent,
-    canActivate: [AppGuardService],
+    component: BabyActionsPage,
+    canActivate: [AppGuard],
   },
 
   // Lazy loading paths
   {
-    path: 'growth-tracking',
-    loadChildren: () =>
+    path: 'baby-actions-preferences',
+    loadComponent: () =>
       import(
-        './components/features/growth-tracking/growth-tracking.module'
-      ).then((module) => module.GrowthTrackingModule),
+        './features/baby-actions/pages/baby-actions-preferences.page'
+      ).then((page) => page.BabyActionsPreferencesPage),
+    canActivate: [AppGuard],
+  },
+  {
+    path: 'growth-tracking',
+    loadComponent: () =>
+      import('./features/growth-tracking/pages/growth-tracking.page').then(
+        (m) => m.GrowthTrackingPage
+      ),
+    canActivate: [AppGuard],
   },
   {
     path: 'add-baby',
     loadComponent: () =>
-      import('./components/features/add-baby/add-baby.component').then(
-        (module) => module.AddBabyComponent
+      import('./features/add-baby/add-baby.page').then(
+        (module) => module.AddBabyPage
       ),
-    canActivate: [AppGuardService],
+    canActivate: [AppGuard],
   },
   {
     path: 'baby-info',
     loadComponent: () =>
-      import('./components/features/baby-info/baby-info.component').then(
-        (module) => module.BabyInfoComponent
+      import('./features/baby-info/baby-info.page').then(
+        (module) => module.BabyInfoPage
       ),
-    canActivate: [AppGuardService],
+    canActivate: [AppGuard],
   },
 ];
 

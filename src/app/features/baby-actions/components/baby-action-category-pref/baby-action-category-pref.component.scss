@@ -1,0 +1,15 @@
+.actionImg {
+  width: 45px;
+  height: 45px;
+  border-radius: 100px;
+  background-size: cover;
+}
+
+@media (min-width: 768px) {
+  .actionImg {
+    width: 90px;
+    height: 90px;
+    border-radius: 200px;
+    background-size: cover;
+  }
+}
