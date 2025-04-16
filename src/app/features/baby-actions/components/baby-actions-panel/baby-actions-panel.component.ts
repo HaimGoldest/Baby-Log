@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   Component,
   EventEmitter,
@@ -6,11 +7,14 @@ import {
   Output,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { BabyActionCategoryModel } from '../../../models/baby-action-category.model';
-import { BabyActionCategoriesService } from '../../../core/services/baby-actions-categories.service';
+import { BabyActionCategoryModel } from '../../../../models/baby-action-category.model';
+import { BabyActionsPanelItemComponent } from './baby-actions-panel-item/baby-actions-panel-item.component';
+import { BabyActionCategoriesService } from '../../services/baby-actions-categories.service';
 
 @Component({
   selector: 'app-baby-actions-panel',
+  standalone: true,
+  imports: [CommonModule, BabyActionsPanelItemComponent],
   templateUrl: './baby-actions-panel.component.html',
   styleUrl: './baby-actions-panel.component.scss',
 })

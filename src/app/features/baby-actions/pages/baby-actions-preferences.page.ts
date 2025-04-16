@@ -1,14 +1,18 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { BabyActionCategoryPrefComponent } from '../components/baby-action-category-pref/baby-action-category-pref.component';
+import { BabyActionCategoriesService } from '../services/baby-actions-categories.service';
 import { BabyActionCategoryModel } from '../../../models/baby-action-category.model';
-import { BabyActionCategoriesService } from '../../../core/services/baby-actions-categories.service';
 
 @Component({
   selector: 'app-baby-actions-preferences',
-  templateUrl: './baby-actions-preferences.component.html',
-  styleUrl: './baby-actions-preferences.component.scss',
+  standalone: true,
+  imports: [CommonModule, BabyActionCategoryPrefComponent],
+  templateUrl: './baby-actions-preferences.page.html',
+  styleUrl: './baby-actions-preferences.page.scss',
 })
-export class BabyActionsPreferencesComponent implements OnInit, OnDestroy {
+export class BabyActionsPreferencesPage implements OnInit, OnDestroy {
   private hasChanged = false;
   babyActionsCategories: BabyActionCategoryModel[];
   babyActionsCategoriesChanged: Subscription;

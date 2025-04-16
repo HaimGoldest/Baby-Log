@@ -1,9 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BabyActionCategoryModel } from '../../../../models/baby-action-category.model';
-import { BabyActionCategoriesService } from '../../../../core/services/baby-actions-categories.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { BabyActionCategoriesService } from '../../services/baby-actions-categories.service';
 
 @Component({
   selector: 'app-baby-action-category-pref',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './baby-action-category-pref.component.html',
   styleUrl: './baby-action-category-pref.component.scss',
 })

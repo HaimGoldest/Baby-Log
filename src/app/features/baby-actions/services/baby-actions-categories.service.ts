@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { BabyActionCategoryModel } from '../../models/baby-action-category.model';
+import { BabyActionCategoryModel } from '../../../models/baby-action-category.model';
 
 @Injectable({
   providedIn: 'root',

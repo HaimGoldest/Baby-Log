@@ -10,10 +10,10 @@ import { BabiesService } from '../../core/services/babies.service';
   standalone: true,
   imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
   selector: 'app-add-baby',
-  templateUrl: './add-baby.component.html',
-  styleUrls: ['./add-baby.component.scss'],
+  templateUrl: './add-baby.page.html',
+  styleUrls: ['./add-baby.page.scss'],
 })
-export class AddBabyComponent {
+export class AddBabyPage {
   isNewBabyMode = true;
   errorMessage: string | null = null;
   selectedImage: File | null = null;

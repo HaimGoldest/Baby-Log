@@ -20,10 +20,10 @@ import { BabiesService } from '../../core/services/babies.service';
     LoadingSpinnerComponent,
   ],
   selector: 'app-baby-info',
-  templateUrl: './baby-info.component.html',
-  styleUrls: ['./baby-info.component.scss'],
+  templateUrl: './baby-info.page.html',
+  styleUrls: ['./baby-info.page.scss'],
 })
-export class BabyInfoComponent implements OnInit {
+export class BabyInfoPage implements OnInit {
   uid: string;
   name: string;
   birthDate: Date;

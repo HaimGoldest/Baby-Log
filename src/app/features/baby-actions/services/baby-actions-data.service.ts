@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Subject, Subscription, map } from 'rxjs';
-import { BabyActionDataModel } from '../../models/baby-action-data.model';
-import { BabiesService } from './babies.service';
-import { BabyActionCategoryModel } from '../../models/baby-action-category.model';
+import { BabiesService } from '../../../core/services/babies.service';
+import { BabyActionCategoryModel } from '../../../models/baby-action-category.model';
+import { BabyActionDataModel } from '../../../models/baby-action-data.model';
 
 @Injectable({
   providedIn: 'root',

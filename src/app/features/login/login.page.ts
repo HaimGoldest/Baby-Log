@@ -5,10 +5,11 @@ import { FacebookAuthProvider, GoogleAuthProvider } from 'firebase/auth';
 
 @Component({
   selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  standalone: false,
+  templateUrl: './login.page.html',
+  styleUrls: ['./login.page.scss'],
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginPage implements OnInit, OnDestroy {
   ui: firebaseui.auth.AuthUI;
   errorMsg: string = null;
 

@@ -1,10 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { BabyActionCategoryModel } from '../../../../models/baby-action-category.model';
-import { BabyActionDataModel } from '../../../../models/baby-action-data.model';
-import { BabyActionsDataService } from '../../../../core/services/baby-actions-data.service';
+import { BabyActionCategoryModel } from '../../../../../models/baby-action-category.model';
+import { BabyActionDataModel } from '../../../../../models/baby-action-data.model';
+import { BabyActionsDataService } from '../../../services/baby-actions-data.service';
 
 @Component({
   selector: 'app-baby-actions-panel-item',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './baby-actions-panel-item.component.html',
   styleUrl: './baby-actions-panel-item.component.scss',
 })

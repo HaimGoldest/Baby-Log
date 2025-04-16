@@ -7,11 +7,15 @@ import {
   Output,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { BabyActionsDataService } from '../../../core/services/baby-actions-data.service';
-import { BabyActionDataModel } from '../../../models/baby-action-data.model';
+import { BabyActionsInfoItemComponent } from './baby-actions-info-item/baby-actions-info-item.component';
+import { CommonModule } from '@angular/common';
+import { BabyActionDataModel } from '../../../../models/baby-action-data.model';
+import { BabyActionsDataService } from '../../services/baby-actions-data.service';
 
 @Component({
   selector: 'app-baby-actions-info',
+  standalone: true,
+  imports: [CommonModule, BabyActionsInfoItemComponent],
   templateUrl: './baby-actions-info.component.html',
   styleUrls: ['./baby-actions-info.component.scss'],
 })

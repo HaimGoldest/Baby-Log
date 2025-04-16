@@ -7,11 +7,11 @@ import {
 } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import { UserModel } from '../../models/user.model';
-import { BabyActionCategoriesService } from './baby-actions-categories.service';
 import { BabyActionCategoryModel } from '../../models/baby-action-category.model';
 import { BabyModel } from '../../models/baby.model';
 import { BabiesService } from './babies.service';
 import firebase from 'firebase/compat';
+import { BabyActionCategoriesService } from '../../features/baby-actions/services/baby-actions-categories.service';
 
 @Injectable({
   providedIn: 'root',
