@@ -2,10 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import * as firebaseui from 'firebaseui';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { FacebookAuthProvider, GoogleAuthProvider } from 'firebase/auth';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
-  standalone: false,
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
