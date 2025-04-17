@@ -3,7 +3,6 @@ import { Subject, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { BabyMeasurementsService } from '../services/baby-measurements.service';
 import { BabyMeasurementModel } from '../../../models/baby-measurement.model';
-import { GrowthTrackingFormComponent } from '../components/growth-tracking-form/growth-tracking-form.component';
 import { GrowthTrackingInfoComponent } from '../components/growth-tracking-info/growth-tracking-info.component';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
@@ -34,12 +33,17 @@ export class GrowthTrackingPage implements OnDestroy {
     this.destroy$.complete();
   }
 
-  public openAddMeasurementForm(): void {
+  public async openAddMeasurementForm(): Promise<void> {
+    const { GrowthTrackingFormComponent } = await import(
+      '../components/growth-tracking-form/growth-tracking-form.component'
+    );
+
     const dialogRef = this.dialog.open(GrowthTrackingFormComponent, {
       width: '90vw',
       maxWidth: '300px',
       data: null,
     });
+
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.destroy$))

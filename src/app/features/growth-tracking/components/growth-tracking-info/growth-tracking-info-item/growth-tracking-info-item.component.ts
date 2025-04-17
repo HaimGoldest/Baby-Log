@@ -1,7 +1,6 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { GrowthTrackingFormComponent } from '../../growth-tracking-form/growth-tracking-form.component';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -43,12 +42,17 @@ export class GrowthTrackingInfoItemComponent implements OnDestroy {
     }
   }
 
-  public openEditMeasurementForm(): void {
+  public async openEditMeasurementForm(): Promise<void> {
+    const { GrowthTrackingFormComponent } = await import(
+      '../../growth-tracking-form/growth-tracking-form.component'
+    );
+
     const dialogRef = this.dialog.open(GrowthTrackingFormComponent, {
       width: '90vw',
       maxWidth: '300px',
       data: this.measurement,
     });
+
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.destroy$))
