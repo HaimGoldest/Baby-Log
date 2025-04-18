@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import * as firebaseui from 'firebaseui';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { FacebookAuthProvider, GoogleAuthProvider } from 'firebase/auth';
+import { Auth, getAuth } from '@angular/fire/auth';
+import { inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -13,25 +14,22 @@ import { CommonModule } from '@angular/common';
 })
 export class LoginPage implements OnInit, OnDestroy {
   ui: firebaseui.auth.AuthUI;
-  errorMsg: string = null;
-
-  constructor(private afAuth: AngularFireAuth) {}
+  auth = inject(Auth);
 
   ngOnInit() {
-    this.afAuth.app.then((app) => {
-      const uiConfig = {
-        signInFlow: 'popup',
-        signInOptions: [
-          GoogleAuthProvider.PROVIDER_ID,
-          FacebookAuthProvider.PROVIDER_ID,
-        ],
-        callbacks: {
-          signInSuccessWithAuthResult: this.onLoginSuccessful.bind(this),
-        },
-      };
-      this.ui = new firebaseui.auth.AuthUI(app.auth());
-      this.ui.start('#firebaseui-auth-container', uiConfig);
-    });
+    const uiConfig = {
+      signInFlow: 'popup',
+      signInOptions: [
+        GoogleAuthProvider.PROVIDER_ID,
+        FacebookAuthProvider.PROVIDER_ID,
+      ],
+      callbacks: {
+        signInSuccessWithAuthResult: this.onLoginSuccessful.bind(this),
+      },
+    };
+
+    this.ui = new firebaseui.auth.AuthUI(this.auth);
+    this.ui.start('#firebaseui-auth-container', uiConfig);
   }
 
   ngOnDestroy() {
