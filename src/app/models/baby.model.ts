@@ -1,28 +1,36 @@
-import { DateUtils } from '../utils/date-utils';
-import { BabyActionDataModel } from './baby-action-data.model';
-import { BabyMeasurementModel } from './baby-measurement.model';
+import { Gender } from '../enums/gender.enum';
 
-export class BabyModel {
-  constructor(
-    public uid: string,
-    public name: string,
-    public birthDate: Date,
-    public actionsData: BabyActionDataModel[],
-    public measurementsData: BabyMeasurementModel[],
-    public usersUids: string[]
-  ) {}
+export interface Baby {
+  uid: string;
+  name: string;
+  gender: Gender;
+  birthDate: Date;
+  eventsData: BabyEvent[];
+  measurementsData: BabyMeasurement[];
+  usersUids: string[];
+}
 
-  // Method to convert instance to JS object
-  public toJsObject() {
-    return {
-      uid: this.uid,
-      name: this.name,
-      birthDate: DateUtils.convertDateToString(this.birthDate),
-      actionsData: this.actionsData.map((action) => action.toJsObject()),
-      measurementsData: this.measurementsData.map((measurement) =>
-        measurement.toJsObject()
-      ),
-      usersUids: this.usersUids,
-    };
-  }
+export interface BabyMeasurement {
+  uid: string;
+  date: Date;
+  height: number;
+  weight: number;
+  headMeasure: number;
+}
+
+export interface BabyEvent {
+  uid: string;
+  category: BabyEventCategory;
+  creationTime: Date;
+  lastEditTime: Date;
+  comment: string;
+}
+
+export interface BabyEventCategory {
+  uid: string;
+  name: string;
+  defaultComment: string;
+  imagePath: string;
+  isCategoryEnable: boolean;
+  isDefaultCommentEnable: boolean;
 }

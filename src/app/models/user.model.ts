@@ -1,22 +1,11 @@
-import { BabyActionCategoryModel } from './baby-action-category.model';
+import { BabyEventCategory } from './baby.model';
 
-export class UserModel {
-  constructor(
-    public uid: string,
-    public name: string,
-    public babyActionsPref: BabyActionCategoryModel[],
-    public babiesUids: string[]
-  ) {}
-
-  // Method to convert instance to JS object
-  public toJsObject() {
-    return {
-      uid: this.uid,
-      name: this.name,
-      babyActionsPref: this.babyActionsPref.map((action) =>
-        action.toJsObject()
-      ),
-      babiesUids: this.babiesUids,
-    };
-  }
+export interface User {
+  uid: string;
+  name: string;
+  email: string;
+  status: string;
+  dueDate: Date;
+  babyEventsPref: BabyEventCategory[];
+  babiesUids: string[];
 }
