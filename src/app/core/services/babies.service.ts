@@ -6,15 +6,19 @@ import { Gender } from '../../enums/gender.enum';
 
 @Injectable({ providedIn: 'root' })
 export class BabiesService {
-  private _baby = signal<Baby | null>(null);
-  public readonly baby: Signal<Baby | null> = this._baby.asReadonly();
-
-  private babiesCollection = 'babies';
   private imagesRootPath = 'baby_images';
   private firestoreHelper = inject(FirestoreHelperService);
   private fireStorageHelper = inject(FireStorageHelperService);
 
-  public async setBaby(babyUid: string): Promise<void> {
+  public babiesCollection = 'babies';
+
+  private _baby = signal<Baby | null>(null);
+  public readonly baby: Signal<Baby | null> = this._baby.asReadonly();
+
+  private _babyPictureUrl = signal<string | null>(null);
+  public readonly babyPictureUrl = this._babyPictureUrl.asReadonly();
+
+  public async setBaby(babyUid: string): Promise<Baby | null> {
     try {
       const existing = await this.firestoreHelper.get<Baby>(
         this.babiesCollection,
@@ -23,7 +27,11 @@ export class BabiesService {
 
       if (existing) {
         this._baby.set(existing);
+        this._babyPictureUrl.set(
+          (await this.getBabyImageUrl(existing.uid)) ?? null
+        );
         console.log('Baby set successfully:', existing);
+        return existing;
       } else {
         this._baby.set(null);
         console.error('No baby found with the given UID:', babyUid);
@@ -31,53 +39,17 @@ export class BabiesService {
     } catch (err) {
       console.error('Failed to get the baby from the DB:', err);
     }
-  }
 
-  public async uploadBabyImage(image: File): Promise<void> {
-    const baby = this._baby();
-    if (!baby) throw new Error('No baby selected.');
-
-    const imagePath = `${this.imagesRootPath}/${baby.uid}`;
-
-    try {
-      await this.fireStorageHelper.uploadFile(imagePath, image);
-      console.log(`Image uploaded successfully for baby ${baby.uid}`);
-    } catch (error: any) {
-      console.error(`Failed to upload image for baby ${baby.uid}:`, error);
-    }
-  }
-
-  public async getBabyImageUrl(): Promise<string | null> {
-    const baby = this._baby();
-    if (!baby) throw new Error('No baby selected.');
-
-    try {
-      const imagePath = `${this.imagesRootPath}/${baby.uid}`;
-      const imageUrl = await this.fireStorageHelper.getFileUrl(imagePath);
-      console.log(
-        `Image URL retrieved successfully for baby ${baby.uid}:`,
-        imageUrl
-      );
-      return imageUrl;
-    } catch (error: any) {
-      if (error.code === 'storage/object-not-found') {
-        console.warn('Baby image not found in storage:', baby.uid);
-        return null;
-      } else {
-        console.error('Error retrieving baby image URL:', error);
-        return null;
-      }
-    }
+    return null;
   }
 
   public async createNewBaby(
     userId: string,
-    babyData: { name: string; gender: Gender; birthDate: Date }
+    babyData: { uid: string; name: string; gender: Gender; birthDate: Date }
   ): Promise<void> {
     try {
       const baby: Baby = {
         ...babyData,
-        uid: this.firestoreHelper.getNewUid(),
         eventsData: [],
         measurementsData: [],
         usersUids: [userId],
@@ -91,13 +63,10 @@ export class BabiesService {
     }
   }
 
-  public async deleteBaby(currentUserId: string): Promise<void> {
-    const baby = this._baby();
-    if (!baby) throw new Error('No baby selected.');
-
+  public async deleteBaby(userUid: string, baby: Baby): Promise<void> {
     try {
       if (baby.usersUids.length > 1) {
-        await this.removeCurrentUserFromBaby(currentUserId, baby);
+        await this.removeCurrentUserFromBaby(userUid, baby);
       } else {
         await this.deleteBabyFromDatabase(baby);
       }
@@ -126,11 +95,47 @@ export class BabiesService {
     }
   }
 
+  public async uploadBabyImage(babyUid: string, image: File): Promise<void> {
+    const imagePath = `${this.imagesRootPath}/${babyUid}`;
+
+    try {
+      await this.fireStorageHelper.uploadFile(imagePath, image);
+      console.log(`Image uploaded successfully for baby ${babyUid}`);
+    } catch (error: any) {
+      console.error(`Failed to upload image for baby ${babyUid}:`, error);
+    }
+  }
+
+  public async getBabyImageUrl(babyUid: string): Promise<string | null> {
+    try {
+      const imagePath = `${this.imagesRootPath}/${babyUid}`;
+      const imageUrl = await this.fireStorageHelper.getFileUrl(imagePath);
+      console.log(
+        `Image URL retrieved successfully for baby ${babyUid}:`,
+        imageUrl
+      );
+      return imageUrl;
+    } catch (error: any) {
+      if (error.code === 'storage/object-not-found') {
+        console.warn('Baby image not found in storage:', babyUid);
+        return null;
+      } else {
+        console.error('Error retrieving baby image URL:', error);
+        return null;
+      }
+    }
+  }
+
+  public dispose(): void {
+    this._baby.set(null);
+    this._babyPictureUrl.set(null);
+  }
+
   private async removeCurrentUserFromBaby(
-    currentUserId: string,
+    userUid: string,
     baby: Baby
   ): Promise<void> {
-    const updatedUsers = baby.usersUids.filter((uid) => uid !== currentUserId);
+    const updatedUsers = baby.usersUids.filter((uid) => uid !== userUid);
     await this.firestoreHelper.update<Baby>(this.babiesCollection, baby.uid, {
       usersUids: updatedUsers,
     });

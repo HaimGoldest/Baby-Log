@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import * as firebaseui from 'firebaseui';
 import { FacebookAuthProvider, GoogleAuthProvider } from 'firebase/auth';
-import { Auth, getAuth } from '@angular/fire/auth';
+import { Auth } from '@angular/fire/auth';
 import { inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 

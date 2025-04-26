@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UserService } from '../../core/services/user.service';
 import { Router } from '@angular/router';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -9,6 +8,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 import { BabiesService } from '../../core/services/babies.service';
+import { UserService } from '../../core/services/user.service';
+import { Route } from '../../enums/route.enum';
 
 @Component({
   standalone: true,
@@ -24,9 +25,7 @@ import { BabiesService } from '../../core/services/babies.service';
   styleUrls: ['./baby-info.page.scss'],
 })
 export class BabyInfoPage implements OnInit {
-  uid: string;
-  name: string;
-  birthDate: Date;
+  baby = computed(() => this.babiesService.baby());
   babyImageUrl: string | null = null;
   isLoading: boolean;
 
@@ -36,11 +35,7 @@ export class BabyInfoPage implements OnInit {
     private router: Router,
     private clipboard: Clipboard,
     private snackBar: MatSnackBar
-  ) {
-    this.uid = this.babiesService.babyData.value?.uid;
-    this.name = this.babiesService.babyData.value?.name;
-    this.birthDate = this.babiesService.babyData.value?.birthDate;
-  }
+  ) {}
 
   ngOnInit(): void {
     this.isLoading = true;
@@ -48,8 +43,8 @@ export class BabyInfoPage implements OnInit {
   }
 
   private loadBabyImage(): void {
-    if (this.uid) {
-      this.babiesService.getBabyImageUrl(this.uid).then((url) => {
+    if (this.baby().uid) {
+      this.babiesService.getBabyImageUrl(this.baby().uid).then((url) => {
         this.babyImageUrl = url;
         this.isLoading = false;
       });
@@ -66,9 +61,9 @@ export class BabyInfoPage implements OnInit {
   }
 
   private uploadNewImage(file: File): void {
-    if (this.uid) {
+    if (this.baby().uid) {
       this.babiesService
-        .uploadBabyImage(this.uid, file)
+        .uploadBabyImage(this.baby().uid, file)
         .then(() => {
           this.loadBabyImage(); // Refresh the displayed image
           this.snackBar.open('Image updated successfully', 'Close', {
@@ -87,21 +82,24 @@ export class BabyInfoPage implements OnInit {
     }
   }
 
-  public deleteBaby(): void {
-    let userDeleted = this.userService.deleteBabyOnlyFromUser(this.uid);
-    if (userDeleted) {
+  public async deleteBaby(): Promise<void> {
+    try {
+      await this.userService.deleteBabyFromUser(this.baby());
       this.navigateAfterBabyDeletion();
+    } catch (error) {
+      // todo - show error message dialog
     }
   }
 
   public copyUIDToClipboard(): void {
-    this.clipboard.copy(this.uid);
+    this.clipboard.copy(this.baby().uid);
+    // todo - show a message that the uid was copied - delete the snackbar
     this.snackBar.open('Baby-Key copied to clipboard', 'Close', {
       duration: 2000,
     });
   }
 
   private navigateAfterBabyDeletion() {
-    this.router.navigate(['./add-baby']);
+    this.router.navigate([Route.AddBaby]);
   }
 }

@@ -26,7 +26,7 @@ import {
   MomentDateAdapter,
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
 } from '@angular/material-moment-adapter';
-import { BabyMeasurementModel } from '../../../../models/baby-measurement.model';
+import { BabyMeasurement } from '../../../../models/baby.model';
 
 export const DATE_FORMATS = {
   parse: {
@@ -73,7 +73,7 @@ export class GrowthTrackingFormComponent {
   public constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<GrowthTrackingFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: BabyMeasurementModel | null
+    @Inject(MAT_DIALOG_DATA) public data: BabyMeasurement | null
   ) {
     this.initForm(data);
   }
@@ -84,7 +84,7 @@ export class GrowthTrackingFormComponent {
     }
   }
 
-  private initForm(data: BabyMeasurementModel | null): void {
+  private initForm(data: BabyMeasurement | null): void {
     this.measurementForm = this.fb.group({
       date: [data?.date || new Date()],
       weight: [

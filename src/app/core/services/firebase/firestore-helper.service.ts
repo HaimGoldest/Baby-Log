@@ -27,7 +27,7 @@ export class FirestoreHelperService {
    * Generates a new unique Firestore document ID without creating an actual document.
    * @returns A new unique ID string.
    */
-  public getNewUid(): string {
+  public generateUid(): string {
     // Create a temporary document reference in a dummy collection to leverage Firestore's ID generator
     const tempRef = doc(collection(this.firestore, '__uids__'));
     return tempRef.id;

@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { UserService } from '../../core/services/user.service';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 import { FormsModule, NgForm } from '@angular/forms';
 import { BabiesService } from '../../core/services/babies.service';
+import { UserService } from '../../core/services/user.service';
+import { Gender } from '../../enums/gender.enum';
+import { Route } from '../../enums/route.enum';
 
 @Component({
   standalone: true,
@@ -66,49 +68,51 @@ export class AddBabyPage {
   private async addNewBaby(form: NgForm): Promise<void> {
     const name = form.value.name;
     const birthDate = form.value.birthDate;
-    const userAdded = await this.userService.addNewBaby(name, birthDate);
+    const gender = Gender.Unknown; // todo - ask the user
 
-    if (userAdded && this.selectedImage) {
+    try {
+      await this.userService.addNewBaby({
+        name: name,
+        birthDate: birthDate,
+        gender: gender,
+      });
       await this.uploadBabyImage();
-    }
-
-    if (userAdded) {
       this.navigateAfterAddingBaby();
-    } else {
+    } catch (error) {
       this.showErrorMessage('Failed to create the baby!');
     }
   }
 
   private async addExistingBaby(form: NgForm): Promise<void> {
     const uid = form.value.uid;
-    const userAdded = await this.userService.addExistingBaby(uid);
-
-    if (userAdded && this.selectedImage) {
+    try {
+      await this.userService.addExistingBaby(uid);
       await this.uploadBabyImage();
-    }
-
-    if (userAdded) {
       this.navigateAfterAddingBaby();
-    } else {
+    } catch (error) {
       this.showErrorMessage(
         'Failed to add the baby! (Please make sure you entered a correct baby key)'
       );
     }
   }
 
-  private uploadBabyImage(): Promise<void> {
-    if (this.selectedImage && this.babiesService.babyData.value) {
-      const babyUid = this.babiesService.babyData.value.uid;
-      return this.babiesService.uploadBabyImage(babyUid, this.selectedImage);
+  private async uploadBabyImage(): Promise<void> {
+    const baby = this.babiesService.baby();
+    if (this.selectedImage && baby) {
+      try {
+        await this.babiesService.uploadBabyImage(baby.uid, this.selectedImage);
+      } catch (error) {
+        this.showErrorMessage('Failed to upload the baby image!');
+      }
     }
-    return Promise.resolve();
   }
 
   private navigateAfterAddingBaby() {
-    this.router.navigate(['./baby-actions']);
+    this.router.navigate([Route.Preferences]);
   }
 
   private showErrorMessage(message: string) {
+    // todo - use generic error dialog component
     this.errorMessage = message;
     setTimeout(() => {
       this.errorMessage = null;

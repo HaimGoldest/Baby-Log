@@ -6,7 +6,7 @@
     <div class="info-row">
       <span class="label">Baby Key:</span>
       <span class="value">
-        {{ uid }}
+        {{ baby().uid }}
         <button
           mat-icon-button
           color="primary"
@@ -19,11 +19,11 @@
     </div>
     <div class="info-row">
       <span class="label">Name:</span>
-      <span class="value">{{ name }}</span>
+      <span class="value">{{ baby().name }}</span>
     </div>
     <div class="info-row">
       <span class="label">Birth Date:</span>
-      <span class="value">{{ birthDate | date : "longDate" }}</span>
+      <span class="value">{{ baby().birthDate | date : "longDate" }}</span>
     </div>
     <hr />
     <div class="info-row">

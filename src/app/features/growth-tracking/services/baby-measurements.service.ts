@@ -1,53 +1,79 @@
-import { Injectable } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
-import { BabyMeasurementModel } from '../../../models/baby-measurement.model';
+import { computed, inject, Injectable } from '@angular/core';
 import { BabiesService } from '../../../core/services/babies.service';
+import { FirestoreHelperService } from '../../../core/services/firebase/firestore-helper.service';
+import { Baby, BabyMeasurement } from '../../../models/baby.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BabyMeasurementsService {
-  measurementsChanged = new Subject<BabyMeasurementModel[]>();
-  babyDataChanged: Subscription;
-  measurements: BabyMeasurementModel[] = [];
+  private firestoreHelper = inject(FirestoreHelperService);
+  private babiesService = inject(BabiesService);
+  private babiesCollection = this.babiesService.babiesCollection;
+  private readonly babyUid = computed(() => this.babiesService.baby().uid);
 
-  constructor(private babiesService: BabiesService) {
-    this.babyDataChanged = this.babiesService.babyData.subscribe((baby) => {
-      if (baby && baby.measurementsData) {
-        this.setMeasurementsData(baby.measurementsData);
-      }
-    });
+  public readonly measurements = computed(
+    () => this.babiesService.baby().measurementsData
+  );
+
+  public add() {
+    this.firestoreHelper;
   }
 
-  getMeasurements() {
-    return this.measurements.slice();
+  public async addMeasurement(newMeasurement: BabyMeasurement) {
+    try {
+      const uid = this.firestoreHelper.generateUid();
+      newMeasurement.uid = uid;
+      await this.firestoreHelper.update<Baby>(
+        this.babiesCollection,
+        this.babyUid(),
+        {
+          measurementsData: [...this.measurements(), newMeasurement],
+        }
+      );
+      console.log('Measurement added successfully:', newMeasurement);
+    } catch (error) {
+      console.error('Error adding measurement:', error);
+      throw error;
+    }
   }
 
-  addMeasurement(newMeasurement: BabyMeasurementModel) {
-    this.babiesService.addMeasurementDataToDb(newMeasurement);
+  public async deleteMeasurement(measurement: BabyMeasurement) {
+    try {
+      const updatedMeasurements = this.measurements().filter(
+        (m) => m.uid !== measurement.uid
+      );
+      await this.firestoreHelper.update<Baby>(
+        this.babiesCollection,
+        this.babyUid(),
+        {
+          measurementsData: updatedMeasurements,
+        }
+      );
+      console.log('Measurement deleted successfully:', measurement);
+    } catch (error) {
+      console.error('Error deleting measurement:', error);
+      throw error;
+    }
   }
 
-  updateMeasurement(
-    oldMeasurement: BabyMeasurementModel,
-    updatedMeasurement: BabyMeasurementModel
-  ) {
-    this.babiesService.updateMeasurementDataInDb(
-      oldMeasurement,
-      updatedMeasurement
-    );
-  }
+  public async updateMeasurement(updatedMeasurement: BabyMeasurement) {
+    try {
+      const otherMeasurements = this.measurements().filter(
+        (m) => m.uid !== updatedMeasurement.uid
+      );
 
-  deleteBabyAction(measurement: BabyMeasurementModel) {
-    this.babiesService.deleteMeasurementDataFromDb(measurement);
-  }
-
-  private setMeasurementsData(
-    newMeasurementsData: BabyMeasurementModel[]
-  ): void {
-    // Sort the newMeasurementsData array by date in descending order
-    newMeasurementsData.sort((a, b) => b.date.getTime() - a.date.getTime());
-
-    this.measurements = newMeasurementsData;
-    this.measurementsChanged.next(this.measurements.slice());
+      await this.firestoreHelper.update<Baby>(
+        this.babiesCollection,
+        this.babyUid(),
+        {
+          measurementsData: [...otherMeasurements, updatedMeasurement],
+        }
+      );
+      console.log('Measurement updated successfully:', updatedMeasurement);
+    } catch (error) {
+      console.error('Error updating measurement:', error);
+      throw error;
+    }
   }
 }

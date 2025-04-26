@@ -1,10 +1,11 @@
+import { UserStatus } from '../enums/user-status.enum';
 import { BabyEventCategory } from './baby.model';
 
 export interface User {
   uid: string;
   name: string;
   email: string;
-  status: string;
+  status: UserStatus;
   dueDate: Date;
   babyEventsPref: BabyEventCategory[];
   babiesUids: string[];

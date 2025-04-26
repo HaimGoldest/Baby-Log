@@ -7,7 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { BabyMeasurementsService } from '../../../services/baby-measurements.service';
-import { BabyMeasurementModel } from '../../../../../models/baby-measurement.model';
+import { BabyMeasurement } from '../../../../../models/baby.model';
 
 @Component({
   selector: 'app-growth-tracking-info-item',
@@ -23,7 +23,7 @@ import { BabyMeasurementModel } from '../../../../../models/baby-measurement.mod
   styleUrl: './growth-tracking-info-item.component.scss',
 })
 export class GrowthTrackingInfoItemComponent implements OnDestroy {
-  @Input() measurement: BabyMeasurementModel;
+  @Input({ required: true }) measurement!: BabyMeasurement;
   private destroy$ = new Subject<void>();
 
   public constructor(
@@ -36,9 +36,11 @@ export class GrowthTrackingInfoItemComponent implements OnDestroy {
     this.destroy$.complete();
   }
 
-  public onDelete() {
-    if (this.measurement) {
-      this.babyMeasurementsService.deleteBabyAction(this.measurement);
+  public async onDelete() {
+    try {
+      await this.babyMeasurementsService.deleteMeasurement(this.measurement);
+    } catch (error) {
+      this.showError('Error deleting measurement');
     }
   }
 
@@ -56,23 +58,30 @@ export class GrowthTrackingInfoItemComponent implements OnDestroy {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((result: BabyMeasurementModel) => {
+      .subscribe((result: BabyMeasurement) => {
         if (result) {
           this.updateMeasurement(result);
         }
       });
   }
 
-  private updateMeasurement(data: BabyMeasurementModel) {
-    const editedMeasurement = new BabyMeasurementModel(
-      data.date,
-      data.height,
-      data.weight,
-      data.headMeasure
-    );
-    this.babyMeasurementsService.updateMeasurement(
-      this.measurement,
-      editedMeasurement
-    );
+  private async updateMeasurement(data: BabyMeasurement) {
+    const editedMeasurement: BabyMeasurement = {
+      ...this.measurement,
+      date: data.date,
+      height: data.height,
+      weight: data.weight,
+      headMeasure: data.headMeasure,
+    };
+
+    try {
+      await this.babyMeasurementsService.updateMeasurement(editedMeasurement);
+    } catch (error) {
+      this.showError('Error updating measurement');
+    }
+  }
+
+  private showError(message: string) {
+    // todo - implement generic error dialog
   }
 }
