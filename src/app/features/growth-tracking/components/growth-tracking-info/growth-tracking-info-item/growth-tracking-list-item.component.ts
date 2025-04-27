@@ -10,7 +10,7 @@ import { BabyMeasurementsService } from '../../../services/baby-measurements.ser
 import { BabyMeasurement } from '../../../../../models/baby.model';
 
 @Component({
-  selector: 'app-growth-tracking-info-item',
+  selector: 'app-growth-tracking-list-item',
   standalone: true,
   imports: [
     CommonModule,
@@ -19,10 +19,10 @@ import { BabyMeasurement } from '../../../../../models/baby.model';
     MatMenuModule,
     MatButtonModule,
   ],
-  templateUrl: './growth-tracking-info-item.component.html',
-  styleUrl: './growth-tracking-info-item.component.scss',
+  templateUrl: './growth-tracking-list-item.component.html',
+  styleUrl: './growth-tracking-list-item.component.scss',
 })
-export class GrowthTrackingInfoItemComponent implements OnDestroy {
+export class GrowthTrackingListItemComponent implements OnDestroy {
   @Input({ required: true }) measurement!: BabyMeasurement;
   private destroy$ = new Subject<void>();
 

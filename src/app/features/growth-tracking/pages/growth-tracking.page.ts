@@ -2,11 +2,11 @@ import { Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { BabyMeasurementsService } from '../services/baby-measurements.service';
-import { GrowthTrackingInfoComponent } from '../components/growth-tracking-info/growth-tracking-info.component';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { BabyMeasurement } from '../../../models/baby.model';
+import { GrowthTrackingListComponent } from '../components/growth-tracking-info/growth-tracking-list.component';
 
 @Component({
   selector: 'app-growth-tracking',
@@ -15,7 +15,7 @@ import { BabyMeasurement } from '../../../models/baby.model';
     CommonModule,
     MatButtonModule,
     MatIconModule,
-    GrowthTrackingInfoComponent,
+    GrowthTrackingListComponent,
   ],
   templateUrl: './growth-tracking.page.html',
   styleUrl: './growth-tracking.page.scss',

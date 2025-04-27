@@ -1,4 +1,5 @@
 import { Gender } from '../enums/gender.enum';
+import { User } from './user.model';
 
 export interface Baby {
   uid: string;
@@ -21,9 +22,11 @@ export interface BabyMeasurement {
 export interface BabyEvent {
   uid: string;
   category: BabyEventCategory;
-  creationTime: Date;
-  lastEditTime: Date;
   comment: string;
+  createdAt: Date;
+  createdBy: User;
+  lastEditedAt?: Date;
+  lastEditedBy?: User;
 }
 
 export interface BabyEventCategory {

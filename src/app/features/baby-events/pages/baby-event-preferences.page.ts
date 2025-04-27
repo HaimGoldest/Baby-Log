@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
-import { BabyEventsPreferencesService } from '../services/baby-events-preferences.service';
+import { BabyEventPreferencesService } from '../services/baby-event-preferences.service';
 
 @Component({
-  selector: 'app-baby-events-preferences',
+  selector: 'app-baby-event-preferences',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './baby-events-preferences.page.html',
-  styleUrl: './baby-events-preferences.page.scss',
+  templateUrl: './baby-event-preferences.page.html',
+  styleUrl: './baby-event-preferences.page.scss',
 })
 export class BabyEventsPreferencesPage {
-  private preferencesService = inject(BabyEventsPreferencesService);
+  private preferencesService = inject(BabyEventPreferencesService);
   private hasChanged = false;
 
   public babyEventsCategories = computed(() => {

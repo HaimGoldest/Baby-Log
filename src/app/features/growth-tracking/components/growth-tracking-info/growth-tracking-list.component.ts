@@ -1,15 +1,15 @@
 import { Component, computed } from '@angular/core';
-import { GrowthTrackingInfoItemComponent } from './growth-tracking-info-item/growth-tracking-info-item.component';
 import { BabyMeasurementsService } from '../../services/baby-measurements.service';
+import { GrowthTrackingListItemComponent } from './growth-tracking-info-item/growth-tracking-list-item.component';
 
 @Component({
-  selector: 'app-growth-tracking-info',
+  selector: 'app-growth-tracking-list',
   standalone: true,
-  imports: [GrowthTrackingInfoItemComponent],
-  templateUrl: './growth-tracking-info.component.html',
-  styleUrl: './growth-tracking-info.component.scss',
+  imports: [GrowthTrackingListItemComponent],
+  templateUrl: './growth-tracking-list.component.html',
+  styleUrl: './growth-tracking-list.component.scss',
 })
-export class GrowthTrackingInfoComponent {
+export class GrowthTrackingListComponent {
   public readonly measurements = computed(() =>
     this.babyMeasurementsService.measurements()
   );

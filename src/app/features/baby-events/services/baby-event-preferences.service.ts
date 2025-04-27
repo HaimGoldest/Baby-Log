@@ -1,12 +1,12 @@
 import { computed, inject, Injectable } from '@angular/core';
-import { UserService } from '../../../../core/services/user.service';
-import { FirestoreHelperService } from '../../../../core/services/firebase/firestore-helper.service';
-import { BabyEventCategory } from '../../../../models/baby.model';
+import { UserService } from '../../../core/services/user.service';
+import { FirestoreHelperService } from '../../../core/services/firebase/firestore-helper.service';
+import { BabyEventCategory } from '../../../models/baby.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class BabyEventsPreferencesService {
+export class BabyEventPreferencesService {
   private firestoreHelper = inject(FirestoreHelperService);
   private userService = inject(UserService);
   private usersCollection = this.userService.usersCollection;

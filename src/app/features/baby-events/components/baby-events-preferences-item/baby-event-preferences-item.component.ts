@@ -1,17 +1,17 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { BabyEventCategory } from '../../../../../models/baby.model';
+import { BabyEventCategory } from '../../../../models/baby.model';
 
 @Component({
-  selector: 'app-baby-events-preferences-item',
+  selector: 'app-baby-event-preferences-item',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './baby-events-preferences-item.component.html',
-  styleUrl: './baby-events-preferences-item.component.scss',
+  templateUrl: './baby-event-preferences-item.component.html',
+  styleUrl: './baby-event-preferences-item.component.scss',
 })
 export class BabyEventsPreferencesItemComponent {
-  @Input({ required: true }) babyEventCategory: BabyEventCategory | undefined;
+  @Input({ required: true }) babyEventCategory: BabyEventCategory;
   @Output() modified = new EventEmitter<boolean>();
 
   public updateDefaultDescription(newValue: string): void {
