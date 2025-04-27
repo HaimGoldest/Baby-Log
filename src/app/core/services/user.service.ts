@@ -11,9 +11,10 @@ import { Baby } from '../../models/baby.model';
   providedIn: 'root',
 })
 export class UserService {
-  private usersCollection = 'users';
   private firestoreHelper = inject(FirestoreHelperService);
   private babiesService = inject(BabiesService);
+
+  public usersCollection = 'users';
 
   private _user = signal<User | null>(null);
   public user: Signal<User | null> = this._user.asReadonly();

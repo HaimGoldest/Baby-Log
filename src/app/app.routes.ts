@@ -22,8 +22,8 @@ export const appRoutes: Routes = [
     path: Route.Preferences,
     loadComponent: () =>
       import(
-        './features/baby-actions/pages/baby-actions-preferences.page'
-      ).then((m) => m.BabyActionsPreferencesPage),
+        './features/baby-events/baby-events-preferences/pages/baby-events-preferences.page'
+      ).then((m) => m.BabyEventsPreferencesPage),
     canActivate: [AppGuard],
   },
 

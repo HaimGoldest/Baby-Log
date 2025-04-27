@@ -16,10 +16,6 @@ export class BabyMeasurementsService {
     () => this.babiesService.baby().measurementsData
   );
 
-  public add() {
-    this.firestoreHelper;
-  }
-
   public async addMeasurement(newMeasurement: BabyMeasurement) {
     try {
       const uid = this.firestoreHelper.generateUid();

@@ -7,6 +7,6 @@ export interface User {
   email: string;
   status: UserStatus;
   dueDate: Date;
-  babyEventsPref: BabyEventCategory[];
+  babyEventsPreferences: BabyEventCategory[];
   babiesUids: string[];
 }

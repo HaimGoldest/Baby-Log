@@ -4,9 +4,8 @@
       <h1 class="text-center">Baby Actions Preferences</h1>
       <br />
       <app-baby-action-category-pref
-        *ngFor="let category of babyActionsCategories; let i = index"
+        *ngFor="let category of babyEventsCategories(); "
         [babyActionCategory]="category"
-        [index]="i"
         (modified)="onChanged()"
       ></app-baby-action-category-pref>
     </div>

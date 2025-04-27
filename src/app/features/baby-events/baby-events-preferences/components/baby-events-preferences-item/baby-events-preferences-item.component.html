@@ -2,22 +2,22 @@
   <div class="card mb-3">
     <div class="col-12">
       <img
-        src="{{ babyActionCategory.imagePath }}"
+        src="{{ babyEventCategory.imagePath }}"
         class="img-fluid rounded-start actionImg"
-        alt="{{ babyActionCategory.name }}"
+        alt="{{ babyEventCategory.name }}"
       />
       <label for="cateroryNameCheckbox" style="margin-right: 10px">
-        Enable {{ babyActionCategory.name }}:
+        Enable {{ babyEventCategory.name }}:
         <input
           (click)="onChanged()"
           type="checkbox"
           id="cateroryNameCheckbox"
-          [(ngModel)]="babyActionCategory.isCategoryEnable"
+          [(ngModel)]="babyEventCategory.isCategoryEnabled"
         />
       </label>
       <label
         for="cateroryDescCheckbox"
-        *ngIf="babyActionCategory.isCategoryEnable"
+        *ngIf="babyEventCategory.isCategoryEnabled"
         >| Enable Default Description
         <input
           (click)="onChanged()"
@@ -30,8 +30,8 @@
     <div
       class="col-12"
       *ngIf="
-        babyActionCategory.isCategoryEnable &&
-        babyActionCategory.isDefaultDescriptionEnable
+        babyEventCategory.isCategoryEnabled &&
+        babyEventCategory.isDefaultCommentEnabled
       "
     >
       <div class="form-floating">

@@ -27,10 +27,9 @@ export interface BabyEvent {
 }
 
 export interface BabyEventCategory {
-  uid: string;
   name: string;
   defaultComment: string;
   imagePath: string;
-  isCategoryEnable: boolean;
-  isDefaultCommentEnable: boolean;
+  isCategoryEnabled: boolean;
+  isDefaultCommentEnabled: boolean;
 }
