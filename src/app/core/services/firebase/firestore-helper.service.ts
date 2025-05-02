@@ -48,10 +48,8 @@ export class FirestoreHelperService {
     return this.execute(`add to ${collectionName}`, async () => {
       const colRef = this.getCollectionRef<T>(collectionName);
       if (uid) {
-        // use provided uid
         await setDoc(doc(colRef, uid), data);
       } else {
-        // let Firestore generate uid
         const newDocRef = doc(colRef);
         await setDoc(newDocRef, data);
       }
@@ -72,7 +70,7 @@ export class FirestoreHelperService {
   }
 
   /**
-   * Retrieve a document by ID from a collection.
+   * Retrieve a document by ID from a collection, converting any Firestore Timestamps to JS Date.
    * @param collectionName Name of the Firestore collection
    * @param uid Document ID
    * @returns Promise resolving to the document data or null if not found
@@ -80,7 +78,9 @@ export class FirestoreHelperService {
   public get<T>(collectionName: string, uid: string): Promise<T | null> {
     return this.execute(`get ${collectionName}/${uid}`, async () => {
       const snap = await getDoc(this.getDocRef<T>(collectionName, uid));
-      return snap.exists() ? snap.data() : null;
+      if (!snap.exists()) return null;
+      const raw = snap.data();
+      return this.convertTimestamps(raw) as T;
     });
   }
 
@@ -114,19 +114,19 @@ export class FirestoreHelperService {
   }
 
   /**
-   * Get all documents in a collection.
+   * Get all documents in a collection, converting any Firestore Timestamps to JS Date.
    * @param collectionName Name of the Firestore collection
    * @returns Promise resolving to an array of document data
    */
   public getAll<T>(collectionName: string): Promise<T[]> {
     return this.execute(`getAll from ${collectionName}`, async () => {
       const snapshot = await getDocs(this.getCollectionRef<T>(collectionName));
-      return snapshot.docs.map((d) => d.data());
+      return snapshot.docs.map((d) => this.convertTimestamps(d.data()) as T);
     });
   }
 
   /**
-   * Observe a document in real-time by collection and UID.
+   * Observe a document in real-time by collection and UID, converting Timestamps to JS Date.
    * @param collectionName Name of the collection
    * @param uid Document ID
    * @param next Callback with the document data or null
@@ -142,7 +142,10 @@ export class FirestoreHelperService {
     const ref = this.getDocRef<T>(collectionName, uid);
     return onSnapshot(
       ref,
-      (snap) => next(snap.exists() ? snap.data() : null),
+      (snap) => {
+        const raw = snap.exists() ? snap.data() : null;
+        next(raw ? (this.convertTimestamps(raw) as T) : null);
+      },
       (err) => {
         console.error(
           `[FirestoreHelperService] observe ${collectionName}/${uid} failed`,
@@ -154,7 +157,7 @@ export class FirestoreHelperService {
   }
 
   /**
-   * Observe all documents in a collection in real-time.
+   * Observe all documents in a collection in real-time, converting Timestamps to JS Date.
    * @param collectionName Name of the collection
    * @param next Callback with an array of document data
    * @param error Optional error callback
@@ -168,7 +171,12 @@ export class FirestoreHelperService {
     const colRef = this.getCollectionRef<T>(collectionName);
     return onSnapshot(
       colRef,
-      (snap) => next(snap.docs.map((d) => d.data())),
+      (snap) => {
+        const items = snap.docs.map(
+          (d) => this.convertTimestamps(d.data()) as T
+        );
+        next(items);
+      },
       (err) => {
         console.error(
           `[FirestoreHelperService] observeAll ${collectionName} failed`,
@@ -180,26 +188,21 @@ export class FirestoreHelperService {
   }
 
   /**
-   * Append a value to an array field in a document using arrayUnion.
-   * @param collectionName Name of the Firestore collection
-   * @param uid Document ID
-   * @param field Field name to append to
-   * @param value Value to append
-   * @returns Promise that resolves when the operation completes
+   * Recursively converts any Firestore Timestamp to JS Date in the provided object/array/tree.
    */
-  public appendToArray<T>(
-    collectionName: string,
-    uid: string,
-    field: keyof T,
-    value: any
-  ): Promise<void> {
-    return this.execute(
-      `appendToArray on ${collectionName}/${uid}.${String(field)}`,
-      () =>
-        updateDoc(this.getDocRef<T>(collectionName, uid), {
-          [field]: arrayUnion(value),
-        } as any)
-    );
+  private convertTimestamps(obj: any): any {
+    if (obj && typeof obj.toDate === 'function') {
+      return obj.toDate();
+    }
+    if (Array.isArray(obj)) {
+      return obj.map((v) => this.convertTimestamps(v));
+    }
+    if (obj && typeof obj === 'object') {
+      return Object.fromEntries(
+        Object.entries(obj).map(([k, v]) => [k, this.convertTimestamps(v)])
+      );
+    }
+    return obj;
   }
 
   /**

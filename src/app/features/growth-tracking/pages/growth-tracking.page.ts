@@ -57,7 +57,7 @@ export class GrowthTrackingPage implements OnDestroy {
   private async addMeasurement(data: BabyMeasurement): Promise<void> {
     const measurement: BabyMeasurement = {
       uid: 'new',
-      date: data.date,
+      date: new Date(data.date),
       height: data.height,
       weight: data.weight,
       headMeasure: data.headMeasure,

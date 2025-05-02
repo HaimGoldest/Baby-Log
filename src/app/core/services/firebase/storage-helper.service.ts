@@ -43,7 +43,7 @@ export class FireStorageHelperService {
       return await getDownloadURL(fileRef);
     } catch (error: any) {
       if (error.code === 'storage/object-not-found') {
-        console.warn('File not found in storage:', path);
+        console.warn('File (Baby image) not found in storage:', path);
         return null;
       } else {
         console.error('Error retrieving file URL:', error);

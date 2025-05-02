@@ -68,7 +68,7 @@ export class GrowthTrackingListItemComponent implements OnDestroy {
   private async updateMeasurement(data: BabyMeasurement) {
     const editedMeasurement: BabyMeasurement = {
       ...this.measurement,
-      date: data.date,
+      date: new Date(data.date),
       height: data.height,
       weight: data.weight,
       headMeasure: data.headMeasure,

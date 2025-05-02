@@ -119,10 +119,6 @@ export class BabiesService {
     try {
       const imagePath = `${this.imagesRootPath}/${babyUid}`;
       const imageUrl = await this.fireStorageHelper.getFileUrl(imagePath);
-      console.log(
-        `Image URL retrieved successfully for baby ${babyUid}:`,
-        imageUrl
-      );
       return imageUrl;
     } catch (error: any) {
       if (error.code === 'storage/object-not-found') {

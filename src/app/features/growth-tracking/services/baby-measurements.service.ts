@@ -18,8 +18,7 @@ export class BabyMeasurementsService {
 
   public async addMeasurement(newMeasurement: BabyMeasurement) {
     try {
-      const uid = this.firestoreHelper.generateUid();
-      newMeasurement.uid = uid;
+      newMeasurement.uid = this.firestoreHelper.generateUid();
       await this.firestoreHelper.update<Baby>(
         this.babiesCollection,
         this.babyUid(),
