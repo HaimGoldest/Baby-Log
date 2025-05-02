@@ -28,22 +28,33 @@ export class FirestoreHelperService {
    * @returns A new unique ID string.
    */
   public generateUid(): string {
-    // Create a temporary document reference in a dummy collection to leverage Firestore's ID generator
     const tempRef = doc(collection(this.firestore, '__uids__'));
     return tempRef.id;
   }
 
   /**
-   * Add a new document to a collection with an auto-generated ID.
+   * Add a new document to a collection, optionally with a provided ID.
+   * If uid is null, Firestore generates a new document ID.
    * @param collectionName Name of the Firestore collection
-   * @param data The data to store in the new document
+   * @param data The data to store in the document
+   * @param uid Optional document ID; if null, an auto-generated ID is used
    * @returns Promise that resolves when the document is added
    */
-  public add<T>(collectionName: string, data: T): Promise<void> {
+  public add<T>(
+    collectionName: string,
+    data: T,
+    uid: string | null = null
+  ): Promise<void> {
     return this.execute(`add to ${collectionName}`, async () => {
       const colRef = this.getCollectionRef<T>(collectionName);
-      const newDocRef = doc(colRef);
-      await setDoc(newDocRef, data);
+      if (uid) {
+        // use provided uid
+        await setDoc(doc(colRef, uid), data);
+      } else {
+        // let Firestore generate uid
+        const newDocRef = doc(colRef);
+        await setDoc(newDocRef, data);
+      }
     });
   }
 

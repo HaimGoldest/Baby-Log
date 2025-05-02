@@ -10,10 +10,10 @@ export class BabyMeasurementsService {
   private firestoreHelper = inject(FirestoreHelperService);
   private babiesService = inject(BabiesService);
   private babiesCollection = this.babiesService.babiesCollection;
-  private readonly babyUid = computed(() => this.babiesService.baby().uid);
+  private readonly babyUid = computed(() => this.babiesService.baby()?.uid);
 
   public readonly measurements = computed(
-    () => this.babiesService.baby().measurementsData
+    () => this.babiesService.baby()?.measurementsData
   );
 
   public async addMeasurement(newMeasurement: BabyMeasurement) {

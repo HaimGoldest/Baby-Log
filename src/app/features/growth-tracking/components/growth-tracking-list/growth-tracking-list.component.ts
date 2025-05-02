@@ -1,6 +1,6 @@
 import { Component, computed } from '@angular/core';
 import { BabyMeasurementsService } from '../../services/baby-measurements.service';
-import { GrowthTrackingListItemComponent } from './growth-tracking-info-item/growth-tracking-list-item.component';
+import { GrowthTrackingListItemComponent } from './growth-tracking-list-item/growth-tracking-list-item.component';
 
 @Component({
   selector: 'app-growth-tracking-list',

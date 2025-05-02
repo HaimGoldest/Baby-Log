@@ -1,7 +1,11 @@
-import { UserStatus } from '../enums/user-status.enum';
 import { BabyEventCategory } from '../models/baby.model';
 import { User } from '../models/user.model';
 import { User as FirebaseUser } from 'firebase/auth';
+
+export type UserFactoryResult = {
+  user: User;
+  needSaving: boolean;
+};
 
 export class UserFactory {
   /**
@@ -10,19 +14,64 @@ export class UserFactory {
   public static createUserObject(
     user: Partial<User> | null,
     authData: FirebaseUser
-  ): User {
-    const defaults = this.createDefaultUser(authData);
+  ): UserFactoryResult {
+    const defaultUser = this.createDefaultUser(authData);
+    const defaultPreferences = defaultUser.babyEventsPreferences;
+
+    let preferences: BabyEventCategory[];
+    let needSaving = this.isMissingSomeBaseProperty(user);
+
+    if (user?.babyEventsPreferences) {
+      preferences = [...user.babyEventsPreferences];
+
+      // Add missing categories
+      for (let defaultPref of defaultPreferences) {
+        const alreadyExists = preferences.some(
+          (category: BabyEventCategory) => category.name === defaultPref.name
+        );
+
+        if (!alreadyExists) {
+          preferences.push(defaultPref);
+          needSaving = true;
+        }
+      }
+
+      // Remove old invalid categories
+      preferences = preferences.filter((pref) => {
+        const stillExists = defaultPreferences.some(
+          (category: BabyEventCategory) => category.name === pref.name
+        );
+
+        if (!stillExists) {
+          needSaving = true;
+        }
+
+        return stillExists;
+      });
+    } else {
+      preferences = [...defaultPreferences];
+      needSaving = true;
+    }
+
+    const finalUser: User = {
+      uid: user?.uid ?? defaultUser.uid,
+      name: user?.name ?? defaultUser.name,
+      email: user?.email ?? defaultUser.email,
+      babyEventsPreferences: preferences,
+      babiesUids: user?.babiesUids ?? defaultUser.babiesUids,
+    };
 
     return {
-      uid: user?.uid ?? defaults.uid,
-      name: user?.name ?? defaults.name,
-      email: user?.email ?? defaults.email,
-      status: user?.status ?? defaults.status,
-      dueDate: user?.dueDate ?? defaults.dueDate,
-      babyEventsPreferences:
-        user?.babyEventsPreferences ?? defaults.babyEventsPreferences,
-      babiesUids: user?.babiesUids ?? defaults.babiesUids,
+      user: finalUser,
+      needSaving,
     };
+  }
+
+  /**
+   * Check if the user is missing some base properties
+   */
+  private static isMissingSomeBaseProperty(user: Partial<User>): boolean {
+    return !user || !user.uid || !user.name || !user.email || !user.babiesUids;
   }
 
   /**
@@ -33,8 +82,6 @@ export class UserFactory {
       uid: authData.uid,
       name: authData.displayName ?? 'Unknown User',
       email: authData.email ?? 'Unknown Email',
-      status: UserStatus.VIP,
-      dueDate: undefined,
       babyEventsPreferences: this.createDefaultBabyEventPreferences(),
       babiesUids: [],
     };

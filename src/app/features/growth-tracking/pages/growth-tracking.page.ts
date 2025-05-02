@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { BabyMeasurement } from '../../../models/baby.model';
-import { GrowthTrackingListComponent } from '../components/growth-tracking-info/growth-tracking-list.component';
+import { GrowthTrackingListComponent } from '../components/growth-tracking-list/growth-tracking-list.component';
 
 @Component({
   selector: 'app-growth-tracking',

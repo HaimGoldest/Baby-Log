@@ -1,48 +1,53 @@
-import { Injectable } from '@angular/core';
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 import { UserService } from '../services/user.service';
-import {
-  ActivatedRouteSnapshot,
-  CanActivate,
-  Router,
-  RouterStateSnapshot,
-  UrlTree,
-} from '@angular/router';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { AppRoute } from '../../enums/app-route.enum';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class AppGuard implements CanActivate {
-  constructor(private userService: UserService, private router: Router) {}
+export const appGuard: CanActivateFn = (route, state) => {
+  const router = inject(Router);
+  const authService = inject(AuthService);
+  const userService = inject(UserService);
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ):
-    | boolean
-    | UrlTree
-    | Observable<boolean | UrlTree>
-    | Promise<boolean | UrlTree> {
-    const url: string = state.url;
-    console.log('AppGuard: Navigating to', url);
+  const url = state.url.replace(/^\/+/, ''); // remove leading slash
+  const isLoggedIn = authService?.isLoggedIn();
+  const isLoginPage = url === AppRoute.Login;
+  const isAddBabyPage = url === AppRoute.AddBaby;
+  const userHaveBabies = userService?.userHaveBabies();
 
-    const isLoginPage = url.includes('login');
-    const haveBabies =
-      this.userService.userData?.getValue()?.babiesUids?.length > 0;
+  console.log('AppGuard: Trying navigate to', url);
 
-    return this.userService.isLoggedIn.pipe(
-      map((loggedIn) => {
-        if (!loggedIn && !isLoginPage) {
-          return this.router.createUrlTree(['/loading']); // Redirect to login if not logged in and not on login page
-        } else if (loggedIn && !haveBabies && !url.includes('add-baby')) {
-          return this.router.createUrlTree(['/add-baby']); // Logged in but not have baby data, Redirect to add baby page
-        } else if (loggedIn && isLoginPage) {
-          return this.router.createUrlTree(['/']); // Redirect to home if logged in and trying to access login page
-        } else {
-          return true; // Allow access if logged in and not trying to access login page or if not logged in and accessing login page
-        }
-      })
-    );
+  // Redirect to login if not logged in and not on login page
+  if (!isLoggedIn && !isLoginPage) {
+    console.log('AppGuard: Navigating to', AppRoute.Login);
+    return router.createUrlTree(['/', AppRoute.Login]);
   }
-}
+
+  // Logged in but not have baby and not in add baby page, Redirect to add baby page
+  if (isLoggedIn && !userHaveBabies && !isAddBabyPage) {
+    console.log('AppGuard: Navigating to', AppRoute.AddBaby);
+    return router.createUrlTree(['/', AppRoute.AddBaby]);
+  }
+
+  // Redirect to home if logged in and trying to access login page
+  if (isLoggedIn && isLoginPage) {
+    console.log('AppGuard: Navigating to', AppRoute.HomePage);
+    return router.createUrlTree(['/', AppRoute.HomePage]);
+  }
+
+  // Redirect to home if logged in, habe a baby and trying to access add-baby page
+  if (isLoggedIn && userHaveBabies && isAddBabyPage) {
+    console.log('AppGuard: Navigating to', AppRoute.HomePage);
+    return router.createUrlTree(['/', AppRoute.HomePage]);
+  }
+
+  // Allow access if logged in and not trying to access login page or if not logged in and accessing login page
+  if ((isLoggedIn && !isLoginPage) || (!isLoggedIn && isLoginPage)) {
+    console.log('AppGuard: Navigating to', url);
+    return true;
+  }
+
+  // Default case, deny access
+  console.log('AppGuard: Access denied to', url);
+  return false;
+};

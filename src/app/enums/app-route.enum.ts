@@ -1,7 +1,7 @@
-export enum Route {
-  Preferences = 'preferences',
-  BabtEvents = 'baby-events',
-  BabyActions = 'baby-actions',
+export enum AppRoute {
+  HomePage = 'baby-events',
+  BabyEvents = 'baby-events',
+  BabyEventPreferences = 'preferences',
   GrowthTracking = 'growth-tracking',
   AddBaby = 'add-baby',
   BabyInfo = 'baby-info',

@@ -8,6 +8,7 @@ import {
 } from '@angular/fire/auth';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { UserService } from './user.service';
+import { AppRoute } from '../../enums/app-route.enum';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -37,12 +38,24 @@ export class AuthService {
   }
 
   private async handleAuthChange(firebaseUser: FirebaseUser | null) {
+    console.log('Auth state changed, Firebase User:', firebaseUser);
     if (firebaseUser) {
       await this.userService.initUser(firebaseUser);
+      this.router.navigate(['/', AppRoute.BabyEvents]);
     } else {
       this.userService.dispose();
       console.log('Logged out: moving to login page.');
-      this.router.navigate(['/login']);
+      this.router.navigate(['/', AppRoute.Login]);
+    }
+  }
+
+  private navigateAuthUser(): void {
+    const haveBabies = this.userService?.userHaveBabies();
+
+    if (haveBabies) {
+      this.router.navigate(['/', AppRoute.HomePage]);
+    } else {
+      this.router.navigate(['/', AppRoute.AddBaby]);
     }
   }
 }

@@ -1,5 +1,6 @@
-import { inject, Injectable, signal, Signal } from '@angular/core';
+import { computed, inject, Injectable, signal, Signal } from '@angular/core';
 import { User as FirebaseUser } from 'firebase/auth';
+import { Unsubscribe } from 'firebase/firestore';
 import { FirestoreHelperService } from './firebase/firestore-helper.service';
 import { User } from '../../models/user.model';
 import { UserFactory } from '../../factories/user.factory';
@@ -13,6 +14,7 @@ import { Baby } from '../../models/baby.model';
 export class UserService {
   private firestoreHelper = inject(FirestoreHelperService);
   private babiesService = inject(BabiesService);
+  private userUnsubscribe: Unsubscribe | null = null;
 
   public usersCollection = 'users';
 
@@ -22,17 +24,27 @@ export class UserService {
   private _userPictureUrl = signal<string | null>(null);
   public readonly userPictureUrl = this._userPictureUrl.asReadonly();
 
+  public userHaveBabies = computed(() => this.user()?.babiesUids.length > 0);
+
   public async initUser(firebaseUser: FirebaseUser): Promise<void> {
-    console.log('Firebase User:', firebaseUser);
+    this.stopListeningToUserChanges();
+
     const existing = await this.firestoreHelper.get<User>(
       this.usersCollection,
       firebaseUser.uid
     );
-    const isNew = !existing;
-    this._user.set(UserFactory.createUserObject(existing, firebaseUser));
+    const UserFactoryResult = UserFactory.createUserObject(
+      existing,
+      firebaseUser
+    );
+    this._user.set(UserFactoryResult.user);
+    this.startListeningToUserChanges(firebaseUser.uid);
     this._userPictureUrl.set(firebaseUser.photoURL ?? null);
-    if (isNew) {
+    if (UserFactoryResult.needSaving) {
       await this.createUserInDatabase();
+    }
+    if (this.userHaveBabies()) {
+      await this.babiesService.setBaby(UserFactoryResult.user.babiesUids[0]);
     }
   }
 
@@ -62,7 +74,7 @@ export class UserService {
         ...babyData,
         uid: newBabyUid,
       });
-      console.log('New baby created successfully:', babyData);
+      console.log(`Baby was added to user:`, this.babiesService.baby());
     } catch (error) {
       console.error('Failed to add new baby to user:', error);
     }
@@ -83,6 +95,7 @@ export class UserService {
   }
 
   public dispose(): void {
+    this.stopListeningToUserChanges();
     this._user.set(null);
     this._userPictureUrl.set(null);
     this.babiesService.dispose();
@@ -110,5 +123,30 @@ export class UserService {
     await this.firestoreHelper.update<User>(this.usersCollection, user.uid, {
       babiesUids: [...(user.babiesUids ?? []), newBabyUid],
     });
+
+    this._user.set({
+      ...user,
+      babiesUids: [...(user.babiesUids ?? []), newBabyUid],
+    });
+  }
+
+  private startListeningToUserChanges(userUid: string) {
+    this.userUnsubscribe = this.firestoreHelper.observe<User>(
+      this.usersCollection,
+      userUid,
+      (data) => {
+        if (data) {
+          this._user.set(data);
+        }
+      },
+      (err) => console.error('Real-time listener error:', err)
+    );
+  }
+
+  private stopListeningToUserChanges() {
+    if (this.userUnsubscribe) {
+      this.userUnsubscribe();
+      this.userUnsubscribe = null;
+    }
   }
 }

@@ -6,7 +6,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { BabiesService } from '../../core/services/babies.service';
 import { UserService } from '../../core/services/user.service';
 import { Gender } from '../../enums/gender.enum';
-import { Route } from '../../enums/route.enum';
+import { AppRoute } from '../../enums/app-route.enum';
 
 @Component({
   standalone: true,
@@ -108,7 +108,7 @@ export class AddBabyPage {
   }
 
   private navigateAfterAddingBaby() {
-    this.router.navigate([Route.Preferences]);
+    this.router.navigate(['/', AppRoute.BabyEventPreferences]);
   }
 
   private showErrorMessage(message: string) {

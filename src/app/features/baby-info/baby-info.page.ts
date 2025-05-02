@@ -9,7 +9,7 @@ import { MatCardModule } from '@angular/material/card';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 import { BabiesService } from '../../core/services/babies.service';
 import { UserService } from '../../core/services/user.service';
-import { Route } from '../../enums/route.enum';
+import { AppRoute } from '../../enums/app-route.enum';
 
 @Component({
   standalone: true,
@@ -100,6 +100,6 @@ export class BabyInfoPage implements OnInit {
   }
 
   private navigateAfterBabyDeletion() {
-    this.router.navigate([Route.AddBaby]);
+    this.router.navigate(['/', AppRoute.AddBaby]);
   }
 }

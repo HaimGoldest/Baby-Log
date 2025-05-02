@@ -37,11 +37,10 @@ export class LoginPage implements OnInit, OnDestroy {
   }
 
   onLoginSuccessful(result) {
-    console.log('Login was successful');
     if (result.error) {
-      console.error('Firebase UI error:', result.error);
+      console.error('Login was successful, Firebase error:', result.error);
     } else {
-      console.log('Firebase UI result:', result);
+      console.log('Login failed, Firebase result:', result);
     }
   }
 }

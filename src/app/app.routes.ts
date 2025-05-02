@@ -1,52 +1,52 @@
 import { Routes } from '@angular/router';
 import { LoginPage } from './features/login/login.page';
-import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
-import { BabyActionsPage } from './features/baby-actions/pages/baby-actions.page';
-import { AppGuard } from './core/guards/app.guard';
-import { Route } from './enums/route.enum';
+import { AppRoute } from './enums/app-route.enum';
+import { BabyEventsComponent } from './features/baby-events/pages/baby-events.page';
+import { appGuard } from './core/guards/app.guard';
 
 export const appRoutes: Routes = [
-  { path: '', redirectTo: Route.Loading, pathMatch: 'full' },
+  //{ path: '', redirectTo: Route.Loading, pathMatch: 'full' },
+  //{ path: '', pathMatch: 'full' },
 
   // Eager loading paths
-  { path: Route.Loading, component: LoadingSpinnerComponent },
-  { path: Route.Login, component: LoginPage },
+  // { path: Route.Loading, component: LoadingSpinnerComponent },
+  { path: AppRoute.Login, component: LoginPage, canActivate: [appGuard] },
   {
-    path: Route.BabyActions,
-    component: BabyActionsPage,
-    canActivate: [AppGuard],
+    path: AppRoute.BabyEvents,
+    component: BabyEventsComponent,
+    canActivate: [appGuard],
   },
 
   // Lazy loading paths
   {
-    path: Route.Preferences,
+    path: AppRoute.BabyEventPreferences,
     loadComponent: () =>
       import('./features/baby-events/pages/baby-event-preferences.page').then(
         (m) => m.BabyEventsPreferencesPage
       ),
-    canActivate: [AppGuard],
+    canActivate: [appGuard],
   },
 
   {
-    path: Route.GrowthTracking,
+    path: AppRoute.GrowthTracking,
     loadComponent: () =>
       import('./features/growth-tracking/pages/growth-tracking.page').then(
         (m) => m.GrowthTrackingPage
       ),
-    canActivate: [AppGuard],
+    canActivate: [appGuard],
   },
 
   {
-    path: Route.AddBaby,
+    path: AppRoute.AddBaby,
     loadComponent: () =>
       import('./features/add-baby/add-baby.page').then((m) => m.AddBabyPage),
-    canActivate: [AppGuard],
+    canActivate: [appGuard],
   },
 
   {
-    path: Route.BabyInfo,
+    path: AppRoute.BabyInfo,
     loadComponent: () =>
       import('./features/baby-info/baby-info.page').then((m) => m.BabyInfoPage),
-    canActivate: [AppGuard],
+    canActivate: [appGuard],
   },
 ];

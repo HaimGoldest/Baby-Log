@@ -1,6 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil, map } from 'rxjs/operators';
+import { Component, computed, inject } from '@angular/core';
 import { UserService } from '../../core/services/user.service';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,6 +8,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
 import { BabiesService } from '../../core/services/babies.service';
+import { AuthService } from '../../core/services/auth.service';
+import { AppRoute } from '../../enums/app-route.enum';
 
 @Component({
   standalone: true,
@@ -26,66 +26,23 @@ import { BabiesService } from '../../core/services/babies.service';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
 })
-export class NavbarComponent implements OnInit, OnDestroy {
-  isLoggedIn$: Observable<boolean | null>;
-  userImageUrl$: Observable<string | null>;
-  babyImageUrl$: Observable<string | null>;
-  userHaveBabies: boolean;
-  private destroy$ = new Subject<void>();
+export class NavbarComponent {
+  private authService = inject(AuthService);
+  private userService = inject(UserService);
+  private babiesService = inject(BabiesService);
 
-  constructor(
-    private userService: UserService,
-    private babiesService: BabiesService
-  ) {
-    this.userService.userData
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((userData) => {
-        this.userHaveBabies = userData?.babiesUids?.length > 0;
-      });
-  }
+  public isLoggedIn = computed(() => this.authService.isLoggedIn());
+  public userImageUrl = computed(() => this.userService.userPictureUrl());
+  public babyImageUrl = computed(() => this.babiesService.babyPictureUrl());
+  public userHaveBabies = computed(() => this.userService.userHaveBabies());
 
-  ngOnInit() {
-    this.isLoggedIn$ = this.userService.isLoggedIn.pipe(
-      takeUntil(this.destroy$)
-    );
-
-    this.userImageUrl$ = this.userService.pictureUrl.pipe(
-      takeUntil(this.destroy$),
-      map((url) => (url ? url : null))
-    );
-
-    this.babyImageUrl$ = this.babiesService.currentBabyimageUrl.pipe(
-      takeUntil(this.destroy$),
-      map((url) => (url ? url : null))
-    );
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-  navigateRoot() {
-    window.location.href = '';
-  }
+  public homePage = AppRoute.HomePage;
+  public babyEventsPage = AppRoute.BabyEvents;
+  public growthTrackingPage = AppRoute.GrowthTracking;
+  public babyEventPreferencesPage = AppRoute.BabyEventPreferences;
+  public addBabyPage = AppRoute.AddBaby;
 
   logout() {
-    this.userService.logout();
-  }
-
-  preventNavigation(event: Event) {
-    if (this.userHaveBabies) {
-      event.preventDefault();
-    }
-  }
-
-  onUserImageError() {
-    console.warn('User image failed to load, retrying...');
-    this.userImageUrl$ = null;
-  }
-
-  onBabyImageError() {
-    console.warn('Baby image failed to load.');
-    this.babyImageUrl$ = null;
+    this.authService.logout();
   }
 }

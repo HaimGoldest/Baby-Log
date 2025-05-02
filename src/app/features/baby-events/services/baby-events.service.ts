@@ -10,9 +10,11 @@ export class BabyEventsService {
   private firestoreHelper = inject(FirestoreHelperService);
   private babiesService = inject(BabiesService);
   private babiesCollection = this.babiesService.babiesCollection;
-  private readonly babyUid = computed(() => this.babiesService.baby().uid);
+  private readonly babyUid = computed(() => this.babiesService.baby()?.uid);
 
-  public readonly events = computed(() => this.babiesService.baby().eventsData);
+  public readonly events = computed(
+    () => this.babiesService.baby()?.eventsData
+  );
 
   public async addEvent(newEvent: BabyEvent) {
     try {

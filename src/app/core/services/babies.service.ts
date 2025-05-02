@@ -3,12 +3,14 @@ import { Baby } from '../../models/baby.model';
 import { FirestoreHelperService } from './firebase/firestore-helper.service';
 import { FireStorageHelperService } from './firebase/storage-helper.service';
 import { Gender } from '../../enums/gender.enum';
+import { Unsubscribe } from 'firebase/firestore';
 
 @Injectable({ providedIn: 'root' })
 export class BabiesService {
   private imagesRootPath = 'baby_images';
   private firestoreHelper = inject(FirestoreHelperService);
   private fireStorageHelper = inject(FireStorageHelperService);
+  private babyUnsubscribe: Unsubscribe | null = null;
 
   public babiesCollection = 'babies';
 
@@ -19,6 +21,8 @@ export class BabiesService {
   public readonly babyPictureUrl = this._babyPictureUrl.asReadonly();
 
   public async setBaby(babyUid: string): Promise<Baby | null> {
+    this.stopListeningToBabyChanges();
+
     try {
       const existing = await this.firestoreHelper.get<Baby>(
         this.babiesCollection,
@@ -30,6 +34,7 @@ export class BabiesService {
         this._babyPictureUrl.set(
           (await this.getBabyImageUrl(existing.uid)) ?? null
         );
+        this.startListeningToBabyChanges(babyUid);
         console.log('Baby set successfully:', existing);
         return existing;
       } else {
@@ -55,7 +60,11 @@ export class BabiesService {
         usersUids: [userId],
       };
 
-      await this.firestoreHelper.add<Baby>(this.babiesCollection, baby);
+      await this.firestoreHelper.add<Baby>(
+        this.babiesCollection,
+        baby,
+        baby.uid
+      );
       console.log('Baby created in DB:', baby);
       this._baby.set(baby);
     } catch (error) {
@@ -127,6 +136,7 @@ export class BabiesService {
   }
 
   public dispose(): void {
+    this.stopListeningToBabyChanges();
     this._baby.set(null);
     this._babyPictureUrl.set(null);
   }
@@ -147,5 +157,28 @@ export class BabiesService {
     console.log('Baby deleted from DB:', baby);
     await this.fireStorageHelper.deleteFile(imagePath);
     console.log('Baby image deleted from storage:', imagePath);
+  }
+
+  private startListeningToBabyChanges(babyUid: string) {
+    this.babyUnsubscribe = this.firestoreHelper.observe<Baby>(
+      this.babiesCollection,
+      babyUid,
+      (data) => {
+        if (data) {
+          this._baby.set(data);
+          this.getBabyImageUrl(data.uid).then((url) =>
+            this._babyPictureUrl.set(url)
+          );
+        }
+      },
+      (err) => console.error('Real-time listener error:', err)
+    );
+  }
+
+  private stopListeningToBabyChanges() {
+    if (this.babyUnsubscribe) {
+      this.babyUnsubscribe();
+      this.babyUnsubscribe = null;
+    }
   }
 }
