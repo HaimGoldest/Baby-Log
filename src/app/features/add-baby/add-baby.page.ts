@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 import { FormsModule, NgForm } from '@angular/forms';
 import { BabiesService } from '../../core/services/babies.service';
 import { UserService } from '../../core/services/user.service';
 import { Gender } from '../../enums/gender.enum';
-import { AppRoute } from '../../enums/app-route.enum';
 
 @Component({
   standalone: true,
@@ -24,7 +22,6 @@ export class AddBabyPage {
 
   constructor(
     private userService: UserService,
-    private router: Router,
     private babiesService: BabiesService
   ) {}
 
@@ -77,7 +74,6 @@ export class AddBabyPage {
         gender: gender,
       });
       await this.uploadBabyImage();
-      this.navigateAfterAddingBaby();
     } catch (error) {
       this.showErrorMessage('Failed to create the baby!');
     }
@@ -88,7 +84,6 @@ export class AddBabyPage {
     try {
       await this.userService.addExistingBaby(uid);
       await this.uploadBabyImage();
-      this.navigateAfterAddingBaby();
     } catch (error) {
       this.showErrorMessage(
         'Failed to add the baby! (Please make sure you entered a correct baby key)'
@@ -105,10 +100,6 @@ export class AddBabyPage {
         this.showErrorMessage('Failed to upload the baby image!');
       }
     }
-  }
-
-  private navigateAfterAddingBaby() {
-    this.router.navigate(['/', AppRoute.BabyEventPreferences]);
   }
 
   private showErrorMessage(message: string) {

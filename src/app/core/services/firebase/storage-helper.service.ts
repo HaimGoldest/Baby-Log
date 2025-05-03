@@ -43,11 +43,11 @@ export class FireStorageHelperService {
       return await getDownloadURL(fileRef);
     } catch (error: any) {
       if (error.code === 'storage/object-not-found') {
-        console.warn('File (Baby image) not found in storage:', path);
+        console.log('File (Baby image) not found in storage:', path);
         return null;
       } else {
         console.error('Error retrieving file URL:', error);
-        return null;
+        throw error;
       }
     }
   }
@@ -64,8 +64,13 @@ export class FireStorageHelperService {
       await deleteObject(fileRef);
       console.log('File deleted successfully:', path);
     } catch (error: any) {
-      console.error('Error deleting file:', error);
-      throw error;
+      if (error.code === 'storage/object-not-found') {
+        console.log('File (Baby image) not found in storage:', path);
+        return null;
+      } else {
+        console.error('Error retrieving file URL:', error);
+        throw error;
+      }
     }
   }
 }

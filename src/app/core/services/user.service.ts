@@ -7,6 +7,8 @@ import { UserFactory } from '../../factories/user.factory';
 import { BabiesService } from './babies.service';
 import { Gender } from '../../enums/gender.enum';
 import { Baby } from '../../models/baby.model';
+import { Router } from '@angular/router';
+import { AppRoute } from '../../enums/app-route.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +16,7 @@ import { Baby } from '../../models/baby.model';
 export class UserService {
   private firestoreHelper = inject(FirestoreHelperService);
   private babiesService = inject(BabiesService);
+  private router = inject(Router);
   private userUnsubscribe: Unsubscribe | null = null;
 
   public usersCollection = 'users';
@@ -51,6 +54,7 @@ export class UserService {
   public async deleteBabyFromUser(baby: Baby): Promise<void> {
     try {
       await this.babiesService.deleteBaby(this._user().uid, baby);
+      await this.removeBabyIdFromUser(this._user(), baby.uid);
     } catch (error) {
       console.error('Failed to delete baby from user:', error);
     }
@@ -82,7 +86,7 @@ export class UserService {
 
   public async addExistingBaby(babyUid: string): Promise<void> {
     try {
-      const baby = await this.babiesService.setBaby(babyUid);
+      const baby = await this.babiesService.setBaby(babyUid, this._user());
       if (!baby) {
         console.error('No baby found with the given UID:', babyUid);
       }
@@ -123,10 +127,12 @@ export class UserService {
     await this.firestoreHelper.update<User>(this.usersCollection, user.uid, {
       babiesUids: [...(user.babiesUids ?? []), newBabyUid],
     });
+  }
 
-    this._user.set({
-      ...user,
-      babiesUids: [...(user.babiesUids ?? []), newBabyUid],
+  private async removeBabyIdFromUser(user: User, babyUid: string) {
+    const updatedBabiesUids = user.babiesUids.filter((uid) => uid !== babyUid);
+    await this.firestoreHelper.update<User>(this.usersCollection, user.uid, {
+      babiesUids: updatedBabiesUids,
     });
   }
 
@@ -137,6 +143,7 @@ export class UserService {
       (data) => {
         if (data) {
           this._user.set(data);
+          this.navigateAfterAddingBaby();
         }
       },
       (err) => console.error('Real-time listener error:', err)
@@ -148,5 +155,9 @@ export class UserService {
       this.userUnsubscribe();
       this.userUnsubscribe = null;
     }
+  }
+
+  private navigateAfterAddingBaby() {
+    this.router.navigate(['/', AppRoute.BabyEventPreferences]);
   }
 }

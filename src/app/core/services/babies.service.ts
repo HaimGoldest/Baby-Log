@@ -4,6 +4,7 @@ import { FirestoreHelperService } from './firebase/firestore-helper.service';
 import { FireStorageHelperService } from './firebase/storage-helper.service';
 import { Gender } from '../../enums/gender.enum';
 import { Unsubscribe } from 'firebase/firestore';
+import { User } from '../../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class BabiesService {
@@ -20,7 +21,10 @@ export class BabiesService {
   private _babyPictureUrl = signal<string | null>(null);
   public readonly babyPictureUrl = this._babyPictureUrl.asReadonly();
 
-  public async setBaby(babyUid: string): Promise<Baby | null> {
+  public async setBaby(
+    babyUid: string,
+    user: User | null = null
+  ): Promise<Baby | null> {
     this.stopListeningToBabyChanges();
 
     try {
@@ -30,6 +34,12 @@ export class BabiesService {
       );
 
       if (existing) {
+        if (user && !existing.usersUids.includes(user.uid)) {
+          await this.addUserIdToBaby(existing, user.uid);
+          existing.usersUids.push(user.uid);
+          console.log('User added to baby:', user.uid);
+        }
+
         this._baby.set(existing);
         this._babyPictureUrl.set(
           (await this.getBabyImageUrl(existing.uid)) ?? null
@@ -153,6 +163,12 @@ export class BabiesService {
     console.log('Baby deleted from DB:', baby);
     await this.fireStorageHelper.deleteFile(imagePath);
     console.log('Baby image deleted from storage:', imagePath);
+  }
+
+  private async addUserIdToBaby(baby: Baby, newUserUid: string) {
+    await this.firestoreHelper.update<Baby>(this.babiesCollection, baby.uid, {
+      usersUids: [...(baby.usersUids ?? []), newUserUid],
+    });
   }
 
   private startListeningToBabyChanges(babyUid: string) {
