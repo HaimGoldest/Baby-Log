@@ -17,10 +17,11 @@ export const appGuard: CanActivateFn = (route, state) => {
 
   console.log('AppGuard: Trying navigate to', url);
 
-  // Redirect to login if not logged in and not on login page
+  // Redirect to Loading if not logged in and not on login page
+  // (Occurs if it arrived via independent navigation, Firebase Auth will already change this)
   if (!isLoggedIn && !isLoginPage) {
-    console.log('AppGuard: Navigating to', AppRoute.Login);
-    return router.createUrlTree(['/', AppRoute.Login]);
+    console.log('AppGuard: Navigating to', AppRoute.Loading);
+    return router.createUrlTree(['/', AppRoute.Loading]);
   }
 
   // Logged in but not have baby and not in add baby page, Redirect to add baby page

@@ -3,13 +3,13 @@ import { LoginPage } from './features/login/login.page';
 import { AppRoute } from './enums/app-route.enum';
 import { BabyEventsComponent } from './features/baby-events/pages/baby-events.page';
 import { appGuard } from './core/guards/app.guard';
+import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
 
 export const appRoutes: Routes = [
-  //{ path: '', redirectTo: Route.Loading, pathMatch: 'full' },
-  //{ path: '', pathMatch: 'full' },
+  { path: '', redirectTo: AppRoute.Loading, pathMatch: 'full' },
 
   // Eager loading paths
-  // { path: Route.Loading, component: LoadingSpinnerComponent },
+  { path: AppRoute.Loading, component: LoadingSpinnerComponent },
   { path: AppRoute.Login, component: LoginPage, canActivate: [appGuard] },
   {
     path: AppRoute.BabyEvents,

@@ -15,14 +15,22 @@ export class AuthService {
   private auth = inject(Auth);
   private userService = inject(UserService);
   private router = inject(Router);
-  private authData = toSignal(authState(this.auth), { initialValue: null });
+  private authData = toSignal<FirebaseUser | null | undefined>(
+    authState(this.auth),
+    {
+      initialValue: undefined,
+    }
+  );
 
   public readonly isLoggedIn = computed(() => !!this.userService.user());
 
   constructor() {
     effect(
       () => {
-        this.handleAuthChange(this.authData());
+        const user = this.authData();
+        if (user === undefined) return;
+
+        this.handleAuthChange(user);
       },
       { allowSignalWrites: true }
     );
@@ -41,7 +49,7 @@ export class AuthService {
     console.log('Auth state changed, Firebase User:', firebaseUser);
     if (firebaseUser) {
       await this.userService.initUser(firebaseUser);
-      this.router.navigate(['/', AppRoute.BabyEvents]);
+      this.navigateAuthUser();
     } else {
       this.userService.dispose();
       console.log('Logged out: moving to login page.');
