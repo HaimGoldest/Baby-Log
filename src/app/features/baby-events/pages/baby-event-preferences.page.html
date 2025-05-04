@@ -3,11 +3,12 @@
     <div class="container">
       <h1 class="text-center">Baby Actions Preferences</h1>
       <br />
-      <app-baby-action-category-pref
-        *ngFor="let category of babyEventsCategories(); "
-        [babyActionCategory]="category"
+      @for (category of babyEventsCategories(); track category.name) {
+      <app-baby-event-preferences-item
+        [babyEventCategory]="category"
         (modified)="onChanged()"
-      ></app-baby-action-category-pref>
+      ></app-baby-event-preferences-item>
+      }
     </div>
   </div>
 </div>

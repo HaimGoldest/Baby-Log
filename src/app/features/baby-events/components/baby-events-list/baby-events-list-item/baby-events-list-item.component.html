@@ -1,1 +1,59 @@
-<p>Item</p>
+<mat-card
+  appearance="outlined"
+  class="baby-event-card"
+  (contextmenu)="onEdit($event)"
+>
+  <div class="mat-card-content">
+    <div class="main-section">
+      <h4 class="card-title">{{ event.category.name }}</h4>
+      <img
+        mat-card-image
+        src="{{ event.category.imagePath }}"
+        alt="{{ event.category.name }}"
+        class="event-img"
+      />
+      <span class="time-info">
+        <mat-card-subtitle class="time-text">
+          {{ event.time | date : "dd/MM/yy" }} -
+          {{ event.time | date : "HH:mm:ss" }}
+        </mat-card-subtitle>
+      </span>
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="menu"
+        aria-label="Icon-button with a menu"
+        class="menu-button"
+      >
+        <mat-icon>more_vert</mat-icon>
+      </button>
+
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item color="primary" (click)="onEdit()">
+          <mat-icon>edit</mat-icon>
+          <span>Edit</span>
+        </button>
+        @if (filterMode) {
+        <button mat-menu-item (click)="onUnfilter()">
+          <mat-icon>filter_none</mat-icon>
+          <span>Unfilter</span>
+        </button>
+        } @else {
+        <button mat-menu-item (click)="onFilter()">
+          <mat-icon>filter</mat-icon>
+          <span>Filter</span>
+        </button>
+        }
+        <button mat-menu-item color="warn" (click)="onDelete()">
+          <mat-icon>delete</mat-icon>
+          <span>Delete</span>
+        </button>
+      </mat-menu>
+
+      @if (event.comment) {
+      <div class="comment-section">
+        <p>{{ event.comment }}</p>
+      </div>
+      }
+    </div>
+  </div>
+</mat-card>

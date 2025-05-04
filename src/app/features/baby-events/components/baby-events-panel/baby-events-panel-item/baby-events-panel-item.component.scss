@@ -1,24 +1,20 @@
+.img-btn {
+  width: 45px;
+  height: 45px;
+  margin: 4px;
+  border-radius: 100px;
+  border: 3px solid #000000;
+  background-size: cover;
+}
+
 /* MD and above */
 @media (min-width: 768px) {
-    .img-btn {
-      width: 90px;
-      height: 90px;
-      margin: 4px;
-      border-radius: 200px;
-      border: 3px solid #000000;
-      background-size: cover;
-    }
+  .img-btn {
+    width: 90px;
+    height: 90px;
+    margin: 4px;
+    border-radius: 200px;
+    border: 3px solid #000000;
+    background-size: cover;
   }
-  
-  /* SM and below */
-  @media (max-width: 767.98px) {
-    .img-btn {
-      width: 45px;
-      height: 45px;
-      margin: 4px;
-      border-radius: 100px;
-      border: 3px solid #000000;
-      background-size: cover;
-    }
-  }
-  
+}

@@ -1,0 +1,27 @@
+<div class="row">
+  <!-- <app-baby-events-list-item
+        *ngFor="let babyEventEl of babyEventsData; let i = index"
+        [babyEventData]="babyEventEl"
+        [index]="i"
+        [filterMode]="filterMode"
+        [activeEditModeIndex]="activeEditModeIndex"
+        (editModeOpened)="onEditModeOpened($event)"
+        (filter)="onFilter($event)"
+        (unfilter)="onUnfilter()"
+    ></app-baby-events-list-item> -->
+  <app-baby-events-list-item>
+    @for (event in babyEventsData) {
+    <div class="col-xs-12">
+      <app-baby-events-list-item
+        [babyEventData]="event"
+        [index]="i"
+        [filterMode]="filterMode"
+        [activeEditModeIndex]="activeEditModeIndex"
+        (editModeOpened)="onEditModeOpened($event)"
+        (filter)="onFilter($event)"
+        (unfilter)="onUnfilter()"
+      ></app-baby-events-list-item>
+    </div>
+    }
+  </app-baby-events-list-item>
+</div>

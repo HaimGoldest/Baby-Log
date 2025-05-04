@@ -23,7 +23,7 @@
           (click)="onChanged()"
           type="checkbox"
           id="cateroryDescCheckbox"
-          [(ngModel)]="babyActionCategory.isDefaultDescriptionEnable"
+          [(ngModel)]="babyEventCategory.isDefaultCommentEnabled"
         />
       </label>
     </div>
@@ -41,7 +41,7 @@
           style="height: 80px"
           (keyup)="updateDefaultDescription($event.target.value)"
         >
-          {{ babyActionCategory.defaultDescription }}
+          {{ babyEventCategory.defaultDescription }}
         </textarea>
         <label for="defaultDescriptionText">Default Description </label>
       </div>

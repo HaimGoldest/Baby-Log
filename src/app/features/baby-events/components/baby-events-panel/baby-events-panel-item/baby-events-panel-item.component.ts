@@ -26,9 +26,8 @@ export class BabyEventsPanelItemComponent {
       uid: 'new',
       category: this.babyEventCategory,
       comment: comment,
-      createdAt: new Date(),
+      time: new Date(),
       createdBy: this.userService.user(),
-      lastEditedAt: undefined,
       lastEditedBy: undefined,
     };
 

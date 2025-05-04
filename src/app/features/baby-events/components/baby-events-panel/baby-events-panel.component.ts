@@ -11,7 +11,7 @@ import { BabyEventPreferencesService } from '../../services/baby-event-preferenc
   templateUrl: './baby-events-panel.component.html',
   styleUrl: './baby-events-panel.component.scss',
 })
-export class BabyActionsPanelComponent {
+export class BabyEventsPanelComponent {
   private preferencesService = inject(BabyEventPreferencesService);
   public activeBabyEventCategories: BabyEventCategory[] =
     this.preferencesService.preferences().filter((p) => p.isCategoryEnabled);
