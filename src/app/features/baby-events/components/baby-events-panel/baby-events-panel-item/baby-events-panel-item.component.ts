@@ -28,7 +28,7 @@ export class BabyEventsPanelItemComponent {
       comment: comment,
       time: new Date(),
       createdBy: this.userService.user(),
-      lastEditedBy: undefined,
+      lastEditedBy: null,
     };
 
     try {

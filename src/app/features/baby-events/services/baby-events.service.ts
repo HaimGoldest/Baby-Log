@@ -12,8 +12,11 @@ export class BabyEventsService {
   private babiesCollection = this.babiesService.babiesCollection;
   private readonly babyUid = computed(() => this.babiesService.baby()?.uid);
 
-  public readonly events = computed(
-    () => this.babiesService.baby()?.eventsData
+  public readonly events = computed(() =>
+    this.babiesService.baby()?.eventsData.sort(
+      // Sort events by date and time in descending order
+      (a, b) => b.time.getTime() - a.time.getTime()
+    )
   );
 
   public async addEvent(newEvent: BabyEvent) {

@@ -79,6 +79,7 @@ export class UserService {
         uid: newBabyUid,
       });
       console.log(`Baby was added to user:`, this.babiesService.baby());
+      this.navigateAfterAddingBaby();
     } catch (error) {
       console.error('Failed to add new baby to user:', error);
     }
@@ -92,6 +93,7 @@ export class UserService {
       }
       this.addBabyIdToUser(this._user(), babyUid);
       console.log('Existing baby was added to the user:', baby);
+      this.navigateAfterAddingBaby();
     } catch (error) {
       console.error('Failed to add existing baby:', error);
       throw error;
@@ -143,7 +145,6 @@ export class UserService {
       (data) => {
         if (data) {
           this._user.set(data);
-          this.navigateAfterAddingBaby();
         }
       },
       (err) => console.error('Real-time listener error:', err)

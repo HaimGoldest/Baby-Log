@@ -1,4 +1,4 @@
-import { Component, computed } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { BabyMeasurementsService } from '../../services/baby-measurements.service';
 import { GrowthTrackingListItemComponent } from './growth-tracking-list-item/growth-tracking-list-item.component';
 
@@ -10,9 +10,9 @@ import { GrowthTrackingListItemComponent } from './growth-tracking-list-item/gro
   styleUrl: './growth-tracking-list.component.scss',
 })
 export class GrowthTrackingListComponent {
+  private readonly babyMeasurementsService = inject(BabyMeasurementsService);
+
   public readonly measurements = computed(() =>
     this.babyMeasurementsService.measurements()
   );
-
-  constructor(private babyMeasurementsService: BabyMeasurementsService) {}
 }

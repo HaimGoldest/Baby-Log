@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { BabyEventsService } from '../../../services/baby-events.service';
-import { BabyEvent, BabyEventCategory } from '../../../../../models/baby.model';
+import { BabyEventsService } from '../../services/baby-events.service';
+import { BabyEvent, BabyEventCategory } from '../../../../models/baby.model';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -11,7 +11,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-baby-events-list-item',
+  selector: 'app-baby-event-card',
   standalone: true,
   imports: [
     CommonModule,
@@ -23,10 +23,10 @@ import { CommonModule } from '@angular/common';
     MatFormFieldModule,
     MatInputModule,
   ],
-  templateUrl: './baby-events-list-item.component.html',
-  styleUrls: ['./baby-events-list-item.component.scss'],
+  templateUrl: './baby-event-card.component.html',
+  styleUrls: ['./baby-event-card.component.scss'],
 })
-export class BabyEventsListItemComponent {
+export class BabyEventCardComponent {
   private babyEventsService = inject(BabyEventsService);
   @Input({ required: true }) public event: BabyEvent;
   @Input({ required: true }) public filterMode: boolean;
@@ -35,7 +35,7 @@ export class BabyEventsListItemComponent {
 
   public onEdit(event?: MouseEvent): void {
     if (event) event.preventDefault();
-
+    console.warn('Edit event not implemented yet');
     // if (this.babyActionData) {
     //   this.babyActionData.description = newDescription;
     //   this.editMode = false;

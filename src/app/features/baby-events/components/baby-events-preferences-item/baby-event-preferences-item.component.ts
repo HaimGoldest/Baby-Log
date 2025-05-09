@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BabyEventCategory } from '../../../../models/baby.model';
@@ -14,7 +14,7 @@ export class BabyEventsPreferencesItemComponent {
   @Input({ required: true }) babyEventCategory: BabyEventCategory;
   @Output() modified = new EventEmitter<boolean>();
 
-  public updateDefaultDescription(newValue: string): void {
+  public updateDefaultComment(newValue: string): void {
     this.babyEventCategory.defaultComment = newValue;
     this.onChanged();
   }

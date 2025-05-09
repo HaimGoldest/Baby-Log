@@ -7,10 +7,6 @@
     align-items: center;
     margin-bottom: 10px;
 
-    // h4 {
-    //   font-weight: bold;
-    // }
-
     .card-title {
       font-weight: bold;
       margin: 0;
@@ -21,6 +17,7 @@
     .event-img {
       width: 45px;
       height: 45px;
+      margin-left: 5px;
       border-radius: 50%;
       object-fit: cover;
     }
@@ -38,11 +35,11 @@
     .menu-button {
       margin-left: auto; /* Ensure the button is aligned to the right */
     }
+  }
 
-    .comment-section {
-      margin-bottom: 10px;
-      text-align: center;
-    }
+  .comment-section {
+    margin-bottom: 10px;
+    text-align: center;
   }
 }
 

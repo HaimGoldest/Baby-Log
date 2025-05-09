@@ -16,13 +16,13 @@
         />
       </label>
       <label
-        for="cateroryDescCheckbox"
+        for="cateroryCommentCheckbox"
         *ngIf="babyEventCategory.isCategoryEnabled"
-        >| Enable Default Description
+        >| Enable Default Comment
         <input
           (click)="onChanged()"
           type="checkbox"
-          id="cateroryDescCheckbox"
+          id="cateroryCommentCheckbox"
           [(ngModel)]="babyEventCategory.isDefaultCommentEnabled"
         />
       </label>
@@ -35,15 +35,15 @@
       "
     >
       <div class="form-floating">
-        <textarea
+        <input
+          type="text"
           class="form-control"
-          id="defaultDescriptionText"
-          style="height: 80px"
-          (keyup)="updateDefaultDescription($event.target.value)"
-        >
-          {{ babyEventCategory.defaultDescription }}
-        </textarea>
-        <label for="defaultDescriptionText">Default Description </label>
+          id="defaultCommentText"
+          [value]="babyEventCategory.defaultComment"
+          (input)="updateDefaultComment($event.target.value)"
+          placeholder="Default Comment"
+        />
+        <label for="defaultCommentText">Default Comment</label>
       </div>
     </div>
   </div>

@@ -12,8 +12,11 @@ export class BabyMeasurementsService {
   private babiesCollection = this.babiesService.babiesCollection;
   private readonly babyUid = computed(() => this.babiesService.baby()?.uid);
 
-  public readonly measurements = computed(
-    () => this.babiesService.baby()?.measurementsData
+  public readonly measurements = computed(() =>
+    this.babiesService.baby()?.measurementsData.sort(
+      // Sort measurements by date in descending order
+      (a, b) => b.date.getTime() - a.date.getTime()
+    )
   );
 
   public async addMeasurement(newMeasurement: BabyMeasurement) {
