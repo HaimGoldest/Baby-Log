@@ -28,23 +28,23 @@
       </button>
 
       <mat-menu #menu="matMenu">
-        <button mat-menu-item color="primary" (click)="onEdit()">
-          <mat-icon>edit</mat-icon>
+        <button mat-menu-item (click)="onEdit()">
+          <mat-icon color="primary">edit</mat-icon>
           <span>Edit</span>
         </button>
         @if (filterMode) {
         <button mat-menu-item (click)="onUnfilter()">
-          <mat-icon>filter_none</mat-icon>
+          <mat-icon color="accent">filter_none</mat-icon>
           <span>Unfilter</span>
         </button>
         } @else {
         <button mat-menu-item (click)="onFilter()">
-          <mat-icon>filter</mat-icon>
+          <mat-icon color="accent">filter</mat-icon>
           <span>Filter</span>
         </button>
         }
-        <button mat-menu-item color="warn" (click)="onDelete()">
-          <mat-icon>delete</mat-icon>
+        <button mat-menu-item (click)="onDelete()">
+          <mat-icon color="warn">delete</mat-icon>
           <span>Delete</span>
         </button>
       </mat-menu>

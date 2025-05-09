@@ -1,4 +1,4 @@
-<app-baby-events-panel></app-baby-events-panel>
+<app-baby-events-panel (filter)="onFilter($event)"></app-baby-events-panel>
 <hr />
 <div class="container-fluid">
   <div class="container">
@@ -7,7 +7,7 @@
         @for (event of displayedEvents(); track event.uid) {
         <app-baby-event-card
           [event]="event"
-          [filterMode]="filterMode"
+          [filterMode]="filterMode()"
           (filter)="onFilter($event)"
           (unfilter)="onUnfilter()"
         ></app-baby-event-card>
@@ -15,7 +15,6 @@
         <!-- TODO - change to use the alert component -->
         <div class="alert alert-info" role="alert">
           <h4 class="alert-heading">{{ "No events found!" }}</h4>
-          <p class="alert-info">{{ "Please add new events..." }}</p>
         </div>
         }
       </div>

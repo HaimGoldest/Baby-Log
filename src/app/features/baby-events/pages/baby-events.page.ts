@@ -18,7 +18,7 @@ export class BabyEventsComponent {
   private readonly allEvents = computed(() => this.babyEventsService.events());
   private readonly filteredEvents = computed(() =>
     this.allEvents().filter(
-      (event) => event.category === this.currentFilteredCategory()
+      (event) => event.category.name === this.currentFilteredCategory().name
     )
   );
 
@@ -28,6 +28,11 @@ export class BabyEventsComponent {
   );
 
   onFilter(category: BabyEventCategory) {
+    if (category === this.currentFilteredCategory()) {
+      this.onUnfilter();
+      return;
+    }
+
     this.currentFilteredCategory.set(category);
   }
 
