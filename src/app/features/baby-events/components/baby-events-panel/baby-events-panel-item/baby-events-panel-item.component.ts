@@ -1,15 +1,23 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  Output,
+} from '@angular/core';
 import { BabyEventCategory, BabyEvent } from '../../../../../models/baby.model';
 import { BabyEventsService } from '../../../services/baby-events.service';
 import { UserService } from '../../../../../core/services/user.service';
 
 @Component({
   selector: 'app-baby-events-panel-item',
-  standalone: true,
-  imports: [CommonModule],
   templateUrl: './baby-events-panel-item.component.html',
   styleUrl: './baby-events-panel-item.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [CommonModule],
 })
 export class BabyEventsPanelItemComponent {
   private babyEventsService = inject(BabyEventsService);

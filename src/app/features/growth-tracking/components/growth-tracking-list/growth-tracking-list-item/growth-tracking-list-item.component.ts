@@ -1,4 +1,9 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnDestroy,
+} from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
@@ -11,6 +16,7 @@ import { BabyMeasurement } from '../../../../../models/baby.model';
 
 @Component({
   selector: 'app-growth-tracking-list-item',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
     CommonModule,

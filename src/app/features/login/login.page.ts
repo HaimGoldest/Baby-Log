@@ -1,4 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import * as firebaseui from 'firebaseui';
 import { FacebookAuthProvider, GoogleAuthProvider } from 'firebase/auth';
 import { Auth } from '@angular/fire/auth';
@@ -7,6 +12,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [CommonModule],
   templateUrl: './login.page.html',

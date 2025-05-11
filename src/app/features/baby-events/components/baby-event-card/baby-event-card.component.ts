@@ -1,4 +1,11 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  Output,
+} from '@angular/core';
 import { BabyEventsService } from '../../services/baby-events.service';
 import { BabyEvent, BabyEventCategory } from '../../../../models/baby.model';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +19,9 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-baby-event-card',
+  templateUrl: './baby-event-card.component.html',
+  styleUrls: ['./baby-event-card.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
     CommonModule,
@@ -23,8 +33,6 @@ import { CommonModule } from '@angular/common';
     MatFormFieldModule,
     MatInputModule,
   ],
-  templateUrl: './baby-event-card.component.html',
-  styleUrls: ['./baby-event-card.component.scss'],
 })
 export class BabyEventCardComponent {
   private babyEventsService = inject(BabyEventsService);

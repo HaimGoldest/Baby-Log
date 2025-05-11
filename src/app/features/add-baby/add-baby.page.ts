@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 import { FormsModule, NgForm } from '@angular/forms';
@@ -9,6 +9,7 @@ import { Gender } from '../../enums/gender.enum';
 @Component({
   standalone: true,
   imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-add-baby',
   templateUrl: './add-baby.page.html',
   styleUrls: ['./add-baby.page.scss'],

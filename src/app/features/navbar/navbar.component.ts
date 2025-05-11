@@ -1,4 +1,9 @@
-import { Component, computed, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+} from '@angular/core';
 import { UserService } from '../../core/services/user.service';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,6 +17,10 @@ import { AuthService } from '../../core/services/auth.service';
 import { AppRoute } from '../../enums/app-route.enum';
 
 @Component({
+  selector: 'app-navbar',
+  templateUrl: './navbar.component.html',
+  styleUrl: './navbar.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
     CommonModule,
@@ -22,9 +31,6 @@ import { AppRoute } from '../../enums/app-route.enum';
     MatMenuModule,
     MatDividerModule,
   ],
-  selector: 'app-navbar',
-  templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss',
 })
 export class NavbarComponent {
   private authService = inject(AuthService);
