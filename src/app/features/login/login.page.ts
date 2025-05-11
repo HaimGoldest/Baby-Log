@@ -1,13 +1,12 @@
+import * as firebaseui from 'firebaseui';
+import { GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
+import { getFirebaseUIAuth } from '../../core/services/firebase/firebase-ui-init';
 import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import * as firebaseui from 'firebaseui';
-import { FacebookAuthProvider, GoogleAuthProvider } from 'firebase/auth';
-import { Auth } from '@angular/fire/auth';
-import { inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -20,9 +19,10 @@ import { CommonModule } from '@angular/common';
 })
 export class LoginPage implements OnInit, OnDestroy {
   ui: firebaseui.auth.AuthUI;
-  auth = inject(Auth);
 
   ngOnInit() {
+    const auth = getFirebaseUIAuth();
+
     const uiConfig = {
       signInFlow: 'popup',
       signInOptions: [
@@ -34,7 +34,7 @@ export class LoginPage implements OnInit, OnDestroy {
       },
     };
 
-    this.ui = new firebaseui.auth.AuthUI(this.auth);
+    this.ui = new firebaseui.auth.AuthUI(auth);
     this.ui.start('#firebaseui-auth-container', uiConfig);
   }
 
@@ -42,11 +42,11 @@ export class LoginPage implements OnInit, OnDestroy {
     this.ui.delete();
   }
 
-  onLoginSuccessful(result) {
+  onLoginSuccessful(result: any) {
     if (result.error) {
-      console.error('Login was successful, Firebase error:', result.error);
+      console.error('Login failed with error:', result.error);
     } else {
-      console.log('Login failed, Firebase result:', result);
+      console.log('Login successful:', result);
     }
   }
 }
