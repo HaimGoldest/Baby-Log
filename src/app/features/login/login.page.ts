@@ -1,6 +1,6 @@
 import * as firebaseui from 'firebaseui';
 import { GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
-import { getFirebaseUIAuth } from '../../core/services/firebase/firebase-ui-init';
+import { getFirebaseUIAuth } from '../../core/firebase/firebase-ui-init';
 import {
   ChangeDetectionStrategy,
   Component,

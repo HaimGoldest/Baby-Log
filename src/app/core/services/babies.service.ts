@@ -1,7 +1,7 @@
 import { inject, Injectable, Signal, signal } from '@angular/core';
 import { Baby } from '../../models/baby.model';
-import { FirestoreHelperService } from './firebase/firestore-helper.service';
-import { FireStorageHelperService } from './firebase/storage-helper.service';
+import { FirestoreHelperService } from '../firebase/firestore-helper.service';
+import { FireStorageHelperService } from '../firebase/storage-helper.service';
 import { Gender } from '../../enums/gender.enum';
 import { Unsubscribe } from 'firebase/firestore';
 import { User } from '../../models/user.model';

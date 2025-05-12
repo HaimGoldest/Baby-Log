@@ -1,7 +1,7 @@
 import { computed, inject, Injectable, signal, Signal } from '@angular/core';
 import { User as FirebaseUser } from 'firebase/auth';
 import { Unsubscribe } from 'firebase/firestore';
-import { FirestoreHelperService } from './firebase/firestore-helper.service';
+import { FirestoreHelperService } from '../firebase/firestore-helper.service';
 import { User } from '../../models/user.model';
 import { UserFactory } from '../../factories/user.factory';
 import { BabiesService } from './babies.service';

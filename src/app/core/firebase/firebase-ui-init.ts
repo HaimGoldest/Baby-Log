@@ -1,6 +1,6 @@
 import { initializeApp, getApps } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 /**
  * Returns the Firebase Auth instance used specifically for firebaseui,

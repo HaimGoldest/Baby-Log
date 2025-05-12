@@ -1,6 +1,6 @@
 import { computed, inject, Injectable } from '@angular/core';
 import { BabiesService } from '../../../core/services/babies.service';
-import { FirestoreHelperService } from '../../../core/services/firebase/firestore-helper.service';
+import { FirestoreHelperService } from '../../../core/firebase/firestore-helper.service';
 import { Baby, BabyMeasurement } from '../../../models/baby.model';
 
 @Injectable({

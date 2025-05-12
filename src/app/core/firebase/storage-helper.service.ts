@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
-  getStorage,
+  Storage,
   ref,
   uploadBytes,
   getDownloadURL,
   deleteObject,
-} from 'firebase/storage';
+} from '@angular/fire/storage';
 
 /**
  * Helper service for Firebase Storage operations:
@@ -13,6 +13,8 @@ import {
  */
 @Injectable({ providedIn: 'root' })
 export class FireStorageHelperService {
+  private storage = inject(Storage);
+
   /**
    * Uploads a file to Firebase Storage at the specified path.
    * @param path - The relative storage path (e.g., 'users/avatars/uid.jpg').
@@ -22,7 +24,7 @@ export class FireStorageHelperService {
    */
   public async uploadFile(path: string, file: File): Promise<string> {
     try {
-      const fileRef = ref(getStorage(), path);
+      const fileRef = ref(this.storage, path);
       await uploadBytes(fileRef, file);
       console.log('File uploaded successfully:', path);
       return await getDownloadURL(fileRef);
@@ -39,7 +41,7 @@ export class FireStorageHelperService {
    */
   public async getFileUrl(path: string): Promise<string | null> {
     try {
-      const fileRef = ref(getStorage(), path);
+      const fileRef = ref(this.storage, path);
       return await getDownloadURL(fileRef);
     } catch (error: any) {
       if (error.code === 'storage/object-not-found') {
@@ -60,7 +62,7 @@ export class FireStorageHelperService {
    */
   public async deleteFile(path: string): Promise<void> {
     try {
-      const fileRef = ref(getStorage(), path);
+      const fileRef = ref(this.storage, path);
       await deleteObject(fileRef);
       console.log('File deleted successfully:', path);
     } catch (error: any) {
