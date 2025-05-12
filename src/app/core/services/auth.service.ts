@@ -25,15 +25,12 @@ export class AuthService {
   public readonly isLoggedIn = computed(() => !!this.userService.user());
 
   constructor() {
-    effect(
-      () => {
-        const user = this.authData();
-        if (user === undefined) return;
+    effect(() => {
+      const user = this.authData();
+      if (user === undefined) return;
 
-        this.handleAuthChange(user);
-      },
-      { allowSignalWrites: true }
-    );
+      this.handleAuthChange(user);
+    });
   }
 
   public async logout(): Promise<void> {

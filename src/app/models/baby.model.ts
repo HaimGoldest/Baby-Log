@@ -24,8 +24,8 @@ export interface BabyEvent {
   category: BabyEventCategory;
   comment: string;
   time: Date;
-  createdBy: User;
-  lastEditedBy?: User;
+  createdBy: string;
+  lastEditedBy?: string;
 }
 
 export interface BabyEventCategory {
