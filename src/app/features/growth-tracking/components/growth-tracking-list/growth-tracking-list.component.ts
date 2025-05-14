@@ -18,7 +18,5 @@ import { GrowthTrackingListItemComponent } from './growth-tracking-list-item/gro
 export class GrowthTrackingListComponent {
   private readonly babyMeasurementsService = inject(BabyMeasurementsService);
 
-  public readonly measurements = computed(() =>
-    this.babyMeasurementsService.measurements()
-  );
+  public readonly measurements = this.babyMeasurementsService.measurements;
 }

@@ -37,10 +37,10 @@ export class NavbarComponent {
   private userService = inject(UserService);
   private babiesService = inject(BabiesService);
 
-  public isLoggedIn = computed(() => this.authService.isLoggedIn());
-  public userImageUrl = computed(() => this.userService.userPictureUrl());
-  public babyImageUrl = computed(() => this.babiesService.babyPictureUrl());
-  public userHaveBabies = computed(() => this.userService.userHaveBabies());
+  public isLoggedIn = this.authService.isLoggedIn;
+  public userImageUrl = this.userService.userPictureUrl;
+  public babyImageUrl = this.babiesService.babyPictureUrl;
+  public userHaveBabies = this.userService.userHaveBabies;
 
   public homePage = AppRoute.HomePage;
   public babyEventsPage = AppRoute.BabyEvents;

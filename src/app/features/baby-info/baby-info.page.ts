@@ -1,4 +1,4 @@
-import { Component, computed, OnInit } from '@angular/core';
+import { Component, computed, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -25,7 +25,7 @@ import { AppRoute } from '../../enums/app-route.enum';
   styleUrls: ['./baby-info.page.scss'],
 })
 export class BabyInfoPage implements OnInit {
-  baby = computed(() => this.babiesService.baby());
+  baby = this.babiesService.baby;
   babyImageUrl: string | null = null;
   isLoading: boolean;
 

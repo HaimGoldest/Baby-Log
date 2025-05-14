@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   EventEmitter,
   inject,
   Output,
@@ -20,7 +21,10 @@ import { BabyEventPreferencesService } from '../../services/baby-event-preferenc
 })
 export class BabyEventsPanelComponent {
   private preferencesService = inject(BabyEventPreferencesService);
-  public activeBabyEventCategories: BabyEventCategory[] =
+  public activeBabyEventCategories = computed(() =>
+    this.preferencesService.preferences().filter((p) => p.isCategoryEnabled)
+  );
+  public activeBabyEventCategories2: BabyEventCategory[] =
     this.preferencesService.preferences().filter((p) => p.isCategoryEnabled);
   @Output() filter = new EventEmitter<BabyEventCategory>();
 

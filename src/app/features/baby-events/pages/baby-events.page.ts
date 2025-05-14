@@ -22,7 +22,7 @@ export class BabyEventsComponent {
   private readonly babyEventsService = inject(BabyEventsService);
   private currentFilteredCategory = signal<BabyEventCategory | null>(null);
 
-  private readonly allEvents = computed(() => this.babyEventsService.events());
+  private readonly allEvents = this.babyEventsService.events;
   private readonly filteredEvents = computed(() =>
     this.allEvents().filter(
       (event) => event.category.name === this.currentFilteredCategory().name
@@ -30,6 +30,7 @@ export class BabyEventsComponent {
   );
 
   public filterMode = computed(() => this.currentFilteredCategory() !== null);
+
   public readonly displayedEvents = computed(() =>
     this.filterMode() ? this.filteredEvents() : this.allEvents()
   );

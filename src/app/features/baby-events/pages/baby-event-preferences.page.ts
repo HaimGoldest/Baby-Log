@@ -20,9 +20,7 @@ export class BabyEventsPreferencesPage implements OnDestroy {
   private preferencesService = inject(BabyEventPreferencesService);
   private hasChanged = false;
 
-  public babyEventsCategories = computed(() =>
-    this.preferencesService.preferences()
-  );
+  public babyEventsCategories = this.preferencesService.preferences;
 
   ngOnDestroy(): void {
     if (this.hasChanged) {
