@@ -1,18 +1,21 @@
 import { CommonModule } from '@angular/common';
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { MatMomentDateModule } from '@angular/material-moment-adapter';
-import { MatButtonModule } from '@angular/material/button';
+
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogModule,
-  MatDialogRef,
-} from '@angular/material/dialog';
+import { MatNativeDateModule } from '@angular/material/core';
+
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTimepickerModule } from '@angular/material/timepicker';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import {
+  MatDialogModule,
+  MAT_DIALOG_DATA,
+  MatDialogRef,
+} from '@angular/material/dialog';
+
 import { BabyEvent } from '../../../../models/baby.model';
 
 @Component({
@@ -27,7 +30,7 @@ import { BabyEvent } from '../../../../models/baby.model';
     MatInputModule,
     MatButtonModule,
     MatDatepickerModule,
-    MatMomentDateModule,
+    MatNativeDateModule,
     MatIconModule,
     MatTimepickerModule,
   ],
@@ -37,9 +40,16 @@ import { BabyEvent } from '../../../../models/baby.model';
 export class BabyEventFormComponent {
   private fb = inject(FormBuilder);
   public dialogRef = inject(MatDialogRef<BabyEventFormComponent>);
-  private data = inject<BabyEvent | null>(MAT_DIALOG_DATA);
+  private data = inject<BabyEvent>(MAT_DIALOG_DATA);
 
   public eventForm = this.fb.group({
-    date: [this.data?.time ?? new Date()],
+    time: [this.data?.time ?? new Date()],
+    comment: [this.data?.comment ?? ''],
   });
+
+  public onSubmit(): void {
+    if (this.eventForm.valid) {
+      this.dialogRef.close(this.eventForm.value);
+    }
+  }
 }
