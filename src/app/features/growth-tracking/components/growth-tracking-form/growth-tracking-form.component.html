@@ -7,20 +7,15 @@
       <mat-label>Date</mat-label>
       <input
         matInput
-        [matDatepicker]="picker"
+        [matDatepicker]="datepicker"
         formControlName="date"
-        readonly
+        (click)="datepicker.open()"
       />
-      <button
-        mat-icon-button
-        color="primary"
+      <mat-datepicker #datepicker></mat-datepicker>
+      <mat-datepicker-toggle
+        [for]="datepicker"
         matSuffix
-        (click)="picker.open()"
-        aria-label="Edit date"
-      >
-        <mat-icon>edit</mat-icon>
-      </button>
-      <mat-datepicker #picker></mat-datepicker>
+      ></mat-datepicker-toggle>
     </mat-form-field>
 
     <!-- Weight Field -->

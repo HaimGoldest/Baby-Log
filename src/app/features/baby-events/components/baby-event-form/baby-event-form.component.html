@@ -4,7 +4,12 @@
 <mat-dialog-content [formGroup]="eventForm">
   <mat-form-field appearance="outline">
     <mat-label>Event Date</mat-label>
-    <input matInput [matDatepicker]="datepicker" formControlName="time" />
+    <input
+      matInput
+      [matDatepicker]="datepicker"
+      formControlName="time"
+      (click)="datepicker.open()"
+    />
     <mat-datepicker #datepicker></mat-datepicker>
     <mat-datepicker-toggle [for]="datepicker" matSuffix></mat-datepicker-toggle>
   </mat-form-field>
