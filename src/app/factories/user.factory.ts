@@ -103,14 +103,14 @@ export class UserFactory {
         name: 'Breastfeeding',
         defaultComment: '',
         imagePath: '../../assets/images/icons8-breastfeeding-96.png',
-        isCategoryEnabled: true,
+        isCategoryEnabled: false,
         isDefaultCommentEnabled: false,
       },
       {
         name: 'Breast Pump',
         defaultComment: '',
         imagePath: '../../assets/images/icons8-breast-pump-96.png',
-        isCategoryEnabled: true,
+        isCategoryEnabled: false,
         isDefaultCommentEnabled: false,
       },
       {

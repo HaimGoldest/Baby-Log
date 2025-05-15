@@ -25,7 +25,7 @@ export class BabyEventsPanelItemComponent {
   @Input({ required: true }) babyEventCategory: BabyEventCategory;
   @Output() filter = new EventEmitter<BabyEventCategory>();
 
-  public async onAddBabyEvent(): Promise<void> {
+  public async addBabyEvent(): Promise<void> {
     const comment = this.babyEventCategory.isDefaultCommentEnabled
       ? this.babyEventCategory.defaultComment
       : '';
@@ -47,7 +47,8 @@ export class BabyEventsPanelItemComponent {
   }
 
   public filterEvent(event: MouseEvent): void {
-    event.preventDefault(); // Prevent the default context menu from appearing
+    if (event) event.preventDefault();
+
     this.filter.emit(this.babyEventCategory);
   }
 }

@@ -83,6 +83,7 @@ export class BabiesService {
       );
       console.log('Baby created in DB:', baby);
       this._baby.set(baby);
+      this.startListeningToBabyChanges(baby.uid);
     } catch (error) {
       console.error('Error creating baby in database:', error);
     }

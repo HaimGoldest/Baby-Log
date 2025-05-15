@@ -17,20 +17,27 @@
           required
         />
       </div>
-      <div class="form-group">
-        <label for="birthDate">Birth Date:</label>
+      <hr />
+      <mat-form-field>
+        <mat-label>Birth Date</mat-label>
         <input
-          type="date"
-          id="birthDate"
-          class="form-control"
+          matInput
+          [matDatepicker]="picker"
           ngModel
+          id="birthDate"
           name="birthDate"
           required
+          (click)="picker.open()"
         />
-      </div>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
       <hr />
-      <div class="form-group">
-        <label>Gender:</label>
+      <div class="form-group gender-group">
+        <label class="gender-label">Select Gender:</label>
         <div class="form-check">
           <input
             class="form-check-input"
@@ -41,7 +48,7 @@
             ngModel
             required
           />
-          <label class="form-check-label" for="genderMale"> Male </label>
+          <label class="form-check-label" for="genderMale">Male</label>
         </div>
         <div class="form-check">
           <input
@@ -53,7 +60,7 @@
             ngModel
             required
           />
-          <label class="form-check-label" for="genderFemale"> Female </label>
+          <label class="form-check-label" for="genderFemale">Female</label>
         </div>
       </div>
       <hr />

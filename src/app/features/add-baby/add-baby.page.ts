@@ -5,10 +5,20 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { BabiesService } from '../../core/services/babies.service';
 import { UserService } from '../../core/services/user.service';
 import { Gender } from '../../enums/gender.enum';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    LoadingSpinnerComponent,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-add-baby',
   templateUrl: './add-baby.page.html',
