@@ -1,6 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner/loading-spinner.component';
 import { FormsModule, NgForm } from '@angular/forms';
 import { BabiesService } from '../../core/services/babies.service';
 import { UserService } from '../../core/services/user.service';
@@ -8,13 +7,14 @@ import { Gender } from '../../enums/gender.enum';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { AppService } from '../../core/services/app.service';
+import { Observable } from 'rxjs';
 
 @Component({
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
-    LoadingSpinnerComponent,
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
@@ -25,64 +25,69 @@ import { MatInputModule } from '@angular/material/input';
   styleUrls: ['./add-baby.page.scss'],
 })
 export class AddBabyPage {
-  isNewBabyMode = true;
-  errorMessage: string | null = null;
-  selectedImage: File | null = null;
-  imagePreview: string | null = null;
-  isLoading: boolean;
+  private appService = inject(AppService);
+  private userService = inject(UserService);
+  private babiesService = inject(BabiesService);
 
-  constructor(
-    private userService: UserService,
-    private babiesService: BabiesService
-  ) {}
+  public isNewBabyMode = true;
+  public errorMessage: string | null = null;
+  public selectedImage: File | null = null;
+  public imagePreview$?: Observable<string>;
 
   onSwitchMode() {
     this.isNewBabyMode = !this.isNewBabyMode;
   }
 
   onImageSelected(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) {
-      this.selectedImage = file;
+    this.appService.isLoading.set(true);
 
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    this.selectedImage = file;
+
+    this.imagePreview$ = new Observable<string>((sub) => {
       const reader = new FileReader();
       reader.onload = () => {
-        this.imagePreview = reader.result as string;
+        sub.next(reader.result as string);
+        sub.complete();
       };
+      reader.onerror = (err) => sub.error(err);
       reader.readAsDataURL(file);
-    }
+    });
+    this.appService.isLoading.set(false);
   }
 
-  public onSubmit(form: NgForm): void {
-    if (!form.valid) {
-      return;
-    }
+  public async onSubmit(form: NgForm) {
+    if (!form.valid) return;
+    this.appService.isLoading.set(true);
 
-    this.isLoading = true;
-    if (this.isNewBabyMode) {
-      this.addNewBaby(form).finally(() => {
-        this.isLoading = false;
-      });
-    } else {
-      this.addExistingBaby(form).finally(() => {
-        this.isLoading = false;
-      });
+    try {
+      if (this.isNewBabyMode) {
+        await this.addNewBaby(form);
+        await this.uploadBabyImage();
+      } else {
+        await this.addExistingBaby(form);
+      }
+    } catch {
+      this.showErrorMessage('Failed to create the baby!');
+    } finally {
+      this.appService.isLoading.set(false);
     }
-
-    form.reset();
-    this.imagePreview = null;
   }
 
   private async addNewBaby(form: NgForm): Promise<void> {
     const name = form.value.name;
     const birthDate = form.value.birthDate;
     const gender = form.value.gender as Gender;
+    const haveImageInStorage = this.selectedImage !== null;
 
     try {
       await this.userService.addNewBaby({
         name: name,
         birthDate: birthDate,
         gender: gender,
+        haveImageInStorage: haveImageInStorage,
       });
       await this.uploadBabyImage();
     } catch (error) {
@@ -94,7 +99,6 @@ export class AddBabyPage {
     const uid = form.value.uid;
     try {
       await this.userService.addExistingBaby(uid);
-      await this.uploadBabyImage();
     } catch (error) {
       this.showErrorMessage(
         'Failed to add the baby! (Please make sure you entered a correct baby key)'

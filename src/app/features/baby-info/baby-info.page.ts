@@ -18,7 +18,7 @@ import { AppService } from '../../core/services/app.service';
   templateUrl: './baby-info.page.html',
   styleUrls: ['./baby-info.page.scss'],
 })
-export class BabyInfoPage implements OnInit {
+export class BabyInfoPage {
   private appService = inject(AppService);
   private babiesService = inject(BabiesService);
   private userService = inject(UserService);
@@ -27,20 +27,7 @@ export class BabyInfoPage implements OnInit {
   private snackBar = inject(MatSnackBar);
 
   public baby = this.babiesService.baby;
-  public babyImageUrl: string | null = null;
-
-  ngOnInit(): void {
-    this.loadBabyImage();
-  }
-
-  private loadBabyImage(): void {
-    if (this.baby().uid) {
-      this.babiesService.getBabyImageUrl(this.baby().uid).then((url) => {
-        this.babyImageUrl = url;
-        this.appService.isLoading.set(false);
-      });
-    }
-  }
+  public babyImageUrl = this.babiesService.babyImageUrl;
 
   public onImageSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -56,7 +43,6 @@ export class BabyInfoPage implements OnInit {
       this.babiesService
         .uploadBabyImage(this.baby().uid, file)
         .then(() => {
-          this.loadBabyImage(); // Refresh the displayed image
           this.snackBar.open('Image updated successfully', 'Close', {
             duration: 2000,
           });

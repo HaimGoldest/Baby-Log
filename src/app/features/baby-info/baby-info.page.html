@@ -6,7 +6,7 @@
     <div class="info-row">
       <span class="label">Baby Key:</span>
       <span class="value">
-        {{ baby().uid }}
+        {{ baby()?.uid }}
         <button
           mat-icon-button
           color="primary"
@@ -19,22 +19,20 @@
     </div>
     <div class="info-row">
       <span class="label">Name:</span>
-      <span class="value">{{ baby().name }}</span>
+      <span class="value">{{ baby()?.name }}</span>
     </div>
     <div class="info-row">
       <span class="label">Birth Date:</span>
-      <span class="value">{{ baby().birthDate | date : "longDate" }}</span>
+      <span class="value">{{ baby()?.birthDate | date : "longDate" }}</span>
     </div>
     <hr />
     <div class="info-row">
       <span class="label">Baby Image:</span>
       <span class="value">
-        <ng-container *ngIf="babyImageUrl; else noImage">
-          <img [src]="babyImageUrl" alt="Baby Image" class="baby-image" />
+        <ng-container *ngIf="(babyImageUrl() | async) as url; else noImage">
+          <img [src]="url" alt="Baby Image" class="baby-image" />
         </ng-container>
-        <ng-template #noImage>
-          <span>No image available</span>
-        </ng-template>
+        <ng-template #noImage><span>No image available</span></ng-template>
         <input
           type="file"
           accept="image/*"

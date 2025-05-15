@@ -17,8 +17,18 @@ export class BabiesService {
   private _baby = signal<Baby | null>(null);
   public readonly baby: Signal<Baby | null> = this._baby.asReadonly();
 
-  private _babyPictureUrl = signal<string | null>(null);
-  public readonly babyPictureUrl = this._babyPictureUrl.asReadonly();
+  private _babyImageUrl: string | null = null;
+  public babyImageUrl = computed<Promise<string>>(async () => {
+    if (this._babyImageUrl) return this._babyImageUrl;
+
+    const baby = this._baby();
+    if (baby || baby.haveImageInStorage) {
+      this._babyImageUrl = await this.getBabyImageUrl(baby.uid);
+      return this._babyImageUrl;
+    }
+
+    return '';
+  });
 
   private babySubscription: Subscription | null = null;
 
@@ -45,9 +55,6 @@ export class BabiesService {
         }
 
         this._baby.set(existing);
-        const url = await this.getBabyImageUrl(existing.uid);
-        this._babyPictureUrl.set(url);
-
         this.startListeningToBabyChanges(babyUid);
         console.log('Baby set successfully:', existing);
         return existing;
@@ -67,7 +74,13 @@ export class BabiesService {
    */
   public async createNewBaby(
     userId: string,
-    babyData: { uid: string; name: string; gender: Gender; birthDate: Date }
+    babyData: {
+      uid: string;
+      name: string;
+      gender: Gender;
+      birthDate: Date;
+      haveImageInStorage: boolean;
+    }
   ): Promise<void> {
     try {
       const baby: Baby = {
@@ -140,6 +153,11 @@ export class BabiesService {
     try {
       console.log(`Uploading image to ${imagePath}`);
       await this.fireStorageHelper.uploadFile(imagePath, image);
+      const updatedBaby: Baby = {
+        ...this.baby(),
+        haveImageInStorage: true,
+      };
+      await this.updateBaby(updatedBaby);
       console.log(`Image uploaded successfully for baby ${babyUid}`);
     } catch (error: any) {
       console.error(`Failed to upload image for baby ${babyUid}:`, error);
@@ -150,6 +168,8 @@ export class BabiesService {
    * Retrieves the download URL for a baby's image.
    */
   public async getBabyImageUrl(babyUid: string): Promise<string | null> {
+    if (this._babyImageUrl) return this._babyImageUrl;
+
     try {
       const imagePath = `${this.imagesRootPath}/${babyUid}`;
       console.log(`Retrieving image URL for ${imagePath}`);
@@ -182,7 +202,6 @@ export class BabiesService {
   public dispose(): void {
     this.stopListeningToBabyChanges();
     this._baby.set(null);
-    this._babyPictureUrl.set(null);
   }
 
   /**
@@ -245,9 +264,6 @@ export class BabiesService {
         next: (data) => {
           if (data) {
             this._baby.set(data);
-            this.getBabyImageUrl(data.uid).then((url) =>
-              this._babyPictureUrl.set(url)
-            );
           }
         },
         error: (err) => console.error('Real-time listener error:', err),

@@ -7,6 +7,7 @@ export interface Baby {
   birthDate: Date;
   eventsData: BabyEvent[];
   measurementsData: BabyMeasurement[];
+  haveImageInStorage: boolean;
   usersUids: string[];
 }
 

@@ -1,26 +1,24 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
+  effect,
   inject,
+  signal,
 } from '@angular/core';
-import { UserService } from '../../core/services/user.service';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
+import { UserService } from '../../core/services/user.service';
+import { BabiesService } from '../../core/services/babies.service';
+import { AppRoute } from '../../enums/app-route.enum';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { RouterModule } from '@angular/router';
-import { BabiesService } from '../../core/services/babies.service';
-import { AuthService } from '../../core/services/auth.service';
-import { AppRoute } from '../../enums/app-route.enum';
 
 @Component({
   selector: 'app-navbar',
-  templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
     CommonModule,
@@ -31,6 +29,9 @@ import { AppRoute } from '../../enums/app-route.enum';
     MatMenuModule,
     MatDividerModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './navbar.component.html',
+  styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent {
   private authService = inject(AuthService);
@@ -39,7 +40,6 @@ export class NavbarComponent {
 
   public isLoggedIn = this.authService.isLoggedIn;
   public userImageUrl = this.userService.userPictureUrl;
-  public babyImageUrl = this.babiesService.babyPictureUrl;
   public userHaveBabies = this.userService.userHaveBabies;
 
   public homePage = AppRoute.HomePage;
@@ -48,7 +48,25 @@ export class NavbarComponent {
   public babyEventPreferencesPage = AppRoute.BabyEventPreferences;
   public addBabyPage = AppRoute.AddBaby;
 
-  logout() {
+  private rawBabyPicture = this.babiesService.babyImageUrl;
+  public babyImageUrl = signal<string | null>(null);
+
+  constructor() {
+    effect(async () => {
+      const p = this.rawBabyPicture();
+      if (!p) {
+        this.babyImageUrl.set(null);
+      } else {
+        try {
+          this.babyImageUrl.set(await p);
+        } catch {
+          this.babyImageUrl.set(null);
+        }
+      }
+    });
+  }
+
+  public logout() {
     this.authService.logout();
   }
 }

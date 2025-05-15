@@ -1,5 +1,4 @@
 <div class="d-flex flex-column justify-content-center align-items-center">
-  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
   <h2 class="mb-4">
     {{ isNewBabyMode ? "Add New Baby" : "Add Existing Baby" }}
   </h2>
@@ -72,9 +71,9 @@
           accept="image/*"
           (change)="onImageSelected($event)"
         />
-        <div *ngIf="imagePreview" class="mt-2">
+        <div *ngIf="imagePreview$ | async as preview" class="mt-2">
           <img
-            [src]="imagePreview"
+            [src]="preview"
             alt="Selected Image"
             style="max-width: 100px; max-height: 100px"
           />
