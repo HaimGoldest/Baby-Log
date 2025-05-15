@@ -1,5 +1,4 @@
 import { Gender } from '../enums/gender.enum';
-import { User } from './user.model';
 
 export interface Baby {
   uid: string;

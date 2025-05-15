@@ -66,7 +66,7 @@ export class AddBabyPage {
   private async addNewBaby(form: NgForm): Promise<void> {
     const name = form.value.name;
     const birthDate = form.value.birthDate;
-    const gender = Gender.Unknown; // todo - ask the user
+    const gender = form.value.gender as Gender;
 
     try {
       await this.userService.addNewBaby({
