@@ -22,10 +22,9 @@ import { BabyEventPreferencesService } from '../../services/baby-event-preferenc
 export class BabyEventsPanelComponent {
   private preferencesService = inject(BabyEventPreferencesService);
   public activeBabyEventCategories = computed(() =>
-    this.preferencesService.preferences().filter((p) => p.isCategoryEnabled)
+    this.preferencesService.preferences()?.filter((p) => p.isCategoryEnabled)
   );
-  public activeBabyEventCategories2: BabyEventCategory[] =
-    this.preferencesService.preferences().filter((p) => p.isCategoryEnabled);
+
   @Output() filter = new EventEmitter<BabyEventCategory>();
 
   public onFilter(category: BabyEventCategory): void {

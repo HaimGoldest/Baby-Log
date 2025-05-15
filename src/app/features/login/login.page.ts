@@ -4,10 +4,12 @@ import { getFirebaseUIAuth } from '../../core/firebase/firebase-ui-init';
 import {
   ChangeDetectionStrategy,
   Component,
+  inject,
   OnDestroy,
   OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AppService } from '../../core/services/app.service';
 
 @Component({
   selector: 'app-login',
@@ -18,6 +20,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit, OnDestroy {
+  private appService = inject(AppService);
   ui: firebaseui.auth.AuthUI;
 
   ngOnInit() {
@@ -43,6 +46,7 @@ export class LoginPage implements OnInit, OnDestroy {
   }
 
   onLoginSuccessful(result: any) {
+    this.appService.isLoading.set(true);
     if (result.error) {
       console.error('Login failed with error:', result.error);
     } else {

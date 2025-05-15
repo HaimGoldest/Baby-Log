@@ -9,9 +9,11 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { UserService } from './user.service';
 import { AppRoute } from '../../enums/app-route.enum';
+import { AppService } from './app.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private appService = inject(AppService);
   private auth = inject(Auth);
   private userService = inject(UserService);
   private router = inject(Router);
@@ -43,6 +45,7 @@ export class AuthService {
   }
 
   private async handleAuthChange(firebaseUser: FirebaseUser | null) {
+    this.appService.isLoading.set(false);
     console.log('Auth state changed, Firebase User:', firebaseUser);
     if (firebaseUser) {
       await this.userService.initUser(firebaseUser);

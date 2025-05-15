@@ -177,11 +177,9 @@ export class FireStoreHelperService {
    */
   public watch<T>(collectionName: string, uid: string): Observable<T | null> {
     return new Observable<T | null>((subscriber) => {
-      runInInjectionContext(this.env, () => {
-        const refDoc = this.getDocRef<T>(collectionName, uid);
-        console.log(`[FireStoreHelperService] watch ${collectionName}/${uid}`);
-        const unsubscribe = onSnapshot(
-          refDoc,
+      const unsubscribe = runInInjectionContext(this.env, () =>
+        onSnapshot(
+          this.getDocRef<T>(collectionName, uid),
           (snap) => {
             if (snap.exists()) {
               const data = this.convertTimestamps(snap.data() as T) as T;
@@ -201,44 +199,15 @@ export class FireStoreHelperService {
             );
             subscriber.error(err);
           }
-        );
-        return unsubscribe;
-      });
-    });
-  }
+        )
+      );
 
-  /**
-   * Subscribe to real‐time updates for an entire collection.
-   * @param collectionName Firestore collection path.
-   * @returns An Observable emitting arrays of documents (timestamps→Date).
-   */
-  public watchAll<T>(collectionName: string): Observable<T[]> {
-    return new Observable<T[]>((subscriber) => {
-      runInInjectionContext(this.env, () => {
-        const colRef = this.getCollectionRef<T>(collectionName);
-        console.log(`[FireStoreHelperService] watchAll ${collectionName}`);
-        const unsubscribe = onSnapshot(
-          colRef,
-          (snap) => {
-            const arr = snap.docs.map(
-              (d) => this.convertTimestamps(d.data() as T) as T
-            );
-            console.log(
-              `[FireStoreHelperService] realtime all ${collectionName}`,
-              arr
-            );
-            subscriber.next(arr);
-          },
-          (err) => {
-            console.error(
-              `[FireStoreHelperService] realtime watchAll failed ${collectionName}`,
-              err
-            );
-            subscriber.error(err);
-          }
+      return () => {
+        console.log(
+          `[FireStoreHelperService] tearing down realtime listener for ${collectionName}/${uid}`
         );
-        return unsubscribe;
-      });
+        unsubscribe();
+      };
     });
   }
 
