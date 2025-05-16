@@ -63,7 +63,7 @@ export class UserService {
     try {
       const user = this._user();
       if (!user) return;
-      await this.babiesService.deleteBaby(user.uid, baby);
+      await this.babiesService.deleteBaby(user.uid);
       await firstValueFrom(this.removeBabyIdFromUser(this._user(), baby.uid));
     } catch (error) {
       console.error('Failed to delete baby from user:', error);
@@ -84,11 +84,11 @@ export class UserService {
 
     try {
       const newBabyUid = this.firestoreHelper.generateUid();
-      await firstValueFrom(this.addBabyIdToUser(user, newBabyUid));
       await this.babiesService.createNewBaby(user.uid, {
         ...babyData,
         uid: newBabyUid,
       });
+      await firstValueFrom(this.addBabyIdToUser(user, newBabyUid));
       console.log(`Baby was added to user:`, this.babiesService.baby());
       this.navigateAfterAddingBaby();
     } catch (error) {
@@ -98,7 +98,7 @@ export class UserService {
 
   public async addExistingBaby(babyUid: string): Promise<void> {
     try {
-      const baby = await this.babiesService.setBaby(babyUid);
+      const baby = await this.babiesService.setBaby(babyUid, this._user());
       if (!baby) {
         console.error('No baby found with the given UID:', babyUid);
       }

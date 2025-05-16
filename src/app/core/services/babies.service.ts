@@ -103,9 +103,13 @@ export class BabiesService {
   }
 
   /**
-   * Deletes or removes user from baby record.
+   * Deletes baby record and storage if this is the only user for this baby
+   * Else removes only this user from baby record.
    */
-  public async deleteBaby(userUid: string, baby: Baby): Promise<void> {
+  public async deleteBaby(userUid: string): Promise<void> {
+    const baby = this._baby();
+    if (!baby) return;
+
     try {
       if (baby.usersUids.length > 1) {
         console.log(`Removing user ${userUid} from baby ${baby.uid}`);
