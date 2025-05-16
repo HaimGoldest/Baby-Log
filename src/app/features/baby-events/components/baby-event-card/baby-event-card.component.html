@@ -56,4 +56,11 @@
     </div>
     }
   </div>
+
+  <div class="users-section">
+    <p class="creation">Created by: {{ event.createdBy }}</p>
+    @if (event.lastEditedBy) {
+    <p class="editing">Last edited by: {{ event.lastEditedBy }}</p>
+    }
+  </div>
 </mat-card>

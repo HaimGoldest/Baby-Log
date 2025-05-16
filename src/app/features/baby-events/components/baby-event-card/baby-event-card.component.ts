@@ -18,6 +18,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
+import { UserService } from '../../../../core/services/user.service';
 
 @Component({
   selector: 'app-baby-event-card',
@@ -38,6 +39,7 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class BabyEventCardComponent {
   private babyEventsService = inject(BabyEventsService);
+  private userService = inject(UserService);
   private dialog = inject(MatDialog);
   private destroy$ = new Subject<void>();
 
@@ -74,6 +76,7 @@ export class BabyEventCardComponent {
       ...this.event,
       ...data,
       time: new Date(data.time),
+      lastEditedBy: this.userService.user().name,
     };
 
     try {

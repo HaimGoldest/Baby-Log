@@ -47,8 +47,4 @@ export class BabyEventsComponent {
   onUnfilter() {
     this.currentFilteredCategory.set(null);
   }
-
-  //   public addEvent(): void {}
-  //   public deleteEvent(): void {}
-  //   public updateEvent(): void {}
 }

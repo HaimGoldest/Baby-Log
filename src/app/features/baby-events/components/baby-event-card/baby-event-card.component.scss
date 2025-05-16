@@ -40,6 +40,26 @@
   .comment-section {
     margin-bottom: 10px;
     text-align: center;
+
+    p {
+      white-space: normal;
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
+  }
+
+  .users-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .creation {
+      color: darkgreen;
+    }
+
+    .editing {
+      color: darkmagenta;
+    }
   }
 }
 
