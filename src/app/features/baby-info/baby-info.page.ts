@@ -27,7 +27,7 @@ export class BabyInfoPage {
   private snackBar = inject(MatSnackBar);
 
   public baby = this.babiesService.baby;
-  public babyImageUrl = this.babiesService.babyImageUrl;
+  public babyImageUrl = computed(() => this.babiesService.baby()?.imageUrl);
 
   public onImageSelected(event: Event): void {
     const input = event.target as HTMLInputElement;

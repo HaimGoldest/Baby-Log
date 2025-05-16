@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   inject,
   signal,
@@ -41,30 +42,12 @@ export class NavbarComponent {
   public isLoggedIn = this.authService.isLoggedIn;
   public userImageUrl = this.userService.userPictureUrl;
   public userHaveBabies = this.userService.userHaveBabies;
-
+  public babyImageUrl = computed(() => this.babiesService.baby()?.imageUrl);
   public homePage = AppRoute.HomePage;
   public babyEventsPage = AppRoute.BabyEvents;
   public growthTrackingPage = AppRoute.GrowthTracking;
   public babyEventPreferencesPage = AppRoute.BabyEventPreferences;
   public addBabyPage = AppRoute.AddBaby;
-
-  private rawBabyPicture = this.babiesService.babyImageUrl;
-  public babyImageUrl = signal<string | null>(null);
-
-  constructor() {
-    effect(async () => {
-      const p = this.rawBabyPicture();
-      if (!p) {
-        this.babyImageUrl.set(null);
-      } else {
-        try {
-          this.babyImageUrl.set(await p);
-        } catch {
-          this.babyImageUrl.set(null);
-        }
-      }
-    });
-  }
 
   public logout() {
     this.authService.logout();

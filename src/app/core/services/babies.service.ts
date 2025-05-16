@@ -17,19 +17,6 @@ export class BabiesService {
   private _baby = signal<Baby | null>(null);
   public readonly baby: Signal<Baby | null> = this._baby.asReadonly();
 
-  private _babyImageUrl: string | null = null;
-  public babyImageUrl = computed<Promise<string>>(async () => {
-    if (this._babyImageUrl) return this._babyImageUrl;
-
-    const baby = this._baby();
-    if (baby || baby.haveImageInStorage) {
-      this._babyImageUrl = await this.getBabyImageUrl(baby.uid);
-      return this._babyImageUrl;
-    }
-
-    return '';
-  });
-
   private babySubscription: Subscription | null = null;
 
   /**
@@ -79,7 +66,7 @@ export class BabiesService {
       name: string;
       gender: Gender;
       birthDate: Date;
-      haveImageInStorage: boolean;
+      imageUrl: string;
     }
   ): Promise<void> {
     try {
@@ -156,10 +143,11 @@ export class BabiesService {
     const imagePath = `${this.imagesRootPath}/${babyUid}`;
     try {
       console.log(`Uploading image to ${imagePath}`);
+      const imageUrl = await this.getBabyImageUrl(babyUid);
       await this.fireStorageHelper.uploadFile(imagePath, image);
       const updatedBaby: Baby = {
         ...this.baby(),
-        haveImageInStorage: true,
+        imageUrl: imageUrl,
       };
       await this.updateBaby(updatedBaby);
       console.log(`Image uploaded successfully for baby ${babyUid}`);
@@ -172,8 +160,6 @@ export class BabiesService {
    * Retrieves the download URL for a baby's image.
    */
   public async getBabyImageUrl(babyUid: string): Promise<string | null> {
-    if (this._babyImageUrl) return this._babyImageUrl;
-
     try {
       const imagePath = `${this.imagesRootPath}/${babyUid}`;
       console.log(`Retrieving image URL for ${imagePath}`);

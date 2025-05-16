@@ -74,7 +74,7 @@ export class UserService {
     name: string;
     gender: Gender;
     birthDate: Date;
-    haveImageInStorage: boolean;
+    imageUrl: string;
   }): Promise<void> {
     const user = this._user();
     if (!user) {

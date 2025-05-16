@@ -29,7 +29,7 @@
     <div class="info-row">
       <span class="label">Baby Image:</span>
       <span class="value">
-        <ng-container *ngIf="(babyImageUrl() | async) as url; else noImage">
+        <ng-container *ngIf="(babyImageUrl()) as url; else noImage">
           <img [src]="url" alt="Baby Image" class="baby-image" />
         </ng-container>
         <ng-template #noImage><span>No image available</span></ng-template>

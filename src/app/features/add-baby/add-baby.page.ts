@@ -80,14 +80,13 @@ export class AddBabyPage {
     const name = form.value.name;
     const birthDate = form.value.birthDate;
     const gender = form.value.gender as Gender;
-    const haveImageInStorage = this.selectedImage !== null;
 
     try {
       await this.userService.addNewBaby({
         name: name,
         birthDate: birthDate,
         gender: gender,
-        haveImageInStorage: haveImageInStorage,
+        imageUrl: null,
       });
       await this.uploadBabyImage();
     } catch (error) {
