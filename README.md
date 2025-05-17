@@ -5,6 +5,7 @@
 </p>
 
 # Baby-Log
+
 > Baby-Log is a SaaS (Software as a Service) web application born from a personal challenge.<br>
 > Recognizing the lack of adequate solutions in the market (both free and paid), I developed this dedicated application to address a specific need.<br>
 > Built using "Angular framework" with "Bootstrap 5" and "Angular Materials" Libraries for its user interface (with plans to transition exclusively to Angular Materials).<br>
@@ -12,6 +13,7 @@
 > Baby-Log represents a tailored solution to a problem that demanded a custom approach.
 
 ## Usage
+
 The Baby-Log application is designed to simplify tracking important information about your baby and make it easy to share updates instantly with family members, such as parents and grandparents.<br>
 The app allows you to effortlessly keep track of all activities and events related to your baby, as well as monitor their growth over time.
 
@@ -42,7 +44,7 @@ npm install
 4. Build and Run the Application Locally:
 
 ```bash
-ng serve
+npm start
 ```
 
 5. Navigate your browser to the local address you received in the previous step, for example:

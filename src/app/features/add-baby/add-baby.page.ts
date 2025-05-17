@@ -65,7 +65,6 @@ export class AddBabyPage {
     try {
       if (this.isNewBabyMode) {
         await this.addNewBaby(form);
-        await this.uploadBabyImage();
       } else {
         await this.addExistingBaby(form);
       }
@@ -88,7 +87,10 @@ export class AddBabyPage {
         gender: gender,
         imageUrl: null,
       });
-      await this.uploadBabyImage();
+
+      if (this.selectedImage && this.babiesService.baby()) {
+        await this.uploadBabyImage();
+      }
     } catch (error) {
       this.showErrorMessage('Failed to create the baby!');
     }
@@ -107,12 +109,10 @@ export class AddBabyPage {
 
   private async uploadBabyImage(): Promise<void> {
     const baby = this.babiesService.baby();
-    if (this.selectedImage && baby) {
-      try {
-        await this.babiesService.uploadBabyImage(baby.uid, this.selectedImage);
-      } catch (error) {
-        this.showErrorMessage('Failed to upload the baby image!');
-      }
+    try {
+      await this.babiesService.uploadBabyImage(baby.uid, this.selectedImage);
+    } catch (error) {
+      this.showErrorMessage('Failed to upload the baby image!');
     }
   }
 

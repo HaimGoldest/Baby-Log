@@ -143,8 +143,8 @@ export class BabiesService {
     const imagePath = `${this.imagesRootPath}/${babyUid}`;
     try {
       console.log(`Uploading image to ${imagePath}`);
-      const imageUrl = await this.getBabyImageUrl(babyUid);
       await this.fireStorageHelper.uploadFile(imagePath, image);
+      const imageUrl = await this.getBabyImageUrl(babyUid);
       const updatedBaby: Baby = {
         ...this.baby(),
         imageUrl: imageUrl,
