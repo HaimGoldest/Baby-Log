@@ -1,0 +1,19 @@
+:host {
+  position: absolute;
+  padding-bottom: 60px;
+}
+
+.action-buttons {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 16px;
+  z-index: 1000;
+
+  .save {
+    background-color: darkgreen !important;
+    color: white !important;
+  }
+}

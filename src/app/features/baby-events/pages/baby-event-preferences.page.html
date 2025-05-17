@@ -1,14 +1,23 @@
 <div class="container-fluid">
   <div class="container">
-    <div class="container">
-      <h1 class="text-center">Baby Actions Preferences</h1>
-      <br />
-      @for (category of babyEventsCategories(); track category.name) {
-      <app-baby-event-preferences-item
-        [babyEventCategory]="category"
-        (modified)="onChanged()"
-      ></app-baby-event-preferences-item>
-      }
+    <h1 class="text-center">Baby Events Preferences</h1>
+    @for (category of babyEventsCategories(); track category.name) {
+    <app-baby-event-preferences-item
+      [babyEventCategory]="category"
+      (modified)="onChanged()"
+    ></app-baby-event-preferences-item>
+    }
+
+    <div class="action-buttons">
+      <button
+        mat-fab
+        [class.save]="hasChanged"
+        [disabled]="!hasChanged"
+        (click)="save()"
+      >
+        Save Changes
+      </button>
+      <button mat-button (click)="cancel()">Don't Change</button>
     </div>
   </div>
 </div>
