@@ -1,0 +1,23 @@
+<app-baby-events-panel (filter)="onFilter($event)"></app-baby-events-panel>
+<hr />
+<div class="container-fluid">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        @for (event of displayedEvents(); track event.uid) {
+        <app-baby-event-card
+          [event]="event"
+          [filterMode]="filterMode()"
+          (filter)="onFilter($event)"
+          (unfilter)="onUnfilter()"
+        ></app-baby-event-card>
+        } @empty {
+        <!-- TODO - change to use the alert component -->
+        <div class="alert alert-info" role="alert">
+          <h4 class="alert-heading">{{ "No events found!" }}</h4>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

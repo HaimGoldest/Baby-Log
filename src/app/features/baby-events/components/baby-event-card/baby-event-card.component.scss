@@ -1,0 +1,75 @@
+.baby-event-card {
+  margin-bottom: 15px;
+  padding: 15px;
+
+  .main-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+
+    .card-title {
+      font-weight: bold;
+      margin: 0;
+      text-align: center;
+      align-self: center;
+    }
+
+    .event-img {
+      width: 45px;
+      height: 45px;
+      margin-left: 5px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .time-info {
+      margin-left: 15px;
+      font-size: 0.875rem;
+
+      .time-text {
+        color: darkblue;
+        font-weight: bold;
+      }
+    }
+
+    .menu-button {
+      margin-left: auto; /* Ensure the button is aligned to the right */
+    }
+  }
+
+  .comment-section {
+    margin-bottom: 10px;
+    text-align: center;
+
+    p {
+      white-space: normal;
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
+  }
+
+  .users-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .creation {
+      color: darkgreen;
+    }
+
+    .editing {
+      color: darkmagenta;
+    }
+
+    .same-user {
+      color: brown;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .action-img {
+    width: 90px;
+    height: 90px;
+  }
+}

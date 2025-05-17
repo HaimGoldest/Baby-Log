@@ -6,3 +6,14 @@
 .form-group label {
   font-weight: bold;
 }
+
+.gender-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.gender-group .gender-label {
+  margin-right: 0.5rem;
+  font-weight: bold;
+}

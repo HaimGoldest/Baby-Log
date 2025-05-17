@@ -1,439 +1,273 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import {
-  AngularFirestore,
-  AngularFirestoreCollection,
-  AngularFirestoreDocument,
-} from '@angular/fire/compat/firestore';
-import { AngularFireStorage } from '@angular/fire/compat/storage';
-import firebase from 'firebase/compat/app';
-import { BehaviorSubject, Observable, Subscription, map } from 'rxjs';
-import { BabyActionCategoryModel } from '../../models/baby-action-category.model';
-import { BabyActionDataModel } from '../../models/baby-action-data.model';
-import { BabyMeasurementModel } from '../../models/baby-measurement.model';
-import { BabyModel } from '../../models/baby.model';
+import { inject, Injectable, signal, Signal, computed } from '@angular/core';
+import { Subscription, firstValueFrom } from 'rxjs';
+import { Baby } from '../../models/baby.model';
+import { FireStoreHelperService } from '../firebase/fire-store-helper.service';
+import { FireStorageHelperService } from '../firebase/fire-storage-helper.service';
+import { Gender } from '../../enums/gender.enum';
+import { User } from '../../models/user.model';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class BabiesService implements OnDestroy {
-  public babyData = new BehaviorSubject<BabyModel | null>(null);
-  public currentBabyimageUrl = new BehaviorSubject<string | null>(null);
-  private babiesCollection: AngularFirestoreCollection<unknown>;
-  private babyChanged: Subscription | null = null;
+@Injectable({ providedIn: 'root' })
+export class BabiesService {
+  private imagesRootPath = 'baby_images';
+  private firestoreHelper = inject(FireStoreHelperService);
+  private fireStorageHelper = inject(FireStorageHelperService);
 
-  constructor(
-    private firestore: AngularFirestore,
-    private storage: AngularFireStorage
-  ) {
-    this.babiesCollection = this.firestore.collection('babies');
+  public babiesCollection = 'babies';
+
+  private _baby = signal<Baby | null>(null);
+  public readonly baby: Signal<Baby | null> = this._baby.asReadonly();
+
+  private babySubscription: Subscription | null = null;
+
+  /**
+   * Sets the current baby and begins real-time listening.
+   */
+  public async setBaby(
+    babyUid: string,
+    user: User | null = null
+  ): Promise<Baby | null> {
+    this.stopListeningToBabyChanges();
+
+    try {
+      const existing = await firstValueFrom(
+        this.firestoreHelper.get<Baby>(this.babiesCollection, babyUid)
+      );
+
+      if (existing) {
+        if (user && !existing.usersUids.includes(user.uid)) {
+          console.log('Adding user to baby record:', user.uid);
+          await this.addUserIdToBaby(existing, user.uid);
+          existing.usersUids.push(user.uid);
+          console.log('User added to baby:', user.uid);
+        }
+
+        this._baby.set(existing);
+        this.startListeningToBabyChanges(babyUid);
+        console.log('Baby set successfully:', existing);
+        return existing;
+      } else {
+        this._baby.set(null);
+        console.error('No baby found with the given UID:', babyUid);
+      }
+    } catch (err) {
+      console.error('Failed to get the baby from the DB:', err);
+    }
+
+    return null;
   }
 
-  ngOnDestroy() {
-    if (this.babyChanged) {
-      this.babyChanged.unsubscribe();
+  /**
+   * Creates a new baby record in Firestore.
+   */
+  public async createNewBaby(
+    userId: string,
+    babyData: {
+      uid: string;
+      name: string;
+      gender: Gender;
+      birthDate: Date;
+      imageUrl: string;
+    }
+  ): Promise<void> {
+    try {
+      const baby: Baby = {
+        ...babyData,
+        eventsData: [],
+        measurementsData: [],
+        usersUids: [userId],
+      };
+
+      console.log('Creating baby record in DB:', baby);
+      await firstValueFrom(
+        this.firestoreHelper.add<Baby>(this.babiesCollection, baby, baby.uid)
+      );
+      console.log('Baby created in DB:', baby);
+      this._baby.set(baby);
+      this.startListeningToBabyChanges(baby.uid);
+    } catch (error) {
+      console.error('Error creating baby in database:', error);
     }
   }
 
-  public setBaby(babyUid: string): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
-      // Unsubscribe from any previous subscriptions
-      if (this.babyChanged) {
-        this.babyChanged.unsubscribe();
+  /**
+   * Deletes baby record and storage if this is the only user for this baby
+   * Else removes only this user from baby record.
+   */
+  public async deleteBaby(userUid: string): Promise<void> {
+    const baby = this._baby();
+    if (!baby) return;
+
+    try {
+      if (baby.usersUids.length > 1) {
+        console.log(`Removing user ${userUid} from baby ${baby.uid}`);
+        await this.removeCurrentUserFromBaby(userUid, baby);
+      } else {
+        console.log('Deleting baby record and storage:', baby.uid);
+        await this.deleteBabyFromDatabase(baby);
+      }
+      this._baby.set(null);
+    } catch (err) {
+      console.error('Error deleting baby:', err);
+      throw err;
+    }
+  }
+
+  /**
+   * Updates the current baby data.
+   */
+  public async updateBaby(babyData: Partial<Baby>): Promise<void> {
+    try {
+      const baby = this._baby();
+      if (!baby) throw new Error('No baby selected.');
+
+      const updatedBaby: Baby = { ...baby, ...babyData } as Baby;
+      console.log('Updating baby record:', updatedBaby);
+      await firstValueFrom(
+        this.firestoreHelper.update<Baby>(
+          this.babiesCollection,
+          baby.uid,
+          updatedBaby
+        )
+      );
+      console.log('Baby updated:', updatedBaby);
+      this._baby.set(updatedBaby);
+    } catch (error) {
+      console.error('Error updating baby:', error);
+    }
+  }
+
+  /**
+   * Uploads an image file for the baby.
+   */
+  public async uploadBabyImage(babyUid: string, image: File): Promise<void> {
+    const imagePath = `${this.imagesRootPath}/${babyUid}`;
+    try {
+      console.log(`Uploading image to ${imagePath}`);
+      await this.fireStorageHelper.uploadFile(imagePath, image);
+      const imageUrl = await this.getBabyImageUrl(babyUid);
+      const updatedBaby: Baby = {
+        ...this.baby(),
+        imageUrl: imageUrl,
+      };
+      await this.updateBaby(updatedBaby);
+      console.log(`Image uploaded successfully for baby ${babyUid}`);
+    } catch (error: any) {
+      console.error(`Failed to upload image for baby ${babyUid}:`, error);
+    }
+  }
+
+  /**
+   * Retrieves the download URL for a baby's image.
+   */
+  public async getBabyImageUrl(babyUid: string): Promise<string | null> {
+    try {
+      const imagePath = `${this.imagesRootPath}/${babyUid}`;
+      console.log(`Retrieving image URL for ${imagePath}`);
+      const imageUrl = await this.fireStorageHelper.getFileUrl(imagePath);
+
+      if (!imageUrl) {
+        console.warn('Baby image not found in storage:', babyUid);
+        return null;
       }
 
-      this.babyChanged = this.getBabyFromDb(babyUid).subscribe(
-        (baby) => {
-          if (baby) {
-            console.log('Received baby data:', baby);
-            this.babyData.next(baby);
+      console.log(
+        `Image URL retrieved successfully for baby ${babyUid}:`,
+        imageUrl
+      );
+      return imageUrl;
+    } catch (error: any) {
+      if (error.code === 'storage/object-not-found') {
+        console.warn('Baby image not found in storage:', babyUid);
+        return null;
+      } else {
+        console.error('Error retrieving baby image URL:', error);
+        return null;
+      }
+    }
+  }
 
-            this.getBabyImageUrl(babyUid)
-              .then((url) => {
-                this.currentBabyimageUrl.next(url);
-              })
-              .catch((error) => {
-                console.error('Failed to get baby image URL:', error);
-                this.currentBabyimageUrl.next(null);
-              });
-            resolve(true);
-          } else {
-            console.log('Baby not found in DB');
-            this.babyData.next(null);
-            resolve(false);
+  /**
+   * Stops listening and resets state.
+   */
+  public dispose(): void {
+    this.stopListeningToBabyChanges();
+    this._baby.set(null);
+  }
+
+  /**
+   * Appends a user ID to a baby document.
+   */
+  private async addUserIdToBaby(baby: Baby, newUserUid: string): Promise<void> {
+    console.log(`Adding userId ${newUserUid} to baby ${baby.uid}`);
+    await firstValueFrom(
+      this.firestoreHelper.update<Baby>(this.babiesCollection, baby.uid, {
+        usersUids: [...baby.usersUids, newUserUid],
+      })
+    );
+    console.log(`UserId ${newUserUid} added to baby record ${baby.uid}`);
+  }
+
+  /**
+   * Removes a user ID from a baby document.
+   */
+  private async removeCurrentUserFromBaby(
+    userUid: string,
+    baby: Baby
+  ): Promise<void> {
+    console.log(`Removing userId ${userUid} from baby ${baby.uid}`);
+    const updated = baby.usersUids.filter((uid) => uid !== userUid);
+    await firstValueFrom(
+      this.firestoreHelper.update<Baby>(this.babiesCollection, baby.uid, {
+        usersUids: updated,
+      })
+    );
+    console.log(`UserId ${userUid} removed from baby record ${baby.uid}`);
+  }
+
+  /**
+   * Deletes a baby record and its image.
+   */
+  private async deleteBabyFromDatabase(baby: Baby): Promise<void> {
+    const imagePath = `${this.imagesRootPath}/${baby.uid}`;
+    console.log(`Deleting baby record ${baby.uid}`);
+    await firstValueFrom(
+      this.firestoreHelper.delete(this.babiesCollection, baby.uid)
+    );
+    console.log('Baby deleted from DB:', baby);
+
+    try {
+      await this.fireStorageHelper.deleteFile(imagePath);
+      console.log('Baby image deleted from storage:', imagePath);
+    } catch (err) {
+      console.error('Error deleting baby image from storage:', err);
+    }
+  }
+
+  /**
+   * Begins real-time listening for baby document changes.
+   */
+  private startListeningToBabyChanges(babyUid: string): void {
+    console.log(`Starting real-time listener for baby ${babyUid}`);
+    this.babySubscription = this.firestoreHelper
+      .watch<Baby>(this.babiesCollection, babyUid)
+      .subscribe({
+        next: (data) => {
+          if (data) {
+            this._baby.set(data);
           }
         },
-        (error) => {
-          console.error('Error fetching baby data:', error);
-          this.babyData.next(null);
-          reject(false);
-        }
-      );
-    });
-  }
-
-  public uploadBabyImage(babyUid: string, image: File): Promise<void> {
-    const filePath = `baby_images/${babyUid}`;
-    return this.storage
-      .upload(filePath, image)
-      .then(() => {
-        console.log('Baby image uploaded successfully.');
-        // call getBabyImageUrl to set the currentBabyimageUrl
-        this.getBabyImageUrl(babyUid);
-      })
-      .catch((error) => {
-        console.error('Error uploading baby image:', error);
-        throw new Error('Failed to upload baby image');
+        error: (err) => console.error('Real-time listener error:', err),
       });
   }
 
-  public getBabyImageUrl(babyUid: string): Promise<string | null> {
-    const filePath = `baby_images/${babyUid}`;
-    const fileRef = this.storage.ref(filePath);
-
-    return fileRef
-      .getDownloadURL()
-      .toPromise()
-      .then((url: string) => {
-        console.log('Retrieved baby image URL successfully:', url);
-        this.currentBabyimageUrl.next(url);
-        return url;
-      })
-      .catch((error) => {
-        if (error.code === 'storage/object-not-found') {
-          console.warn('Baby image not found in storage:', filePath);
-          return null;
-        } else {
-          console.error('Error retrieving baby image URL:', error);
-          return null;
-        }
-      });
-  }
-
-  public addBabyToDb(
-    babyUid: string,
-    name: string,
-    birthDate: string,
-    firstUserUid: string
-  ): Promise<boolean> {
-    const babyModel = new BabyModel(
-      babyUid,
-      name,
-      new Date(birthDate),
-      [],
-      [],
-      [firstUserUid]
-    );
-
-    const babyData = babyModel.toJsObject();
-
-    const babyRef = this.babiesCollection.doc(babyUid);
-    return babyRef
-      .set(babyData)
-      .then(() => {
-        console.log('New baby document created successfully:', babyData);
-        let isBabyWasSaved = this.setBaby(babyData.uid);
-
-        if (!isBabyWasSaved) {
-          console.error('Failed to use this baby!');
-        }
-
-        return isBabyWasSaved;
-      })
-      .catch((error) => {
-        console.error('Error - failed to add new baby document to DB: ', error);
-        return false;
-      });
-  }
-
-  public deleteBabyFromDb(baby: BabyModel): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
-      const babyRef: AngularFirestoreDocument<any> = this.babiesCollection.doc(
-        baby.uid
-      );
-
-      babyRef
-        .delete()
-        .then(() => {
-          console.log(
-            `Baby document with UID ${baby.uid} deleted successfully.`
-          );
-          this.babyData.next(null); // Reset babyData after deletion
-          this.currentBabyimageUrl.next(null); // Reset currentBabyimageUrl after deletion
-          resolve(true);
-        })
-        .catch((error) => {
-          console.error(
-            `Error deleting baby document with UID ${baby.uid}: `,
-            error
-          );
-          resolve(false);
-        });
-    });
-  }
-
-  public addBabyActionDataToDb(babyActionData: BabyActionDataModel): void {
-    const babyUid = this.babyData?.value?.uid;
-    if (!babyUid) {
-      const errorMsg = 'Error adding baby action, current baby is null!';
-      throw new Error(errorMsg);
+  /**
+   * Stops real-time listening.
+   */
+  private stopListeningToBabyChanges(): void {
+    if (this.babySubscription) {
+      console.log('Stopping real-time listener');
+      this.babySubscription.unsubscribe();
+      this.babySubscription = null;
     }
-
-    let actionData = babyActionData.toJsObject();
-
-    const babyRef: AngularFirestoreDocument<any> =
-      this.babiesCollection.doc(babyUid);
-
-    babyRef
-      .update({
-        actionsData: firebase.firestore.FieldValue.arrayUnion(actionData),
-      })
-      .then(() => {
-        console.log('Baby action added successfully.');
-      })
-      .catch((error) => {
-        console.error('Error adding baby action:', error);
-      });
-  }
-
-  public addMeasurementDataToDb(measurementData: BabyMeasurementModel): void {
-    const babyUid = this.babyData?.value?.uid;
-    if (!babyUid) {
-      const errorMsg = 'Error adding baby measurement, current baby is null!';
-      throw new Error(errorMsg);
-    }
-
-    let data = measurementData.toJsObject();
-
-    const babyRef: AngularFirestoreDocument<any> =
-      this.babiesCollection.doc(babyUid);
-
-    babyRef
-      .update({
-        measurementsData: firebase.firestore.FieldValue.arrayUnion(data),
-      })
-      .then(() => {
-        console.log('Baby measurement added successfully.');
-      })
-      .catch((error) => {
-        console.error('Error adding baby measurement:', error);
-      });
-  }
-
-  public updateMeasurementDataInDb(
-    oldMeasurementData: BabyMeasurementModel,
-    updatedMeasurementData: BabyMeasurementModel
-  ): void {
-    const babyUid = this.babyData?.value?.uid;
-    if (!babyUid) {
-      const errorMsg = 'Error updating baby measurement, current baby is null!';
-      throw new Error(errorMsg);
-    }
-
-    const babyRef: AngularFirestoreDocument<any> =
-      this.babiesCollection.doc(babyUid);
-
-    babyRef
-      .get()
-      .toPromise()
-      .then((doc) => {
-        if (doc.exists) {
-          const babyData = doc.data() as BabyModel;
-
-          // Find the index of the measurement to be updated
-          const measurementIndex = babyData.measurementsData.findIndex(
-            (measurement) =>
-              new Date(measurement.date).getTime() ===
-                oldMeasurementData.date.getTime() &&
-              measurement.height === oldMeasurementData.height &&
-              measurement.weight === oldMeasurementData.weight &&
-              measurement.headMeasure === oldMeasurementData.headMeasure
-          );
-
-          if (measurementIndex !== -1) {
-            // Remove the old measurement data
-            babyRef.update({
-              measurementsData: firebase.firestore.FieldValue.arrayRemove(
-                oldMeasurementData.toJsObject()
-              ),
-            });
-
-            // Add the updated measurement data
-            babyRef.update({
-              measurementsData: firebase.firestore.FieldValue.arrayUnion(
-                updatedMeasurementData.toJsObject()
-              ),
-            });
-
-            console.log('Baby measurement updated successfully.');
-          } else {
-            console.error(
-              'Error updating baby measurement: Measurement not found.'
-            );
-          }
-        } else {
-          console.error(
-            'Error updating baby measurement: Baby document not found.'
-          );
-        }
-      })
-      .catch((error) => {
-        console.error('Error updating baby measurement:', error);
-      });
-  }
-
-  public deleteBabyActionDataFromDb(babyActionData: BabyActionDataModel): void {
-    const babyUid = this.babyData?.value?.uid;
-    if (!babyUid) {
-      const errorMsg = 'Error deleting baby action, current baby is null!';
-      throw new Error(errorMsg);
-    }
-
-    const actionData = babyActionData.toJsObject();
-
-    const babyRef: AngularFirestoreDocument<any> =
-      this.babiesCollection.doc(babyUid);
-
-    babyRef
-      .update({
-        actionsData: firebase.firestore.FieldValue.arrayRemove(actionData),
-      })
-      .then(() => {
-        console.log('Baby action deleted successfully.');
-      })
-      .catch((error) => {
-        console.error('Error deleting baby action:', error);
-      });
-  }
-
-  public deleteMeasurementDataFromDb(
-    measurementData: BabyMeasurementModel
-  ): void {
-    const babyUid = this.babyData?.value?.uid;
-    if (!babyUid) {
-      const errorMsg = 'Error deleting baby measuremen, current baby is null!';
-      throw new Error(errorMsg);
-    }
-
-    const data = measurementData.toJsObject();
-
-    const babyRef: AngularFirestoreDocument<any> =
-      this.babiesCollection.doc(babyUid);
-
-    babyRef
-      .update({
-        measurementsData: firebase.firestore.FieldValue.arrayRemove(data),
-      })
-      .then(() => {
-        console.log('Baby measuremen deleted successfully.');
-      })
-      .catch((error) => {
-        console.error('Error deleting baby measuremen:', error);
-      });
-  }
-
-  public updateBabyActionDataInDb(
-    updatedActionData: BabyActionDataModel
-  ): void {
-    const babyUid = this.babyData?.value?.uid;
-    if (!babyUid) {
-      const errorMsg = 'Error updating baby action, current baby is null!';
-      throw new Error(errorMsg);
-    }
-
-    const babyRef: AngularFirestoreDocument<any> =
-      this.babiesCollection.doc(babyUid);
-
-    babyRef
-      .get()
-      .toPromise()
-      .then((doc) => {
-        if (doc.exists) {
-          const babyData = doc.data() as BabyModel;
-
-          // Find the index of the action to be updated
-          const actionIndex = babyData.actionsData.findIndex(
-            (action) =>
-              new Date(action.creationTime).getTime() ===
-              updatedActionData.creationTime.getTime()
-          );
-
-          if (actionIndex !== -1) {
-            // Remove the old action data
-            const oldActionData = babyData.actionsData[actionIndex];
-            babyRef.update({
-              actionsData:
-                firebase.firestore.FieldValue.arrayRemove(oldActionData),
-            });
-
-            // Add the updated action data
-            babyRef.update({
-              actionsData: firebase.firestore.FieldValue.arrayUnion(
-                updatedActionData.toJsObject()
-              ),
-            });
-
-            console.log('Baby action updated successfully.');
-          } else {
-            console.error('Error updating baby action: Action not found.');
-          }
-        } else {
-          console.error('Error updating baby action: Baby document not found.');
-        }
-      })
-      .catch((error) => {
-        console.error('Error updating baby action:', error);
-      });
-  }
-
-  private getBabyFromDb(babyUid: string): Observable<BabyModel | null> {
-    const babyRef: AngularFirestoreDocument<BabyModel> =
-      this.babiesCollection.doc(babyUid);
-
-    return babyRef.snapshotChanges().pipe(
-      map((doc) => {
-        if (doc.payload.exists) {
-          const data = doc.payload.data() as BabyModel;
-
-          const actionsData = Array.isArray(data.actionsData)
-            ? data.actionsData
-            : [];
-          const measurementsData = Array.isArray(data.measurementsData)
-            ? data.measurementsData
-            : [];
-
-          return new BabyModel(
-            data.uid,
-            data.name,
-            new Date(data.birthDate),
-            actionsData.map(
-              (action) =>
-                new BabyActionDataModel(
-                  new BabyActionCategoryModel(
-                    action.category.name,
-                    action.category.defaultDescription,
-                    action.category.imagePath,
-                    action.category.isCategoryEnable,
-                    action.category.isDefaultDescriptionEnable
-                  ),
-                  action.description,
-                  new Date(action.creationTime)
-                )
-            ),
-            measurementsData.map(
-              (measurement) =>
-                new BabyMeasurementModel(
-                  new Date(measurement.date),
-                  measurement.height,
-                  measurement.weight,
-                  measurement.headMeasure
-                )
-            ),
-            data.usersUids
-          );
-        } else {
-          return null;
-        }
-      })
-    );
   }
 }

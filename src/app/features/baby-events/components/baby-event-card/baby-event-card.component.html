@@ -1,0 +1,69 @@
+<mat-card
+  appearance="outlined"
+  class="baby-event-card"
+  (contextmenu)="onEdit($event)"
+>
+  <div class="mat-card-content">
+    <div class="main-section">
+      <h4 class="card-title">{{ event.category.name }}</h4>
+      <img
+        mat-card-image
+        src="{{ event.category.imagePath }}"
+        alt="{{ event.category.name }}"
+        class="event-img"
+      />
+      <span class="time-info">
+        <mat-card-subtitle class="time-text">
+          {{ event.time | date : "dd/MM/yy" }} -
+          {{ event.time | date : "HH:mm" }}
+        </mat-card-subtitle>
+      </span>
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="menu"
+        aria-label="Icon-button with a menu"
+        class="menu-button"
+      >
+        <mat-icon>more_vert</mat-icon>
+      </button>
+
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="onEdit()">
+          <mat-icon color="primary">edit</mat-icon>
+          <span>Edit</span>
+        </button>
+        @if (filterMode) {
+        <button mat-menu-item (click)="onUnfilter()">
+          <mat-icon color="accent">filter_none</mat-icon>
+          <span>Unfilter</span>
+        </button>
+        } @else {
+        <button mat-menu-item (click)="onFilter()">
+          <mat-icon color="accent">filter</mat-icon>
+          <span>Filter</span>
+        </button>
+        }
+        <button mat-menu-item (click)="onDelete()">
+          <mat-icon color="warn">delete</mat-icon>
+          <span>Delete</span>
+        </button>
+      </mat-menu>
+    </div>
+
+    @if (event.comment) {
+    <div class="comment-section">
+      <p>{{ event.comment }}</p>
+    </div>
+    }
+  </div>
+
+  <div class="users-section">
+    @if (event.createdBy === event.lastEditedBy) {
+    <p class="same-user">Created and edited by: {{ event.createdBy }}</p>
+    } @else {
+    <p class="creation">Created by: {{ event.createdBy }}</p>
+    @if (event.lastEditedBy) {
+    <p class="editing">Edited by: {{ event.lastEditedBy }}</p>
+    } }
+  </div>
+</mat-card>

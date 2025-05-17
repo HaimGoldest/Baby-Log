@@ -1,0 +1,50 @@
+<div class="row">
+  <div class="card mb-3">
+    <div class="col-12">
+      <img
+        src="{{ babyEventCategory.imagePath }}"
+        class="img-fluid rounded-start eventImg"
+        alt="{{ babyEventCategory.name }}"
+      />
+      <label for="cateroryNameCheckbox" style="margin-right: 10px">
+        Enable {{ babyEventCategory.name }}:
+        <input
+          (click)="onChanged()"
+          type="checkbox"
+          id="cateroryNameCheckbox"
+          [(ngModel)]="babyEventCategory.isCategoryEnabled"
+        />
+      </label>
+      <label
+        for="cateroryCommentCheckbox"
+        *ngIf="babyEventCategory.isCategoryEnabled"
+        >| Enable Default Comment
+        <input
+          (click)="onChanged()"
+          type="checkbox"
+          id="cateroryCommentCheckbox"
+          [(ngModel)]="babyEventCategory.isDefaultCommentEnabled"
+        />
+      </label>
+    </div>
+    <div
+      class="col-12"
+      *ngIf="
+        babyEventCategory.isCategoryEnabled &&
+        babyEventCategory.isDefaultCommentEnabled
+      "
+    >
+      <div class="form-floating">
+        <input
+          type="text"
+          class="form-control"
+          id="defaultCommentText"
+          [value]="babyEventCategory.defaultComment"
+          (input)="updateDefaultComment($event.target.value)"
+          placeholder="Default Comment"
+        />
+        <label for="defaultCommentText">Default Comment</label>
+      </div>
+    </div>
+  </div>
+</div>
