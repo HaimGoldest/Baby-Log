@@ -1,36 +1,41 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  OnDestroy,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { BabyEventPreferencesService } from '../services/baby-event-preferences.service';
 import { BabyEventsPreferencesItemComponent } from '../components/baby-events-preferences-item/baby-event-preferences-item.component';
+import { AppRoute } from '../../../enums/app-route.enum';
 
 @Component({
   selector: 'app-baby-event-preferences',
   templateUrl: './baby-event-preferences.page.html',
-  styleUrl: './baby-event-preferences.page.scss',
+  styleUrls: ['./baby-event-preferences.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [BabyEventsPreferencesItemComponent],
 })
-export class BabyEventsPreferencesPage implements OnDestroy {
+export class BabyEventsPreferencesPage {
   private preferencesService = inject(BabyEventPreferencesService);
-  private hasChanged = false;
+  private router = inject(Router);
 
   public babyEventsCategories = this.preferencesService.preferences;
+  public hasChanged = false;
 
-  ngOnDestroy(): void {
+  public onChanged(): void {
+    this.hasChanged = true;
+  }
+
+  public save(): void {
     if (this.hasChanged) {
       this.preferencesService.updatePreferences(this.babyEventsCategories());
+      this.hasChanged = false;
+      this.navigateEventsPage();
     }
   }
 
-  public onChanged(): void {
-    if (!this.hasChanged) {
-      this.hasChanged = true;
-    }
+  public cancel(): void {
+    this.navigateEventsPage();
+  }
+
+  private navigateEventsPage() {
+    this.router.navigate(['/', AppRoute.BabyEvents]);
   }
 }
