@@ -37,6 +37,7 @@
     <a
       class="nav-buttons"
       mat-button
+      [disabled]="!userHaveBabies()"
       [routerLink]="['/', babyEventsPage]"
       routerLinkActive="router-link-active"
       >Baby Events</a
@@ -44,6 +45,7 @@
     <a
       class="nav-buttons"
       mat-button
+      [disabled]="!userHaveBabies()"
       [routerLink]="['/', growthTrackingPage]"
       routerLinkActive="router-link-active"
       >Growth Tracking</a
@@ -60,26 +62,58 @@
   >
     <mat-icon>menu</mat-icon>
   </button>
+
   <mat-menu #menu="matMenu" xPosition="before">
-    <button mat-menu-item [routerLink]="['/', babyEventsPage]">
+    <button
+      mat-menu-item
+      [routerLink]="['/', babyEventsPage]"
+      routerLinkActive="menu-item-active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [disabled]="!userHaveBabies()"
+    >
       Baby Events
     </button>
-    <button mat-menu-item [routerLink]="['/', growthTrackingPage]">
+
+    <button
+      mat-menu-item
+      [routerLink]="['/', growthTrackingPage]"
+      routerLinkActive="menu-item-active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [disabled]="!userHaveBabies()"
+    >
       Growth Tracking
     </button>
+
     <mat-divider></mat-divider>
-    <button mat-menu-item [routerLink]="['/', babyEventPreferencesPage]">
+
+    <button
+      mat-menu-item
+      [routerLink]="['/', babyEventPreferencesPage]"
+      routerLinkActive="menu-item-active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [disabled]="!userHaveBabies()"
+    >
       Preferences
     </button>
     <mat-divider></mat-divider>
     <button
       mat-menu-item
       [routerLink]="['/', addBabyPage]"
-      [disabled]="userHaveBabies"
+      routerLinkActive="menu-item-active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [disabled]="userHaveBabies()"
     >
       Add Baby
     </button>
-    <button mat-menu-item routerLink="/baby-info">Baby Information</button>
+    <button
+      mat-menu-item
+      [routerLink]="['/', babyInfoPage]"
+      routerLinkActive="menu-item-active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [disabled]="!userHaveBabies()"
+    >
+      Baby Information
+    </button>
     <mat-divider></mat-divider>
     <button mat-menu-item (click)="logout()">Logout</button>
   </mat-menu>
