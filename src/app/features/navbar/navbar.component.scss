@@ -30,20 +30,17 @@ nav a {
   margin: 0px 10px;
 }
 
-/* Disable navbar links by default */
 .mat-toolbar .navbar-links {
   display: none;
 }
 
 @media (min-width: 600px) {
-  /* Show navbar links only on larger screens */
   .mat-toolbar .navbar-links {
     display: flex;
     gap: 10px;
   }
 }
 
-/* Active link styling */
 .mat-toolbar .router-link-active {
   color: darkblue;
 }
@@ -59,4 +56,9 @@ nav a {
 
 .mat-toolbar .mat-divider {
   margin: 5px 0;
+}
+
+.menu-item-active {
+  background-color: lightskyblue;
+  font-weight: bold;
 }

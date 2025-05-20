@@ -48,6 +48,7 @@ export class NavbarComponent {
   public growthTrackingPage = AppRoute.GrowthTracking;
   public babyEventPreferencesPage = AppRoute.BabyEventPreferences;
   public addBabyPage = AppRoute.AddBaby;
+  public babyInfoPage = AppRoute.BabyInfo;
 
   public logout() {
     this.authService.logout();
