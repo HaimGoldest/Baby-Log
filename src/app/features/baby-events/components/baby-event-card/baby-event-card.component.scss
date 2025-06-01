@@ -17,13 +17,13 @@
     .event-img {
       width: 45px;
       height: 45px;
-      margin-left: 5px;
+      margin-inline-start: 5px;
       border-radius: 50%;
       object-fit: cover;
     }
 
     .time-info {
-      margin-left: 15px;
+      margin-inline-start: 15px;
       font-size: 0.875rem;
 
       .time-text {
@@ -33,7 +33,7 @@
     }
 
     .menu-button {
-      margin-left: auto; /* Ensure the button is aligned to the right */
+      margin-inline-start: auto;
     }
   }
 
@@ -68,7 +68,7 @@
 }
 
 @media (min-width: 768px) {
-  .action-img {
+  .event-img {
     width: 90px;
     height: 90px;
   }
