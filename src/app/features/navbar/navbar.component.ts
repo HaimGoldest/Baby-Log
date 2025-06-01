@@ -2,12 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   inject,
-  signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { UserService } from '../../core/services/user.service';
 import { BabiesService } from '../../core/services/babies.service';
@@ -23,7 +21,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   standalone: true,
   imports: [
     CommonModule,
-    RouterModule,
+    RouterLink,
+    RouterLinkActive,
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
