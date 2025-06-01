@@ -1,6 +1,11 @@
-<app-navbar></app-navbar>
-<router-outlet></router-outlet>
+<header>
+  <app-navbar></app-navbar>
+</header>
 
-@if (showLoadingSpinner()) {
-<app-loading-spinner></app-loading-spinner>
-}
+<main>
+  <router-outlet></router-outlet>
+
+  @if (showLoadingSpinner()) {
+  <app-loading-spinner></app-loading-spinner>
+  }
+</main>
