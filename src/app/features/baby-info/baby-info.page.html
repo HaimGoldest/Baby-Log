@@ -1,10 +1,10 @@
 <mat-card>
   <mat-card-header>
-    <mat-card-title>Baby Information</mat-card-title>
+    <mat-card-title>{{ strings.BABY_INFO}}</mat-card-title>
   </mat-card-header>
   <mat-card-content>
     <div class="info-row">
-      <span class="label">Baby Key:</span>
+      <span class="label">{{ strings.BABY_UID}}</span>
       <span class="value">
         {{ baby()?.uid }}
         <button
@@ -18,21 +18,27 @@
       </span>
     </div>
     <div class="info-row">
-      <span class="label">Name:</span>
+      <span class="label">{{ strings.BABY_NAME}}</span>
       <span class="value">{{ baby()?.name }}</span>
     </div>
     <div class="info-row">
-      <span class="label">Birth Date:</span>
+      <span class="label">{{ strings.BABY_BIRTH_DATE}}</span>
       <span class="value">{{ baby()?.birthDate | date : "longDate" }}</span>
+    </div>
+    <div class="info-row">
+      <span class="label">{{ strings.BABY_GENDER }}</span>
+      <span class="value"
+        >{{ baby()?.gender === 'Male' ? strings.MALE : strings.FEMALE}}</span
+      >
     </div>
     <hr />
     <div class="info-row">
-      <span class="label">Baby Image:</span>
+      <span class="label">{{ strings.BABY_IMAGE}}</span>
       <span class="value">
         <ng-container *ngIf="(babyImageUrl()) as url; else noImage">
           <img [src]="url" alt="Baby Image" class="baby-image" />
         </ng-container>
-        <ng-template #noImage><span>No image available</span></ng-template>
+        <ng-template #noImage><span>{{ strings.NO_IMAGE}}</span></ng-template>
         <input
           type="file"
           accept="image/*"
@@ -45,14 +51,14 @@
           class="change-image-button"
           (click)="fileInput.click()"
         >
-          Change Image
+          {{ strings.CHANGE_IMAGE}}
         </button>
       </span>
     </div>
   </mat-card-content>
   <mat-card-actions align="end">
     <button mat-raised-button color="warn" (click)="deleteBaby()">
-      Delete
+      {{ strings.DELETE_BABY}}
     </button>
   </mat-card-actions>
 </mat-card>

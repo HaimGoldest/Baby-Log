@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { BabyMeasurementsService } from '../../../services/baby-measurements.service';
 import { BabyMeasurement } from '../../../../../models/baby.model';
+import GrowthTrackingListItemStrings from './growth-tracking-list-item.strings';
 
 @Component({
   selector: 'app-growth-tracking-list-item',
@@ -31,6 +32,8 @@ import { BabyMeasurement } from '../../../../../models/baby.model';
 export class GrowthTrackingListItemComponent implements OnDestroy {
   @Input({ required: true }) measurement!: BabyMeasurement;
   private destroy$ = new Subject<void>();
+
+  public strings = GrowthTrackingListItemStrings;
 
   public constructor(
     private babyMeasurementsService: BabyMeasurementsService,
