@@ -1,75 +1,63 @@
-.baby-event-card {
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 800px;
-  margin-bottom: 15px;
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.main-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
 
-  .main-section {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
+  .card-title {
+    font-weight: bold;
+    margin: 0;
+    text-align: center;
+    align-self: center;
+  }
 
-    .card-title {
+  .event-img {
+    width: 45px;
+    height: 45px;
+    margin-inline-start: 5px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .time-info {
+    margin-inline-start: 15px;
+    font-size: 0.875rem;
+
+    .time-text {
+      color: darkblue;
       font-weight: bold;
-      margin: 0;
-      text-align: center;
-      align-self: center;
-    }
-
-    .event-img {
-      width: 45px;
-      height: 45px;
-      margin-inline-start: 5px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-
-    .time-info {
-      margin-inline-start: 15px;
-      font-size: 0.875rem;
-
-      .time-text {
-        color: darkblue;
-        font-weight: bold;
-      }
-    }
-
-    .menu-button {
-      margin-inline-start: auto;
     }
   }
 
-  .comment-section {
-    margin-bottom: 10px;
-    text-align: start;
+  .menu-button {
+    margin-inline-start: auto;
+  }
+}
 
-    p {
-      white-space: normal;
-      word-break: break-word;
-      overflow-wrap: break-word;
-    }
+.comment-section {
+  margin-bottom: 10px;
+  text-align: start;
+
+  p {
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+}
+
+.users-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .creation {
+    color: darkgreen;
   }
 
-  .users-section {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  .editing {
+    color: darkmagenta;
+  }
 
-    .creation {
-      color: darkgreen;
-    }
-
-    .editing {
-      color: darkmagenta;
-    }
-
-    .same-user {
-      color: brown;
-    }
+  .same-user {
+    color: brown;
   }
 }

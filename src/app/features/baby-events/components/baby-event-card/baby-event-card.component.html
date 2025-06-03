@@ -1,8 +1,4 @@
-<mat-card
-  appearance="outlined"
-  class="baby-event-card"
-  (contextmenu)="onEdit($event)"
->
+<mat-card class="card-style" (contextmenu)="onEdit($event)">
   <div class="mat-card-content">
     <div class="main-section">
       <h4 class="card-title">{{ getCategoryName(event.category) }}</h4>

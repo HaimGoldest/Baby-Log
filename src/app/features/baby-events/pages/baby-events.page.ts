@@ -9,6 +9,7 @@ import { BabyEventsPanelComponent } from '../components/baby-events-panel/baby-e
 import { BabyEventCategory } from '../../../models/baby.model';
 import { BabyEventsService } from '../services/baby-events.service';
 import { BabyEventCardComponent } from '../components/baby-event-card/baby-event-card.component';
+import BabyEventsStrings from './baby-events.strings';
 
 @Component({
   selector: 'app-baby-events',
@@ -29,6 +30,7 @@ export class BabyEventsComponent {
     )
   );
 
+  public readonly strings = BabyEventsStrings;
   public filterMode = computed(() => this.currentFilteredCategory() !== null);
 
   public readonly displayedEvents = computed(() =>
