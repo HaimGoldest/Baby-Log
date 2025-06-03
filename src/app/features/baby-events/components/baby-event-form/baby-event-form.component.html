@@ -1,9 +1,9 @@
-<h2 mat-dialog-title>Edit Event</h2>
+<h2 mat-dialog-title>{{ strings.HEADER }}</h2>
 <hr />
 
 <mat-dialog-content [formGroup]="eventForm">
   <mat-form-field appearance="outline">
-    <mat-label>Event Date</mat-label>
+    <mat-label>{{ strings.DATE }}</mat-label>
     <input
       matInput
       [matDatepicker]="datepicker"
@@ -15,26 +15,26 @@
   </mat-form-field>
 
   <mat-form-field appearance="outline">
-    <mat-label>Event Time</mat-label>
+    <mat-label>{{ strings.TIME }}</mat-label>
     <input matInput [matTimepicker]="timepicker" formControlName="time" />
     <mat-timepicker #timepicker></mat-timepicker>
     <mat-timepicker-toggle [for]="timepicker" matSuffix></mat-timepicker-toggle>
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Comment</mat-label>
+    <mat-label>{{ strings.COMMENT }}</mat-label>
     <input matInput formControlName="comment" />
   </mat-form-field>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button (click)="dialogRef.close()">Cancel</button>
+  <button mat-button (click)="dialogRef.close()">{{ strings.CANCEL }}</button>
   <button
     mat-raised-button
     color="primary"
     [disabled]="eventForm.invalid"
     (click)="onSubmit()"
   >
-    Save
+    {{ strings.SAVE }}
   </button>
 </mat-dialog-actions>

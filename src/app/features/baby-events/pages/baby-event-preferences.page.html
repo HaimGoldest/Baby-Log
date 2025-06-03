@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="container">
-    <h1 class="text-center">Baby Events Preferences</h1>
-    @for (category of babyEventsCategories(); track category.name) {
+    <h1 class="text-center">{{ strings.HEADER }}</h1>
+    @for (category of babyEventsCategories(); track category.id) {
     <app-baby-event-preferences-item
       [babyEventCategory]="category"
       (modified)="onChanged()"
@@ -15,9 +15,9 @@
         [disabled]="!hasChanged"
         (click)="save()"
       >
-        Save Changes
+        {{ strings.SAVE }}
       </button>
-      <button mat-button (click)="cancel()">Don't Change</button>
+      <button mat-button (click)="cancel()">{{ strings.CANCEL }}</button>
     </div>
   </div>
 </div>

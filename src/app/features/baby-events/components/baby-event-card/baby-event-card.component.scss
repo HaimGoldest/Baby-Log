@@ -1,6 +1,13 @@
 .baby-event-card {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 800px;
   margin-bottom: 15px;
   padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   .main-section {
     display: flex;
@@ -39,7 +46,7 @@
 
   .comment-section {
     margin-bottom: 10px;
-    text-align: center;
+    text-align: start;
 
     p {
       white-space: normal;
@@ -64,12 +71,5 @@
     .same-user {
       color: brown;
     }
-  }
-}
-
-@media (min-width: 768px) {
-  .event-img {
-    width: 90px;
-    height: 90px;
   }
 }

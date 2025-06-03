@@ -1,12 +1,12 @@
 <div class="d-flex flex-column justify-content-center align-items-center">
   <h2 class="mb-4">
-    {{ isNewBabyMode ? "Add New Baby" : "Add Existing Baby" }}
+    {{ isNewBabyMode ? strings.ADD_NEW_BABY : strings.ADD_EXISTING_BABY }}
   </h2>
 
   <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
     <div *ngIf="isNewBabyMode">
       <div class="form-group">
-        <label for="name">Name:</label>
+        <label for="name">{{ strings.BABY_NAME }}</label>
         <input
           type="text"
           id="name"
@@ -18,7 +18,7 @@
       </div>
       <hr />
       <mat-form-field>
-        <mat-label>Birth Date</mat-label>
+        <mat-label>{{ strings.BABY_BIRTH_DATE }}</mat-label>
         <input
           matInput
           [matDatepicker]="picker"
@@ -36,7 +36,7 @@
       </mat-form-field>
       <hr />
       <div class="form-group gender-group">
-        <label class="gender-label">Select Gender:</label>
+        <label class="gender-label">{{ strings.BABY_GENDER }}</label>
         <div class="form-check">
           <input
             class="form-check-input"
@@ -47,7 +47,9 @@
             ngModel
             required
           />
-          <label class="form-check-label" for="genderMale">Male</label>
+          <label class="form-check-label" for="genderMale"
+            >{{ strings.MALE }}</label
+          >
         </div>
         <div class="form-check">
           <input
@@ -59,12 +61,14 @@
             ngModel
             required
           />
-          <label class="form-check-label" for="genderFemale">Female</label>
+          <label class="form-check-label" for="genderFemale"
+            >{{ strings.FEMALE }}</label
+          >
         </div>
       </div>
       <hr />
       <div class="form-group">
-        <label for="image">Baby Image:</label>
+        <label for="image">{{ strings.BABY_IMAGE }}</label>
         <input
           type="file"
           id="image"
@@ -82,7 +86,7 @@
     </div>
     <div *ngIf="!isNewBabyMode">
       <div class="form-group">
-        <label for="uid">Enter baby key</label>
+        <label for="uid">{{ strings.BABY_UID }}</label>
         <input
           type="text"
           id="uid"
@@ -100,11 +104,12 @@
         class="btn btn-primary"
         [disabled]="!authForm.valid"
       >
-        Add Baby
+        {{ strings.ADD_BABY }}
       </button>
       |
       <button type="button" class="btn btn-secondary" (click)="onSwitchMode()">
-        Switch to {{ isNewBabyMode ? "existing baby" : "new baby" }} mode
+        {{ isNewBabyMode ? strings.ADD_TO_EXISTING_BABY :
+        strings.ADD_TO_NEW_BABY }}
       </button>
     </div>
   </form>

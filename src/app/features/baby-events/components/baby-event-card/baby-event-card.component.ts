@@ -19,6 +19,8 @@ import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import { UserService } from '../../../../core/services/user.service';
+import BabyEventCardStrings from './baby-event-card.strings';
+import GetCategoryName from '../../utils/baby-event-categories.strings';
 
 @Component({
   selector: 'app-baby-event-card',
@@ -42,6 +44,8 @@ export class BabyEventCardComponent {
   private userService = inject(UserService);
   private dialog = inject(MatDialog);
   private destroy$ = new Subject<void>();
+
+  public strings = BabyEventCardStrings;
 
   @Input({ required: true }) public event: BabyEvent;
   @Input({ required: true }) public filterMode: boolean;
@@ -69,6 +73,10 @@ export class BabyEventCardComponent {
           this.updateEvent(result);
         }
       });
+  }
+
+  public getCategoryName(category: BabyEventCategory): string {
+    return GetCategoryName(category);
   }
 
   private async updateEvent(data: BabyEvent): Promise<void> {

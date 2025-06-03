@@ -10,9 +10,8 @@ export default class GrowthTrackingFormStrings {
   public static readonly HEAD = 'היקף ראש (ס"מ)';
   public static readonly HEAD_PLACEHOLDER = 'הזן את היקף ראש התינוק';
 
-  public static readonly UPDATE = 'עדכן';
-  public static readonly ADD = 'הוסף';
-  public static readonly CANCEL = 'בטל';
+  public static readonly SAVE = 'שמירה';
+  public static readonly CANCEL = 'ביטול';
 
   public static readonly WEIGHT_IS_REQUIRED = 'נדרש משקל התינוק';
   public static readonly HEIGHT_IS_REQUIRED = 'נדרש גובה התינוק';

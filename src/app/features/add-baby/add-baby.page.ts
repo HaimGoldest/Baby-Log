@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AppService } from '../../core/services/app.service';
 import { Observable } from 'rxjs';
+import AddBabyStrings from './add-baby.strings';
 
 @Component({
   standalone: true,
@@ -33,6 +34,7 @@ export class AddBabyPage {
   public errorMessage: string | null = null;
   public selectedImage: File | null = null;
   public imagePreview$?: Observable<string>;
+  public strings = AddBabyStrings;
 
   onSwitchMode() {
     this.isNewBabyMode = !this.isNewBabyMode;

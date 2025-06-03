@@ -1,6 +1,13 @@
 .growth-tracking-card {
-  margin-bottom: 5px;
-  padding: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 800px;
+  margin-bottom: 15px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   .mat-card-content {
     display: flex;
@@ -27,11 +34,11 @@
 
       .measurement-title {
         font-weight: bold;
-        font-size: 0.85rem;
+        font-size: 1rem;
       }
 
       .measurement-value {
-        font-size: 0.8rem;
+        font-size: 1rem;
       }
     }
 

@@ -1,5 +1,5 @@
 export default class BabyInfoStrings {
-  public static readonly BABY_INFO = 'מידע על התינוק';
+  public static readonly BABY_INFO = 'פרטי תינוק';
 
   public static readonly BABY_UID =
     'קוד תינוק (לשיתוף התינוק בין משתמשים שונים)';
