@@ -12,11 +12,12 @@
           (unfilter)="onUnfilter()"
         ></app-baby-event-card>
         } @empty {
-        <!-- TODO - change to use the alert component -->
-        <div class="alert alert-info" role="alert">
-          <h4 class="alert-heading">{{ strings.NO_EVENTS_FOUND }}</h4>
-          <p class="alert-info">{{ strings.ADD_NEW_EVENTS }}</p>
-        </div>
+        <app-alert-message
+          type="info"
+          [title]="strings.NO_EVENTS_FOUND"
+          [message]="strings.ADD_NEW_EVENTS"
+        >
+        </app-alert-message>
         }
       </div>
     </div>

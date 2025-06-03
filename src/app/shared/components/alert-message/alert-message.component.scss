@@ -1,0 +1,28 @@
+.alert-card {
+  margin: 16px auto;
+  padding: 16px;
+  max-width: 600px;
+  border-radius: 8px;
+  color: #fff;
+}
+
+.alert-card.info {
+  background-color: #2196f3;
+}
+
+.alert-card.success {
+  background-color: #4caf50;
+}
+
+.alert-card.error {
+  background-color: #f44336;
+}
+
+.alert-title {
+  margin: 0 0 8px 0;
+  font-weight: bold;
+}
+
+.alert-message {
+  margin: 0;
+}

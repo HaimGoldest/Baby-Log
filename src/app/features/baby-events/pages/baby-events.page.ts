@@ -10,6 +10,7 @@ import { BabyEventCategory } from '../../../models/baby.model';
 import { BabyEventsService } from '../services/baby-events.service';
 import { BabyEventCardComponent } from '../components/baby-event-card/baby-event-card.component';
 import BabyEventsStrings from './baby-events.strings';
+import { AlertMessageComponent } from '../../../shared/components/alert-message/alert-message.component';
 
 @Component({
   selector: 'app-baby-events',
@@ -17,7 +18,11 @@ import BabyEventsStrings from './baby-events.strings';
   styleUrl: './baby-events.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [BabyEventsPanelComponent, BabyEventCardComponent],
+  imports: [
+    BabyEventsPanelComponent,
+    BabyEventCardComponent,
+    AlertMessageComponent,
+  ],
 })
 export class BabyEventsComponent {
   private readonly babyEventsService = inject(BabyEventsService);
