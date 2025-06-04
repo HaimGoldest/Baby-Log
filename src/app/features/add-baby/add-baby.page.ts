@@ -1,14 +1,19 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
+
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core'; // required by MatDatepicker
+import { MatRadioModule } from '@angular/material/radio';
+import { MatButtonModule } from '@angular/material/button';
+
+import { AppService } from '../../core/services/app.service';
+import { Observable } from 'rxjs';
 import { BabiesService } from '../../core/services/babies.service';
 import { UserService } from '../../core/services/user.service';
 import { Gender } from '../../enums/gender.enum';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { AppService } from '../../core/services/app.service';
-import { Observable } from 'rxjs';
 import AddBabyStrings from './add-baby.strings';
 
 @Component({
@@ -19,6 +24,9 @@ import AddBabyStrings from './add-baby.strings';
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
+    MatNativeDateModule,
+    MatRadioModule,
+    MatButtonModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-add-baby',
