@@ -73,6 +73,17 @@
     >
       {{ strings.BABY_EVENTS }}
     </button>
+    <button
+      mat-menu-item
+      [routerLink]="['/', babyEventPreferencesPage]"
+      routerLinkActive="menu-item-active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [disabled]="!userHaveBabies()"
+    >
+      {{ strings.PREFERENCES }}
+    </button>
+
+    <mat-divider></mat-divider>
 
     <button
       mat-menu-item
@@ -88,14 +99,13 @@
 
     <button
       mat-menu-item
-      [routerLink]="['/', babyEventPreferencesPage]"
+      [routerLink]="['/', babyInfoPage]"
       routerLinkActive="menu-item-active"
       [routerLinkActiveOptions]="{ exact: true }"
       [disabled]="!userHaveBabies()"
     >
-      {{ strings.PREFERENCES }}
+      {{ strings.BABY_INFO }}
     </button>
-    <mat-divider></mat-divider>
     <button
       mat-menu-item
       [routerLink]="['/', addBabyPage]"
@@ -105,16 +115,9 @@
     >
       {{ strings.ADD_BABY }}
     </button>
-    <button
-      mat-menu-item
-      [routerLink]="['/', babyInfoPage]"
-      routerLinkActive="menu-item-active"
-      [routerLinkActiveOptions]="{ exact: true }"
-      [disabled]="!userHaveBabies()"
-    >
-      {{ strings.BABY_INFO }}
-    </button>
+
     <mat-divider></mat-divider>
+
     <button mat-menu-item (click)="logout()">{{ strings.LOGOUT }}</button>
   </mat-menu>
 </mat-toolbar>

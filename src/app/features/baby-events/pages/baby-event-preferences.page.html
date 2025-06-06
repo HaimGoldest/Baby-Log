@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="container">
-    <h1 class="text-center">{{ strings.HEADER }}</h1>
+    <h2 class="text-center">{{ strings.HEADER }}</h2>
     @for (category of babyEventsCategories(); track category.id) {
     <app-baby-event-preferences-item
       [babyEventCategory]="category"

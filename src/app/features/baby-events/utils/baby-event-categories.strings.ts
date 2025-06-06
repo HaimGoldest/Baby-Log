@@ -23,7 +23,7 @@ export default function GetCategoryName(category: BabyEventCategory): string {
     case 'Fever':
       return 'חום';
     case 'Medication':
-      return 'קבלת תרופה';
+      return 'תרופה';
     case 'Vomit':
       return 'הקאה';
     case 'Vaccine':
