@@ -27,7 +27,7 @@ export class UserFactory {
       // Add missing categories
       for (let defaultPref of defaultPreferences) {
         const alreadyExists = preferences.some(
-          (category: BabyEventCategory) => category.name === defaultPref.name
+          (category: BabyEventCategory) => category.id === defaultPref.id
         );
 
         if (!alreadyExists) {
@@ -39,7 +39,7 @@ export class UserFactory {
       // Remove old invalid categories
       preferences = preferences.filter((pref) => {
         const stillExists = defaultPreferences.some(
-          (category: BabyEventCategory) => category.name === pref.name
+          (category: BabyEventCategory) => category.id === pref.id
         );
 
         if (!stillExists) {
@@ -93,91 +93,91 @@ export class UserFactory {
   private static createDefaultBabyEventPreferences(): BabyEventCategory[] {
     return [
       {
-        name: 'Bottle',
+        id: 'Bottle',
         defaultComment: '',
         imagePath: '../../assets/images/icons8-baby-bottle-96.png',
         isCategoryEnabled: true,
         isDefaultCommentEnabled: false,
       },
       {
-        name: 'Breastfeeding',
+        id: 'Breastfeeding',
         defaultComment: '',
         imagePath: '../../assets/images/icons8-breastfeeding-96.png',
         isCategoryEnabled: false,
         isDefaultCommentEnabled: false,
       },
       {
-        name: 'Breast Pump',
+        id: 'BreastPump',
         defaultComment: '',
         imagePath: '../../assets/images/icons8-breast-pump-96.png',
         isCategoryEnabled: false,
         isDefaultCommentEnabled: false,
       },
       {
-        name: 'Diaper',
+        id: 'Diaper',
         defaultComment: '',
         imagePath: '../../assets/images/icons8-diaper-96.png',
         isCategoryEnabled: true,
         isDefaultCommentEnabled: false,
       },
       {
-        name: 'Poo',
+        id: 'Poo',
         defaultComment: '',
         imagePath: '../../assets/images/icons8-pile-of-poo-3d-fluency-96.png',
         isCategoryEnabled: true,
         isDefaultCommentEnabled: false,
       },
       {
-        name: 'Shower',
+        id: 'Shower',
         defaultComment: '',
         imagePath: '../../assets/images/icons8-shower-96.png',
         isCategoryEnabled: true,
         isDefaultCommentEnabled: false,
       },
       {
-        name: 'Awake',
+        id: 'Awake',
         defaultComment: '',
         imagePath: '../../assets/images/icons8-sun-96.png',
         isCategoryEnabled: true,
         isDefaultCommentEnabled: false,
       },
       {
-        name: 'Sleep',
+        id: 'Sleep',
         defaultComment: '',
         imagePath: '../../assets/images/icons8-moon-96.png',
         isCategoryEnabled: true,
         isDefaultCommentEnabled: false,
       },
       {
-        name: 'Fever',
+        id: 'Fever',
         defaultComment: '',
         imagePath: '../../assets/images/icons8-thermometer-96.png',
         isCategoryEnabled: true,
         isDefaultCommentEnabled: false,
       },
       {
-        name: 'Medication',
+        id: 'Medication',
         defaultComment: '',
         imagePath: '../../assets/images/icons8-pill-96.png',
         isCategoryEnabled: true,
         isDefaultCommentEnabled: false,
       },
       {
-        name: 'Vomit',
+        id: 'Vomit',
         defaultComment: '',
         imagePath: '../../assets/images/icons8-face-vomiting-96.png',
         isCategoryEnabled: true,
         isDefaultCommentEnabled: false,
       },
       {
-        name: 'Vaccine',
+        id: 'Vaccine',
         defaultComment: '',
         imagePath: '../../assets/images/icons8-syringe-96.png',
         isCategoryEnabled: false,
         isDefaultCommentEnabled: false,
       },
       {
-        name: 'Notes',
+        id: 'Notes',
         defaultComment: '',
         imagePath: '../../assets/images/icons8-task-96.png',
         isCategoryEnabled: true,

@@ -1,42 +1,37 @@
-.growth-tracking-card {
-  margin-bottom: 5px;
-  padding: 5px;
+.mat-card-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
 
-  .mat-card-content {
+  .date {
+    flex: 0 0 auto;
+    font-size: 1rem;
+    color: darkblue;
+    font-weight: bold;
+  }
+
+  .measurements-container {
+    flex: 1 1 auto;
     display: flex;
+    justify-content: center;
     align-items: center;
-    width: 100%;
+    gap: 10px;
 
-    .date {
-      flex: 0 0 auto;
-      font-size: 1rem;
-      color: darkblue;
+    > .measurement {
+      text-align: center;
+    }
+
+    .measurement-title {
       font-weight: bold;
+      font-size: 1rem;
     }
 
-    .measurements-container {
-      flex: 1 1 auto;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-
-      > .measurement {
-        text-align: center;
-      }
-
-      .measurement-title {
-        font-weight: bold;
-        font-size: 0.85rem;
-      }
-
-      .measurement-value {
-        font-size: 0.8rem;
-      }
+    .measurement-value {
+      font-size: 1rem;
     }
+  }
 
-    .menu-button {
-      flex: 0 0 auto;
-    }
+  .menu-button {
+    flex: 0 0 auto;
   }
 }

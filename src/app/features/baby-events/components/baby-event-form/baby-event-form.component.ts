@@ -17,6 +17,7 @@ import {
 } from '@angular/material/dialog';
 
 import { BabyEvent } from '../../../../models/baby.model';
+import BabyEventFormStrings from './baby-event-form.strings';
 
 @Component({
   selector: 'app-baby-event-form',
@@ -41,6 +42,7 @@ export class BabyEventFormComponent {
   private fb = inject(FormBuilder);
   public dialogRef = inject(MatDialogRef<BabyEventFormComponent>);
   private data = inject<BabyEvent>(MAT_DIALOG_DATA);
+  public strings = BabyEventFormStrings;
 
   public eventForm = this.fb.group({
     time: [this.data?.time ?? new Date()],

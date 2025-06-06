@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import NavbarStrings from './navbar.strings';
 
 @Component({
   selector: 'app-navbar',
@@ -48,6 +49,8 @@ export class NavbarComponent {
   public babyEventPreferencesPage = AppRoute.BabyEventPreferences;
   public addBabyPage = AppRoute.AddBaby;
   public babyInfoPage = AppRoute.BabyInfo;
+
+  public strings = NavbarStrings;
 
   public logout() {
     this.authService.logout();

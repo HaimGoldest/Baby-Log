@@ -1,15 +1,31 @@
-.eventImg {
-  width: 45px;
-  height: 45px;
-  border-radius: 100px;
-  background-size: cover;
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-@media (min-width: 768px) {
-  .eventImg {
-    width: 90px;
-    height: 90px;
-    border-radius: 200px;
-    background-size: cover;
-  }
+.event-img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.title-and-checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.category-title {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.default-comment-field {
+  margin-top: 12px;
+}
+
+.full-width {
+  width: 100%;
 }

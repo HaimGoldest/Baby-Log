@@ -10,6 +10,7 @@ import { BabiesService } from '../../core/services/babies.service';
 import { UserService } from '../../core/services/user.service';
 import { AppRoute } from '../../enums/app-route.enum';
 import { AppService } from '../../core/services/app.service';
+import BabyInfoStrings from './baby-info.strings';
 
 @Component({
   standalone: true,
@@ -25,6 +26,8 @@ export class BabyInfoPage {
   private router = inject(Router);
   private clipboard = inject(Clipboard);
   private snackBar = inject(MatSnackBar);
+
+  public strings = BabyInfoStrings;
 
   public baby = this.babiesService.baby;
   public babyImageUrl = computed(() => this.babiesService.baby()?.imageUrl);

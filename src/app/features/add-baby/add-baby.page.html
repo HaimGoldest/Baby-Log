@@ -1,115 +1,98 @@
-<div class="d-flex flex-column justify-content-center align-items-center">
-  <h2 class="mb-4">
-    {{ isNewBabyMode ? "Add New Baby" : "Add Existing Baby" }}
+<div class="add-baby-container">
+  <h2 class="page-title">
+    {{ isNewBabyMode ? strings.ADD_NEW_BABY : strings.ADD_EXISTING_BABY }}
   </h2>
 
-  <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
-    <div *ngIf="isNewBabyMode">
-      <div class="form-group">
-        <label for="name">Name:</label>
-        <input
-          type="text"
-          id="name"
-          class="form-control"
-          ngModel
-          name="name"
-          required
-        />
-      </div>
-      <hr />
-      <mat-form-field>
-        <mat-label>Birth Date</mat-label>
+  <form
+    #authForm="ngForm"
+    (ngSubmit)="onSubmit(authForm)"
+    class="add-baby-form"
+  >
+    <ng-container *ngIf="isNewBabyMode; else existingBabyBlock">
+      <!-- Name -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ strings.BABY_NAME }}</mat-label>
+        <input matInput id="name" name="name" ngModel required />
+      </mat-form-field>
+
+      <!-- Birth Date -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ strings.BABY_BIRTH_DATE }}</mat-label>
         <input
           matInput
           [matDatepicker]="picker"
-          ngModel
           id="birthDate"
           name="birthDate"
+          ngModel
           required
           (click)="picker.open()"
         />
-        <mat-datepicker-toggle
-          matIconSuffix
-          [for]="picker"
-        ></mat-datepicker-toggle>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
-      <hr />
-      <div class="form-group gender-group">
-        <label class="gender-label">Select Gender:</label>
-        <div class="form-check">
-          <input
-            class="form-check-input"
-            type="radio"
-            id="genderMale"
-            name="gender"
-            value="Male"
-            ngModel
-            required
-          />
-          <label class="form-check-label" for="genderMale">Male</label>
-        </div>
-        <div class="form-check">
-          <input
-            class="form-check-input"
-            type="radio"
-            id="genderFemale"
-            name="gender"
-            value="Female"
-            ngModel
-            required
-          />
-          <label class="form-check-label" for="genderFemale">Female</label>
-        </div>
+
+      <!-- Gender  -->
+      <div class="gender-container">
+        <mat-label class="label">{{ strings.BABY_GENDER }}:</mat-label>
+        <mat-radio-group
+          class="gender-options"
+          name="gender"
+          color="primary"
+          ngModel
+          required
+        >
+          <mat-radio-button value="Male">{{ strings.MALE }}</mat-radio-button>
+          <mat-radio-button value="Female"
+            >{{ strings.FEMALE }}</mat-radio-button
+          >
+        </mat-radio-group>
       </div>
-      <hr />
-      <div class="form-group">
-        <label for="image">Baby Image:</label>
+
+      <!-- Image Upload + Preview -->
+      <div class="image-upload-container">
+        <mat-label class="label">{{ strings.BABY_IMAGE }}:</mat-label>
         <input
           type="file"
-          id="image"
           accept="image/*"
           (change)="onImageSelected($event)"
         />
-        <div *ngIf="imagePreview$ | async as preview" class="mt-2">
-          <img
-            [src]="preview"
-            alt="Selected Image"
-            style="max-width: 100px; max-height: 100px"
-          />
+        <div *ngIf="imagePreview$ | async as preview" class="image-preview">
+          <img [src]="preview" alt="Selected Image" />
         </div>
       </div>
-    </div>
-    <div *ngIf="!isNewBabyMode">
-      <div class="form-group">
-        <label for="uid">Enter baby key</label>
-        <input
-          type="text"
-          id="uid"
-          class="form-control"
-          ngModel
-          name="uid"
-          required
-        />
-      </div>
-    </div>
-    <div>
-      <hr />
+    </ng-container>
+
+    <!-- Existing Baby Mode -->
+    <ng-template #existingBabyBlock>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ strings.ENTER_BABY_UID }}</mat-label>
+        <input matInput id="uid" name="uid" ngModel required />
+      </mat-form-field>
+      <p>{{ strings.BABY_UID_INFO }}</p>
+    </ng-template>
+
+    <!-- Action Buttons -->
+    <div class="button-row">
       <button
+        mat-raised-button
+        color="primary"
         type="submit"
-        class="btn btn-primary"
         [disabled]="!authForm.valid"
       >
-        Add Baby
+        {{ strings.ADD_BABY }}
       </button>
-      |
-      <button type="button" class="btn btn-secondary" (click)="onSwitchMode()">
-        Switch to {{ isNewBabyMode ? "existing baby" : "new baby" }} mode
+      <button
+        mat-button
+        type="button"
+        class="change_mode_button"
+        (click)="onSwitchMode()"
+      >
+        {{ isNewBabyMode ? strings.ADD_TO_EXISTING_BABY :
+        strings.ADD_TO_NEW_BABY }}
       </button>
     </div>
   </form>
 
-  <div *ngIf="errorMessage" class="alert alert-danger mt-4">
-    {{ errorMessage }}
-  </div>
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 </div>

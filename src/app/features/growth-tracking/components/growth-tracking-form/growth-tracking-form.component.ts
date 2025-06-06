@@ -16,6 +16,7 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { BabyMeasurement } from '../../../../models/baby.model';
+import GrowthTrackingFormStrings from './growth-tracking-form.strings';
 
 @Component({
   selector: 'app-growth-tracking-form',
@@ -41,6 +42,7 @@ export class GrowthTrackingFormComponent {
   private fb = inject(FormBuilder);
   public dialogRef = inject(MatDialogRef<GrowthTrackingFormComponent>);
   public data = inject<BabyMeasurement | null>(MAT_DIALOG_DATA);
+  public strings = GrowthTrackingFormStrings;
 
   public measurementForm = this.fb.group({
     date: [this.data?.date || new Date()],

@@ -27,7 +27,7 @@ nav a {
   max-height: 50px;
   max-width: 50px;
   border-radius: 4px;
-  margin: 0px 10px;
+  margin-inline: 10px;
 }
 
 .mat-toolbar .navbar-links {
@@ -47,7 +47,7 @@ nav a {
 
 .mat-toolbar .menu-icon {
   color: black;
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 .mat-toolbar .mat-menu-item {

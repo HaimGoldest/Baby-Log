@@ -1,0 +1,7 @@
+<mat-card [ngClass]="type" class="alert-card">
+  @if (title) {
+  <h4 class="alert-title">{{ title }}</h4>
+  } @if (message) {
+  <p class="alert-message">{{ message }}</p>
+  }
+</mat-card>

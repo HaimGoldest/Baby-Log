@@ -1,15 +1,11 @@
-<mat-card
-  appearance="outlined"
-  class="baby-event-card"
-  (contextmenu)="onEdit($event)"
->
+<mat-card class="card-style" (contextmenu)="onEdit($event)">
   <div class="mat-card-content">
     <div class="main-section">
-      <h4 class="card-title">{{ event.category.name }}</h4>
+      <h4 class="card-title">{{ getCategoryName(event.category) }}</h4>
       <img
         mat-card-image
         src="{{ event.category.imagePath }}"
-        alt="{{ event.category.name }}"
+        alt="{{ event.category.id }}"
         class="event-img"
       />
       <span class="time-info">
@@ -30,40 +26,42 @@
       <mat-menu #menu="matMenu">
         <button mat-menu-item (click)="onEdit()">
           <mat-icon color="primary">edit</mat-icon>
-          <span>Edit</span>
+          <span>{{ strings.EDIT }}</span>
         </button>
         @if (filterMode) {
         <button mat-menu-item (click)="onUnfilter()">
           <mat-icon color="accent">filter_none</mat-icon>
-          <span>Unfilter</span>
+          <span>{{ strings.UNFILTER }}</span>
         </button>
         } @else {
         <button mat-menu-item (click)="onFilter()">
           <mat-icon color="accent">filter</mat-icon>
-          <span>Filter</span>
+          <span>{{ strings.FILTER }}</span>
         </button>
         }
         <button mat-menu-item (click)="onDelete()">
           <mat-icon color="warn">delete</mat-icon>
-          <span>Delete</span>
+          <span>{{ strings.DELETE }}</span>
         </button>
       </mat-menu>
     </div>
 
     @if (event.comment) {
-    <div class="comment-section">
-      <p>{{ event.comment }}</p>
-    </div>
+    <p>
+      <strong>{{ strings.COMMENT }}:</strong> {{ event.comment }}
+    </p>
     }
   </div>
 
   <div class="users-section">
     @if (event.createdBy === event.lastEditedBy) {
-    <p class="same-user">Created and edited by: {{ event.createdBy }}</p>
+    <p class="same-user">
+      {{`${strings.CREATED_AND_EDITED_BY}: ${event.createdBy}` }}
+    </p>
     } @else {
-    <p class="creation">Created by: {{ event.createdBy }}</p>
+    <p class="creation">{{`${strings.CREATED_BY}: ${event.createdBy}` }}</p>
     @if (event.lastEditedBy) {
-    <p class="editing">Edited by: {{ event.lastEditedBy }}</p>
+    <p class="editing">{{`${strings.EDITED_BY}: ${event.lastEditedBy}` }}</p>
     } }
   </div>
 </mat-card>

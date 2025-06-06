@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppService } from '../../core/services/app.service';
+import LoginStrings from './login.strings';
 
 @Component({
   selector: 'app-login',
@@ -22,6 +23,8 @@ import { AppService } from '../../core/services/app.service';
 export class LoginPage implements OnInit, OnDestroy {
   private appService = inject(AppService);
   ui: firebaseui.auth.AuthUI;
+
+  public strings = LoginStrings;
 
   ngOnInit() {
     const auth = getFirebaseUIAuth();

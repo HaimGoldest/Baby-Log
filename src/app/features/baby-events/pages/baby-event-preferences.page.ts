@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { BabyEventPreferencesService } from '../services/baby-event-preferences.service';
 import { BabyEventsPreferencesItemComponent } from '../components/baby-events-preferences-item/baby-event-preferences-item.component';
 import { AppRoute } from '../../../enums/app-route.enum';
+import BabyEventsPreferencesStrings from './baby-event-preferences.strings';
 
 @Component({
   selector: 'app-baby-event-preferences',
@@ -18,6 +19,7 @@ export class BabyEventsPreferencesPage {
 
   public babyEventsCategories = this.preferencesService.preferences;
   public hasChanged = false;
+  public strings = BabyEventsPreferencesStrings;
 
   public onChanged(): void {
     this.hasChanged = true;

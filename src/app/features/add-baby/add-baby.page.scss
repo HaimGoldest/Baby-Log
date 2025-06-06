@@ -1,19 +1,75 @@
-.form-group {
+.add-baby-container {
   display: flex;
   flex-direction: column;
-}
-
-.form-group label {
-  font-weight: bold;
-}
-
-.gender-group {
-  display: flex;
   align-items: center;
-  gap: 1rem;
+  padding: 24px;
 }
 
-.gender-group .gender-label {
-  margin-right: 0.5rem;
+.page-title {
+  color: darkblue;
   font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.add-baby-form {
+  width: 100%;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.gender-container {
+  align-items: center;
+  gap: 16px;
+}
+
+.label {
+  font-weight: bold;
+}
+
+.gender-options {
+  display: flex;
+  gap: 16px;
+}
+
+.image-upload-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.image-preview {
+  margin-top: 8px;
+}
+
+.image-preview img {
+  max-width: 100px;
+  max-height: 100px;
+  border-radius: 4px;
+}
+
+.button-row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.change_mode_button {
+  background-color: #e0e0e0;
+  color: #000;
+  border: none;
+  padding: 8px 16px;
+}
+
+.error-message {
+  margin-top: 16px;
+  color: #f44336;
+  font-weight: 500;
 }

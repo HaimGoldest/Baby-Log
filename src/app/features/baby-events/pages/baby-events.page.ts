@@ -9,6 +9,8 @@ import { BabyEventsPanelComponent } from '../components/baby-events-panel/baby-e
 import { BabyEventCategory } from '../../../models/baby.model';
 import { BabyEventsService } from '../services/baby-events.service';
 import { BabyEventCardComponent } from '../components/baby-event-card/baby-event-card.component';
+import BabyEventsStrings from './baby-events.strings';
+import { AlertMessageComponent } from '../../../shared/components/alert-message/alert-message.component';
 
 @Component({
   selector: 'app-baby-events',
@@ -16,7 +18,11 @@ import { BabyEventCardComponent } from '../components/baby-event-card/baby-event
   styleUrl: './baby-events.page.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [BabyEventsPanelComponent, BabyEventCardComponent],
+  imports: [
+    BabyEventsPanelComponent,
+    BabyEventCardComponent,
+    AlertMessageComponent,
+  ],
 })
 export class BabyEventsComponent {
   private readonly babyEventsService = inject(BabyEventsService);
@@ -25,10 +31,11 @@ export class BabyEventsComponent {
   private readonly allEvents = this.babyEventsService.events;
   private readonly filteredEvents = computed(() =>
     this.allEvents().filter(
-      (event) => event.category.name === this.currentFilteredCategory().name
+      (event) => event.category.id === this.currentFilteredCategory().id
     )
   );
 
+  public readonly strings = BabyEventsStrings;
   public filterMode = computed(() => this.currentFilteredCategory() !== null);
 
   public readonly displayedEvents = computed(() =>

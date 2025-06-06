@@ -1,4 +1,4 @@
-<mat-card appearance="outlined" class="growth-tracking-card">
+<mat-card class="card-style">
   <div class="mat-card-content">
     <div class="date">
       {{ measurement?.date | date : "dd/MM/yy" }}
@@ -6,15 +6,15 @@
 
     <div class="measurements-container">
       <div class="measurement">
-        <p class="measurement-title">Weight</p>
+        <p class="measurement-title">{{ strings.WEIGHT }}</p>
         <p class="measurement-value">{{ measurement.weight }}</p>
       </div>
       <div class="measurement">
-        <p class="measurement-title">Height</p>
+        <p class="measurement-title">{{ strings.HEIGHT }}</p>
         <p class="measurement-value">{{ measurement.height }}</p>
       </div>
       <div class="measurement">
-        <p class="measurement-title">Head</p>
+        <p class="measurement-title">{{ strings.HEAD }}</p>
         <p class="measurement-value">{{ measurement.headMeasure }}</p>
       </div>
     </div>
@@ -31,11 +31,11 @@
     <mat-menu #menu="matMenu">
       <button mat-menu-item (click)="openEditMeasurementForm()">
         <mat-icon color="primary">edit</mat-icon>
-        <span>Edit</span>
+        <span>{{ strings.EDIT }}</span>
       </button>
       <button mat-menu-item (click)="onDelete()">
         <mat-icon color="warn">delete</mat-icon>
-        <span>Delete</span>
+        <span>{{ strings.DELETE }}</span>
       </button>
     </mat-menu>
   </div>

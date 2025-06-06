@@ -1,10 +1,12 @@
-<h2 mat-dialog-title>{{ data ? "Edit Measurement" : "Add Measurement" }}</h2>
+<h2 mat-dialog-title>
+  {{ data ? strings.EDIT_MEASUREMENT : strings.ADD_MEASUREMENT }}
+</h2>
 <hr />
 <mat-dialog-content>
   <form [formGroup]="measurementForm">
     <!-- Date Field -->
     <mat-form-field appearance="outline">
-      <mat-label>Date</mat-label>
+      <mat-label>{{ strings.DATE }}</mat-label>
       <input
         matInput
         [matDatepicker]="datepicker"
@@ -20,54 +22,72 @@
 
     <!-- Weight Field -->
     <mat-form-field appearance="outline">
-      <mat-label>Weight (kg)</mat-label>
-      <input type="number" matInput formControlName="weight" required />
+      <mat-label>{{ strings.WEIGHT }}</mat-label>
+      <input
+        type="number"
+        matInput
+        formControlName="weight"
+        placeholder="{{ strings.WEIGHT_PLACEHOLDER }}"
+        required
+      />
       <mat-error *ngIf="measurementForm.get('weight')?.hasError('required')">
-        Weight is required.
+        {{ strings.WEIGHT_IS_REQUIRED }}
       </mat-error>
       <mat-error *ngIf="measurementForm.get('weight')?.hasError('pattern')">
-        Please enter a valid number.
+        {{ strings.ENTER_VALID_NUMBER }}
       </mat-error>
     </mat-form-field>
 
     <!-- Height Field -->
     <mat-form-field appearance="outline">
-      <mat-label>Height (cm)</mat-label>
-      <input type="number" matInput formControlName="height" required />
+      <mat-label>{{ strings.HEIGHT }}</mat-label>
+      <input
+        type="number"
+        matInput
+        formControlName="height"
+        placeholder="{{ strings.HEIGHT_PLACEHOLDER }}"
+        required
+      />
       <mat-error *ngIf="measurementForm.get('height')?.hasError('required')">
-        Height is required.
+        {{ strings.HEIGHT_IS_REQUIRED }}
       </mat-error>
       <mat-error *ngIf="measurementForm.get('height')?.hasError('pattern')">
-        Please enter a valid number.
+        {{ strings.ENTER_VALID_NUMBER }}
       </mat-error>
     </mat-form-field>
 
     <!-- Head Measure Field -->
     <mat-form-field appearance="outline">
-      <mat-label>Head Measure (cm)</mat-label>
-      <input type="number" matInput formControlName="headMeasure" required />
+      <mat-label>{{ strings.HEAD }}</mat-label>
+      <input
+        type="number"
+        matInput
+        formControlName="headMeasure"
+        placeholder="{{ strings.HEAD_PLACEHOLDER }}"
+        required
+      />
       <mat-error
         *ngIf="measurementForm.get('headMeasure')?.hasError('required')"
       >
-        Head Measure is required.
+        {{ strings.HEAD_IS_REQUIRED }}
       </mat-error>
       <mat-error
         *ngIf="measurementForm.get('headMeasure')?.hasError('pattern')"
       >
-        Please enter a valid number.
+        {{ strings.ENTER_VALID_NUMBER }}
       </mat-error>
     </mat-form-field>
   </form>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button (click)="dialogRef.close()">Cancel</button>
+  <button mat-button (click)="dialogRef.close()">{{ strings.CANCEL }}</button>
   <button
     mat-raised-button
     color="primary"
     (click)="onSubmit()"
     [disabled]="measurementForm.invalid"
   >
-    {{ data ? "Update" : "Add" }}
+    {{ strings.SAVE }}
   </button>
 </mat-dialog-actions>
