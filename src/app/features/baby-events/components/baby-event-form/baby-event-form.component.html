@@ -16,12 +16,7 @@
 
   <mat-form-field appearance="outline">
     <mat-label>{{ strings.TIME }}</mat-label>
-    <input
-      matInput
-      [matTimepicker]="timepicker"
-      formControlName="time"
-      type="number"
-    />
+    <input matInput [matTimepicker]="timepicker" formControlName="time" />
     <mat-timepicker #timepicker></mat-timepicker>
     <mat-timepicker-toggle [for]="timepicker" matSuffix></mat-timepicker-toggle>
   </mat-form-field>
