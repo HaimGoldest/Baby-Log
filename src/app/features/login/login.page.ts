@@ -31,10 +31,7 @@ export class LoginPage implements OnInit, OnDestroy {
 
     const uiConfig = {
       signInFlow: 'popup',
-      signInOptions: [
-        GoogleAuthProvider.PROVIDER_ID,
-        FacebookAuthProvider.PROVIDER_ID,
-      ],
+      signInOptions: [GoogleAuthProvider.PROVIDER_ID],
       callbacks: {
         signInSuccessWithAuthResult: this.onLoginSuccessful.bind(this),
       },
