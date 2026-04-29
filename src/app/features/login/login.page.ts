@@ -1,5 +1,5 @@
 import * as firebaseui from 'firebaseui';
-import { GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
+import { GoogleAuthProvider } from 'firebase/auth';
 import { getFirebaseUIAuth } from '../../core/firebase/firebase-ui-init';
 import {
   ChangeDetectionStrategy,
@@ -31,10 +31,7 @@ export class LoginPage implements OnInit, OnDestroy {
 
     const uiConfig = {
       signInFlow: 'popup',
-      signInOptions: [
-        GoogleAuthProvider.PROVIDER_ID,
-        FacebookAuthProvider.PROVIDER_ID,
-      ],
+      signInOptions: [GoogleAuthProvider.PROVIDER_ID],
       callbacks: {
         signInSuccessWithAuthResult: this.onLoginSuccessful.bind(this),
       },
