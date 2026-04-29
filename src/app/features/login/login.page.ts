@@ -1,5 +1,5 @@
 import * as firebaseui from 'firebaseui';
-import { GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
+import { GoogleAuthProvider } from 'firebase/auth';
 import { getFirebaseUIAuth } from '../../core/firebase/firebase-ui-init';
 import {
   ChangeDetectionStrategy,
@@ -8,7 +8,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { AppService } from '../../core/services/app.service';
 import LoginStrings from './login.strings';
 
@@ -16,7 +16,7 @@ import LoginStrings from './login.strings';
   selector: 'app-login',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })

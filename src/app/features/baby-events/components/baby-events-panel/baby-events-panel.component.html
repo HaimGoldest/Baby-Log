@@ -1,7 +1,8 @@
 <div class="panel">
-  <app-baby-events-panel-item
-    *ngFor="let eventCategory of activeBabyEventCategories()"
-    [babyEventCategory]="eventCategory"
-    (filter)="onFilter($event)"
-  ></app-baby-events-panel-item>
+  @for (eventCategory of activeBabyEventCategories(); track eventCategory) {
+    <app-baby-events-panel-item
+      [babyEventCategory]="eventCategory"
+      (filter)="onFilter($event)"
+    ></app-baby-events-panel-item>
+  }
 </div>
