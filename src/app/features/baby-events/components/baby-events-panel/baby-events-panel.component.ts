@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -17,7 +17,7 @@ import { BabyEventPreferencesService } from '../../services/baby-event-preferenc
   styleUrl: './baby-events-panel.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CommonModule, BabyEventsPanelItemComponent],
+  imports: [BabyEventsPanelItemComponent],
 })
 export class BabyEventsPanelComponent {
   private preferencesService = inject(BabyEventPreferencesService);

@@ -4,45 +4,47 @@
       class="event-img"
       [src]="babyEventCategory.imagePath"
       [alt]="babyEventCategory.id"
-    />
+      />
 
-    <div class="title-and-checkboxes">
-      <div class="category-title">
-        {{ getCategoryName(babyEventCategory) }}
+      <div class="title-and-checkboxes">
+        <div class="category-title">
+          {{ getCategoryName(babyEventCategory) }}
+        </div>
+
+        <mat-checkbox
+          [(ngModel)]="babyEventCategory.isCategoryEnabled"
+          (change)="onChanged()"
+          color="primary"
+          >
+          {{ strings.ENABLE_CATEGORY }}
+        </mat-checkbox>
+
+        @if (babyEventCategory.isCategoryEnabled) {
+          <mat-checkbox
+            [(ngModel)]="babyEventCategory.isDefaultCommentEnabled"
+            (change)="onChanged()"
+            >
+            {{ strings.ENABLE_DEFAULT_COMMENT }}
+          </mat-checkbox>
+        }
       </div>
-
-      <mat-checkbox
-        [(ngModel)]="babyEventCategory.isCategoryEnabled"
-        (change)="onChanged()"
-        color="primary"
-      >
-        {{ strings.ENABLE_CATEGORY }}
-      </mat-checkbox>
-
-      <mat-checkbox
-        *ngIf="babyEventCategory.isCategoryEnabled"
-        [(ngModel)]="babyEventCategory.isDefaultCommentEnabled"
-        (change)="onChanged()"
-      >
-        {{ strings.ENABLE_DEFAULT_COMMENT }}
-      </mat-checkbox>
     </div>
-  </div>
 
-  <div
-    class="default-comment-field"
-    *ngIf="
+    @if (
       babyEventCategory.isCategoryEnabled &&
       babyEventCategory.isDefaultCommentEnabled
-    "
-  >
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label> {{ strings.DEFAULT_COMMENT }}</mat-label>
-      <input
-        matInput
-        [value]="babyEventCategory.defaultComment"
-        (input)="updateDefaultComment($event.target.value)"
-      />
-    </mat-form-field>
-  </div>
-</mat-card>
+      ) {
+      <div
+        class="default-comment-field"
+        >
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label> {{ strings.DEFAULT_COMMENT }}</mat-label>
+          <input
+            matInput
+            [value]="babyEventCategory.defaultComment"
+            (input)="updateDefaultComment($event.target.value)"
+            />
+          </mat-form-field>
+        </div>
+      }
+    </mat-card>
