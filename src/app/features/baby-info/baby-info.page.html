@@ -12,7 +12,7 @@
           color="primary"
           aria-label="Copy UID"
           (click)="copyUIDToClipboard()"
-        >
+          >
           <mat-icon>content_copy</mat-icon>
         </button>
       </span>
@@ -29,36 +29,37 @@
       <span class="label">{{ strings.BABY_GENDER }}</span>
       <span class="value"
         >{{ baby()?.gender === 'Male' ? strings.MALE : strings.FEMALE}}</span
-      >
-    </div>
-    <hr />
-    <div class="info-row">
-      <span class="label">{{ strings.BABY_IMAGE}}</span>
-      <span class="value">
-        <ng-container *ngIf="(babyImageUrl()) as url; else noImage">
-          <img [src]="url" alt="Baby Image" class="baby-image" />
-        </ng-container>
-        <ng-template #noImage><span>{{ strings.NO_IMAGE}}</span></ng-template>
-        <input
-          type="file"
-          accept="image/*"
-          (change)="onImageSelected($event)"
-          hidden
-          #fileInput
-        />
-        <button
-          mat-raised-button
-          class="change-image-button"
-          (click)="fileInput.click()"
         >
-          {{ strings.CHANGE_IMAGE}}
+      </div>
+      <hr />
+      <div class="info-row">
+        <span class="label">{{ strings.BABY_IMAGE}}</span>
+        <span class="value">
+          @if ((babyImageUrl()); as url) {
+            <img [src]="url" alt="Baby Image" class="baby-image" />
+          } @else {
+            <span>{{ strings.NO_IMAGE}}</span>
+          }
+          <input
+            type="file"
+            accept="image/*"
+            (change)="onImageSelected($event)"
+            hidden
+            #fileInput
+            />
+            <button
+              mat-raised-button
+              class="change-image-button"
+              (click)="fileInput.click()"
+              >
+              {{ strings.CHANGE_IMAGE}}
+            </button>
+          </span>
+        </div>
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <button mat-raised-button color="warn" (click)="deleteBaby()">
+          {{ strings.DELETE_BABY}}
         </button>
-      </span>
-    </div>
-  </mat-card-content>
-  <mat-card-actions align="end">
-    <button mat-raised-button color="warn" (click)="deleteBaby()">
-      {{ strings.DELETE_BABY}}
-    </button>
-  </mat-card-actions>
-</mat-card>
+      </mat-card-actions>
+    </mat-card>

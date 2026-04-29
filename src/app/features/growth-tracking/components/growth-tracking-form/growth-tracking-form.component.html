@@ -12,82 +12,92 @@
         [matDatepicker]="datepicker"
         formControlName="date"
         (click)="datepicker.open()"
-      />
-      <mat-datepicker #datepicker></mat-datepicker>
-      <mat-datepicker-toggle
-        [for]="datepicker"
-        matSuffix
-      ></mat-datepicker-toggle>
-    </mat-form-field>
+        />
+        <mat-datepicker #datepicker></mat-datepicker>
+        <mat-datepicker-toggle
+          [for]="datepicker"
+          matSuffix
+        ></mat-datepicker-toggle>
+      </mat-form-field>
 
-    <!-- Weight Field -->
-    <mat-form-field appearance="outline">
-      <mat-label>{{ strings.WEIGHT }}</mat-label>
-      <input
-        type="number"
-        matInput
-        formControlName="weight"
-        placeholder="{{ strings.WEIGHT_PLACEHOLDER }}"
-        required
-      />
-      <mat-error *ngIf="measurementForm.get('weight')?.hasError('required')">
-        {{ strings.WEIGHT_IS_REQUIRED }}
-      </mat-error>
-      <mat-error *ngIf="measurementForm.get('weight')?.hasError('pattern')">
-        {{ strings.ENTER_VALID_NUMBER }}
-      </mat-error>
-    </mat-form-field>
+      <!-- Weight Field -->
+      <mat-form-field appearance="outline">
+        <mat-label>{{ strings.WEIGHT }}</mat-label>
+        <input
+          type="number"
+          matInput
+          formControlName="weight"
+          placeholder="{{ strings.WEIGHT_PLACEHOLDER }}"
+          required
+          />
+          @if (measurementForm.get('weight')?.hasError('required')) {
+            <mat-error>
+              {{ strings.WEIGHT_IS_REQUIRED }}
+            </mat-error>
+          }
+          @if (measurementForm.get('weight')?.hasError('pattern')) {
+            <mat-error>
+              {{ strings.ENTER_VALID_NUMBER }}
+            </mat-error>
+          }
+        </mat-form-field>
 
-    <!-- Height Field -->
-    <mat-form-field appearance="outline">
-      <mat-label>{{ strings.HEIGHT }}</mat-label>
-      <input
-        type="number"
-        matInput
-        formControlName="height"
-        placeholder="{{ strings.HEIGHT_PLACEHOLDER }}"
-        required
-      />
-      <mat-error *ngIf="measurementForm.get('height')?.hasError('required')">
-        {{ strings.HEIGHT_IS_REQUIRED }}
-      </mat-error>
-      <mat-error *ngIf="measurementForm.get('height')?.hasError('pattern')">
-        {{ strings.ENTER_VALID_NUMBER }}
-      </mat-error>
-    </mat-form-field>
+        <!-- Height Field -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{ strings.HEIGHT }}</mat-label>
+          <input
+            type="number"
+            matInput
+            formControlName="height"
+            placeholder="{{ strings.HEIGHT_PLACEHOLDER }}"
+            required
+            />
+            @if (measurementForm.get('height')?.hasError('required')) {
+              <mat-error>
+                {{ strings.HEIGHT_IS_REQUIRED }}
+              </mat-error>
+            }
+            @if (measurementForm.get('height')?.hasError('pattern')) {
+              <mat-error>
+                {{ strings.ENTER_VALID_NUMBER }}
+              </mat-error>
+            }
+          </mat-form-field>
 
-    <!-- Head Measure Field -->
-    <mat-form-field appearance="outline">
-      <mat-label>{{ strings.HEAD }}</mat-label>
-      <input
-        type="number"
-        matInput
-        formControlName="headMeasure"
-        placeholder="{{ strings.HEAD_PLACEHOLDER }}"
-        required
-      />
-      <mat-error
-        *ngIf="measurementForm.get('headMeasure')?.hasError('required')"
-      >
-        {{ strings.HEAD_IS_REQUIRED }}
-      </mat-error>
-      <mat-error
-        *ngIf="measurementForm.get('headMeasure')?.hasError('pattern')"
-      >
-        {{ strings.ENTER_VALID_NUMBER }}
-      </mat-error>
-    </mat-form-field>
-  </form>
-</mat-dialog-content>
+          <!-- Head Measure Field -->
+          <mat-form-field appearance="outline">
+            <mat-label>{{ strings.HEAD }}</mat-label>
+            <input
+              type="number"
+              matInput
+              formControlName="headMeasure"
+              placeholder="{{ strings.HEAD_PLACEHOLDER }}"
+              required
+              />
+              @if (measurementForm.get('headMeasure')?.hasError('required')) {
+                <mat-error
+                  >
+                  {{ strings.HEAD_IS_REQUIRED }}
+                </mat-error>
+              }
+              @if (measurementForm.get('headMeasure')?.hasError('pattern')) {
+                <mat-error
+                  >
+                  {{ strings.ENTER_VALID_NUMBER }}
+                </mat-error>
+              }
+            </mat-form-field>
+          </form>
+        </mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button mat-button (click)="dialogRef.close()">{{ strings.CANCEL }}</button>
-  <button
-    mat-raised-button
-    color="primary"
-    (click)="onSubmit()"
-    [disabled]="measurementForm.invalid"
-  >
-    {{ strings.SAVE }}
-  </button>
-</mat-dialog-actions>
+        <mat-dialog-actions align="end">
+          <button mat-button (click)="dialogRef.close()">{{ strings.CANCEL }}</button>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="onSubmit()"
+            [disabled]="measurementForm.invalid"
+            >
+            {{ strings.SAVE }}
+          </button>
+        </mat-dialog-actions>

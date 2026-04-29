@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   Component,
   ChangeDetectionStrategy,
@@ -23,13 +23,12 @@ import { BabyEventCategory } from '../../../../models/baby.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     MatCardModule,
     MatCheckboxModule,
     MatFormFieldModule,
-    MatInputModule,
-  ],
+    MatInputModule
+],
 })
 export class BabyEventsPreferencesItemComponent {
   @Input({ required: true }) babyEventCategory: BabyEventCategory;

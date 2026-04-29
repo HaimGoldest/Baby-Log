@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
@@ -24,7 +24,6 @@ import BabyEventFormStrings from './baby-event-form.strings';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatDialogModule,
     MatFormFieldModule,
@@ -33,8 +32,8 @@ import BabyEventFormStrings from './baby-event-form.strings';
     MatDatepickerModule,
     MatNativeDateModule,
     MatIconModule,
-    MatTimepickerModule,
-  ],
+    MatTimepickerModule
+],
   templateUrl: './baby-event-form.component.html',
   styleUrls: ['./baby-event-form.component.scss'],
 })

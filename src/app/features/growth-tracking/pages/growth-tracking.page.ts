@@ -3,7 +3,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { BabyMeasurementsService } from '../services/baby-measurements.service';
 import { MatIconModule } from '@angular/material/icon';
-import { CommonModule } from '@angular/common';
+
 import { MatButtonModule } from '@angular/material/button';
 import { BabyMeasurement } from '../../../models/baby.model';
 import { GrowthTrackingListComponent } from '../components/growth-tracking-list/growth-tracking-list.component';
@@ -13,11 +13,10 @@ import { GrowthTrackingListComponent } from '../components/growth-tracking-list/
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
-    CommonModule,
     MatButtonModule,
     MatIconModule,
-    GrowthTrackingListComponent,
-  ],
+    GrowthTrackingListComponent
+],
   templateUrl: './growth-tracking.page.html',
   styleUrl: './growth-tracking.page.scss',
 })

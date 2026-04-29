@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -24,7 +24,6 @@ import GrowthTrackingFormStrings from './growth-tracking-form.strings';
   changeDetection: ChangeDetectionStrategy.OnPush,
 
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatDialogModule,
     MatFormFieldModule,
@@ -33,8 +32,8 @@ import GrowthTrackingFormStrings from './growth-tracking-form.strings';
     MatDatepickerModule,
     MatNativeDateModule,
     MatIconModule,
-    MatTimepickerModule,
-  ],
+    MatTimepickerModule
+],
   templateUrl: './growth-tracking-form.component.html',
   styleUrls: ['./growth-tracking-form.component.scss'],
 })

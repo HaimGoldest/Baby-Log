@@ -7,14 +7,13 @@
     #authForm="ngForm"
     (ngSubmit)="onSubmit(authForm)"
     class="add-baby-form"
-  >
-    <ng-container *ngIf="isNewBabyMode; else existingBabyBlock">
+    >
+    @if (isNewBabyMode) {
       <!-- Name -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>{{ strings.BABY_NAME }}</mat-label>
         <input matInput id="name" name="name" ngModel required />
       </mat-form-field>
-
       <!-- Birth Date -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>{{ strings.BABY_BIRTH_DATE }}</mat-label>
@@ -26,73 +25,74 @@
           ngModel
           required
           (click)="picker.open()"
-        />
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
+          />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <!-- Gender  -->
+        <div class="gender-container">
+          <mat-label class="label">{{ strings.BABY_GENDER }}:</mat-label>
+          <mat-radio-group
+            class="gender-options"
+            name="gender"
+            color="primary"
+            ngModel
+            required
+            >
+            <mat-radio-button value="Male">{{ strings.MALE }}</mat-radio-button>
+            <mat-radio-button value="Female"
+              >{{ strings.FEMALE }}</mat-radio-button
+              >
+            </mat-radio-group>
+          </div>
+          <!-- Image Upload + Preview -->
+          <div class="image-upload-container">
+            <mat-label class="label">{{ strings.BABY_IMAGE }}:</mat-label>
+            <input
+              type="file"
+              accept="image/*"
+              (change)="onImageSelected($event)"
+              />
+              @if (imagePreview$ | async; as preview) {
+                <div class="image-preview">
+                  <img [src]="preview" alt="Selected Image" />
+                </div>
+              }
+            </div>
+          } @else {
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>{{ strings.ENTER_BABY_UID }}</mat-label>
+              <input matInput id="uid" name="uid" ngModel required />
+            </mat-form-field>
+            <p>{{ strings.BABY_UID_INFO }}</p>
+          }
 
-      <!-- Gender  -->
-      <div class="gender-container">
-        <mat-label class="label">{{ strings.BABY_GENDER }}:</mat-label>
-        <mat-radio-group
-          class="gender-options"
-          name="gender"
-          color="primary"
-          ngModel
-          required
-        >
-          <mat-radio-button value="Male">{{ strings.MALE }}</mat-radio-button>
-          <mat-radio-button value="Female"
-            >{{ strings.FEMALE }}</mat-radio-button
-          >
-        </mat-radio-group>
+          <!-- Existing Baby Mode -->
+
+          <!-- Action Buttons -->
+          <div class="button-row">
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="!authForm.valid"
+              >
+              {{ strings.ADD_BABY }}
+            </button>
+            <button
+              mat-button
+              type="button"
+              class="change_mode_button"
+              (click)="onSwitchMode()"
+              >
+              {{ isNewBabyMode ? strings.ADD_TO_EXISTING_BABY :
+              strings.ADD_TO_NEW_BABY }}
+            </button>
+          </div>
+        </form>
+
+        <!-- Error Message -->
+        @if (errorMessage) {
+          <div class="error-message">{{ errorMessage }}</div>
+        }
       </div>
-
-      <!-- Image Upload + Preview -->
-      <div class="image-upload-container">
-        <mat-label class="label">{{ strings.BABY_IMAGE }}:</mat-label>
-        <input
-          type="file"
-          accept="image/*"
-          (change)="onImageSelected($event)"
-        />
-        <div *ngIf="imagePreview$ | async as preview" class="image-preview">
-          <img [src]="preview" alt="Selected Image" />
-        </div>
-      </div>
-    </ng-container>
-
-    <!-- Existing Baby Mode -->
-    <ng-template #existingBabyBlock>
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>{{ strings.ENTER_BABY_UID }}</mat-label>
-        <input matInput id="uid" name="uid" ngModel required />
-      </mat-form-field>
-      <p>{{ strings.BABY_UID_INFO }}</p>
-    </ng-template>
-
-    <!-- Action Buttons -->
-    <div class="button-row">
-      <button
-        mat-raised-button
-        color="primary"
-        type="submit"
-        [disabled]="!authForm.valid"
-      >
-        {{ strings.ADD_BABY }}
-      </button>
-      <button
-        mat-button
-        type="button"
-        class="change_mode_button"
-        (click)="onSwitchMode()"
-      >
-        {{ isNewBabyMode ? strings.ADD_TO_EXISTING_BABY :
-        strings.ADD_TO_NEW_BABY }}
-      </button>
-    </div>
-  </form>
-
-  <!-- Error Message -->
-  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
-</div>

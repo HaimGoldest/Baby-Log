@@ -4,7 +4,7 @@ import {
   computed,
   inject,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { UserService } from '../../core/services/user.service';
@@ -21,15 +21,14 @@ import NavbarStrings from './navbar.strings';
   selector: 'app-navbar',
   standalone: true,
   imports: [
-    CommonModule,
     RouterLink,
     RouterLinkActive,
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
-    MatDividerModule,
-  ],
+    MatDividerModule
+],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
