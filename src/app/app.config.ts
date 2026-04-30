@@ -7,9 +7,17 @@ import { provideRouter } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { environment } from '../environments/environment';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import { provideAuth, getAuth } from '@angular/fire/auth';
-import { provideFirestore, getFirestore } from '@angular/fire/firestore';
-import { provideStorage, getStorage } from '@angular/fire/storage';
+import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
+import {
+  provideFirestore,
+  getFirestore,
+  connectFirestoreEmulator,
+} from '@angular/fire/firestore';
+import {
+  provideStorage,
+  getStorage,
+  connectStorageEmulator,
+} from '@angular/fire/storage';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -23,22 +31,41 @@ export const appConfig: ApplicationConfig = {
     provideRouter(appRoutes),
     provideAnimations(),
 
-    // Material providers :
+    // Material providers
     importProvidersFrom(
       MatDatepickerModule,
       MatNativeDateModule,
       MatFormFieldModule,
       MatInputModule,
       MatIconModule,
-      MatButtonModule
+      MatButtonModule,
     ),
     { provide: MAT_DATE_LOCALE, useValue: 'he-IL' },
     { provide: LOCALE_ID, useValue: 'he-IL' },
 
     // Firebase
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+
     provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore()),
-    provideStorage(() => getStorage()),
+
+    provideFirestore(() => {
+      const firestore = getFirestore();
+
+      if (environment.useFirebaseEmulators) {
+        connectFirestoreEmulator(firestore, '127.0.0.1', 8080);
+      }
+
+      return firestore;
+    }),
+
+    provideStorage(() => {
+      const storage = getStorage();
+
+      if (environment.useFirebaseEmulators) {
+        connectStorageEmulator(storage, '127.0.0.1', 9199);
+      }
+
+      return storage;
+    }),
   ],
 };
