@@ -24,6 +24,11 @@
       "sourceType": "github",
       "skillPath": "skills/firebase-hosting-basics/SKILL.md",
       "computedHash": "0688a8ad6cb72149924352cc47e6cc8bf815e944b636a67b9da225cc9b025afc"
+    },
+    "hebrew-rtl-best-practices": {
+      "source": "skills-il/localization",
+      "sourceType": "github",
+      "computedHash": "0416cc7888dfcfc00cce1e252eb8d67e45892c86fc69533621ba677ad8eab1a7"
     }
   }
 }
