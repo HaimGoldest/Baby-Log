@@ -1,4 +1,12 @@
 <div class="login d-flex flex-column justify-content-center align-items-center">
   <h2 class="mb-4">{{ strings.LOGIN }}</h2>
-  <div id="firebaseui-auth-container" class="auth-container"></div>
+
+  <button mat-raised-button color="primary" (click)="signInWithGoogle()">
+    <mat-icon>login</mat-icon>
+    {{ strings.SIGN_IN_WITH_GOOGLE }}
+  </button>
+
+  @if (loginError()) {
+  <p class="error-message mt-3">{{ loginError() }}</p>
+  }
 </div>
