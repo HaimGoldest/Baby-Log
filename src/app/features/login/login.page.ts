@@ -1,6 +1,4 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 
 import { AuthService } from '../../core/services/auth.service';
 import LoginStrings from './login.strings';
@@ -9,7 +7,7 @@ import LoginStrings from './login.strings';
   selector: 'app-login',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [MatButtonModule, MatIconModule],
+  imports: [],
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
