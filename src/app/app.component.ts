@@ -20,6 +20,6 @@ export class AppComponent {
   public readonly showLoadingSpinner = computed(
     () =>
       this.routeTrackerService.currentRoute() === '' ||
-      this.appService.isLoading()
+      this.appService.isLoading(),
   );
 }

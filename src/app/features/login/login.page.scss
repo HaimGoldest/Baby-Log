@@ -1,4 +1,75 @@
+.login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: silver;
+  width: 100%;
+  height: 100vh;
+}
+
+h1 {
+  color: darkblue;
+  font-weight: bold;
+  font-size: 2.5rem;
+  margin-top: -56px;
+  margin-bottom: 16px;
+}
+
+.app-logo {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 16px;
+}
+
 h2 {
   color: darkblue;
   font-weight: bold;
+  font-size: 1.5rem;
+  margin-bottom: 5px;
+}
+
+.google-sign-in-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 24px 10px 12px;
+  background: #fff;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #3c4043;
+  transition:
+    background 0.2s,
+    box-shadow 0.2s;
+
+  &:hover {
+    background: #f7f8f8;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    background: #e8e8e8;
+  }
+
+  .google-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+  }
+
+  .btn-text {
+    white-space: nowrap;
+  }
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 16px;
 }

@@ -1,15 +1,6 @@
-import * as firebaseui from 'firebaseui';
-import { GoogleAuthProvider } from 'firebase/auth';
-import { getFirebaseUIAuth } from '../../core/firebase/firebase-ui-init';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { AppService } from '../../core/services/app.service';
+import { AuthService } from '../../core/services/auth.service';
 import LoginStrings from './login.strings';
 
 @Component({
@@ -20,37 +11,13 @@ import LoginStrings from './login.strings';
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
-export class LoginPage implements OnInit, OnDestroy {
-  private appService = inject(AppService);
-  ui: firebaseui.auth.AuthUI;
+export class LoginPage {
+  private authService = inject(AuthService);
 
   public strings = LoginStrings;
+  public loginError = this.authService.loginError;
 
-  ngOnInit() {
-    const auth = getFirebaseUIAuth();
-
-    const uiConfig = {
-      signInFlow: 'popup',
-      signInOptions: [GoogleAuthProvider.PROVIDER_ID],
-      callbacks: {
-        signInSuccessWithAuthResult: this.onLoginSuccessful.bind(this),
-      },
-    };
-
-    this.ui = new firebaseui.auth.AuthUI(auth);
-    this.ui.start('#firebaseui-auth-container', uiConfig);
-  }
-
-  ngOnDestroy() {
-    this.ui.delete();
-  }
-
-  onLoginSuccessful(result: any) {
-    this.appService.isLoading.set(true);
-    if (result.error) {
-      console.error('Login failed with error:', result.error);
-    } else {
-      console.log('Login successful:', result);
-    }
+  signInWithGoogle(): void {
+    this.authService.signInWithGoogle();
   }
 }

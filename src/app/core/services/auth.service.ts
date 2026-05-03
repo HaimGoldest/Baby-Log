@@ -1,9 +1,11 @@
-import { Injectable, inject, computed, effect } from '@angular/core';
+import { Injectable, inject, computed, effect, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   Auth,
   authState,
   signOut,
+  signInWithPopup,
+  GoogleAuthProvider,
   User as FirebaseUser,
 } from '@angular/fire/auth';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -21,10 +23,11 @@ export class AuthService {
     authState(this.auth),
     {
       initialValue: undefined,
-    }
+    },
   );
 
   public readonly isLoggedIn = computed(() => !!this.userService.user());
+  public readonly loginError = signal<string | null>(null);
 
   constructor() {
     effect(() => {
@@ -41,6 +44,18 @@ export class AuthService {
       console.log('User manually signed out');
     } catch (err) {
       console.error('Error manually signing out:', err);
+    }
+  }
+
+  public async signInWithGoogle(): Promise<void> {
+    this.loginError.set(null);
+    this.appService.isLoading.set(true);
+    try {
+      await signInWithPopup(this.auth, new GoogleAuthProvider());
+    } catch (err: any) {
+      this.appService.isLoading.set(false);
+      this.loginError.set(err.message ?? 'Login failed');
+      console.error('Google sign-in error:', err);
     }
   }
 
