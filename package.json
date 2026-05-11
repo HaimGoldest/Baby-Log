@@ -2,8 +2,8 @@
   "name": "baby-log",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
     "start": "ng serve",
+    "start:with-emulators": "concurrently -k -n firebase,angular \"npm run firebase:emulators\" \"wait-on http://127.0.0.1:4000 && npm run start\"",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
@@ -33,12 +33,14 @@
     "@angular/cli": "^20.3.24",
     "@angular/compiler-cli": "^20.3.19",
     "@types/jasmine": "~5.1.0",
+    "concurrently": "^9.2.1",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.9.3"
+    "typescript": "~5.9.3",
+    "wait-on": "^9.0.10"
   }
 }
