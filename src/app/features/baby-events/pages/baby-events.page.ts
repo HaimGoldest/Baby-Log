@@ -5,8 +5,9 @@ import {
   inject,
   signal,
 } from '@angular/core';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { BabyEventsPanelComponent } from '../components/baby-events-panel/baby-events-panel.component';
-import { BabyEventCategory } from '../../../models/baby.model';
+import { BabyEvent, BabyEventCategory } from '../../../models/baby.model';
 import { BabyEventsService } from '../services/baby-events.service';
 import { BabyEventCardComponent } from '../components/baby-event-card/baby-event-card.component';
 import BabyEventsStrings from './baby-events.strings';
@@ -19,6 +20,7 @@ import { AlertMessageComponent } from '../../../shared/components/alert-message/
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
+    ScrollingModule,
     BabyEventsPanelComponent,
     BabyEventCardComponent,
     AlertMessageComponent,
@@ -31,16 +33,20 @@ export class BabyEventsComponent {
   private readonly allEvents = this.babyEventsService.events;
   private readonly filteredEvents = computed(() =>
     this.allEvents().filter(
-      (event) => event.category.id === this.currentFilteredCategory().id
-    )
+      (event) => event.category.id === this.currentFilteredCategory().id,
+    ),
   );
 
   public readonly strings = BabyEventsStrings;
   public filterMode = computed(() => this.currentFilteredCategory() !== null);
 
   public readonly displayedEvents = computed(() =>
-    this.filterMode() ? this.filteredEvents() : this.allEvents()
+    this.filterMode() ? this.filteredEvents() : this.allEvents(),
   );
+
+  public trackByUid(_index: number, event: BabyEvent): string {
+    return event.uid;
+  }
 
   onFilter(category: BabyEventCategory) {
     if (category === this.currentFilteredCategory()) {
