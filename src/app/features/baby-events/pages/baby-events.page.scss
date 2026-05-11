@@ -8,4 +8,9 @@
 .event-list-viewport {
   flex: 1;
   min-height: 0;
+
+  app-baby-event-card {
+    display: flex;
+    justify-content: center;
+  }
 }
