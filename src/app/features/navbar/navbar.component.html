@@ -5,33 +5,30 @@
       class="nav-buttons"
       [routerLink]="['/', homePage]"
       aria-label="Go to homepage"
-      >
+    >
       <img src="favicon.ico" alt="App Logo" class="navbar-logo" />
     </a>
   } @else {
     @if (!isLoggedIn()) {
-      <img
-        src="favicon.ico"
-        alt="App Logo"
-        class="navbar-logo"
-        />
+      <img src="favicon.ico" alt="App Logo" class="navbar-logo" />
     }
   }
-
 
   <!-- Nav Images -->
   @if (isLoggedIn() && userImageUrl()) {
     <img
       class="nav-image"
       [src]="userImageUrl()"
-      />
+      (error)="onImageError($event)"
+    />
   }
 
   @if (isLoggedIn() && babyImageUrl()) {
     <img
       class="nav-image"
       [src]="babyImageUrl()"
-      />
+      (error)="onImageError($event)"
+    />
   }
 
   <!-- Navbar Links (Visible on larger screens) -->
@@ -44,85 +41,85 @@
         [routerLink]="['/', babyEventsPage]"
         routerLinkActive="router-link-active"
         >{{ strings.BABY_EVENTS }}</a
-        >
-        <a
-          class="nav-buttons"
-          mat-button
-          [disabled]="!userHaveBabies()"
-          [routerLink]="['/', growthTrackingPage]"
-          routerLinkActive="router-link-active"
-          >{{ strings.GROWTH_TRACKING }}</a
-          >
-        </div>
-      }
+      >
+      <a
+        class="nav-buttons"
+        mat-button
+        [disabled]="!userHaveBabies()"
+        [routerLink]="['/', growthTrackingPage]"
+        routerLinkActive="router-link-active"
+        >{{ strings.GROWTH_TRACKING }}</a
+      >
+    </div>
+  }
 
-      <!-- Menu Icon -->
-      @if (isLoggedIn()) {
-        <button
-          mat-icon-button
-          [matMenuTriggerFor]="menu"
-          class="nav-buttons menu-icon"
-          aria-label="Menu"
-          >
-          <mat-icon>menu</mat-icon>
-        </button>
-      }
+  <!-- Menu Icon -->
+  @if (isLoggedIn()) {
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="menu"
+      class="nav-buttons menu-icon"
+      aria-label="Menu"
+    >
+      <mat-icon>menu</mat-icon>
+    </button>
+  }
 
-      <mat-menu #menu="matMenu" xPosition="before">
-        <button
-          mat-menu-item
-          [routerLink]="['/', babyEventsPage]"
-          routerLinkActive="menu-item-active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          [disabled]="!userHaveBabies()"
-          >
-          {{ strings.BABY_EVENTS }}
-        </button>
-        <button
-          mat-menu-item
-          [routerLink]="['/', babyEventPreferencesPage]"
-          routerLinkActive="menu-item-active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          [disabled]="!userHaveBabies()"
-          >
-          {{ strings.PREFERENCES }}
-        </button>
+  <mat-menu #menu="matMenu" xPosition="before">
+    <button
+      mat-menu-item
+      [routerLink]="['/', babyEventsPage]"
+      routerLinkActive="menu-item-active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [disabled]="!userHaveBabies()"
+    >
+      {{ strings.BABY_EVENTS }}
+    </button>
+    <button
+      mat-menu-item
+      [routerLink]="['/', babyEventPreferencesPage]"
+      routerLinkActive="menu-item-active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [disabled]="!userHaveBabies()"
+    >
+      {{ strings.PREFERENCES }}
+    </button>
 
-        <mat-divider></mat-divider>
+    <mat-divider></mat-divider>
 
-        <button
-          mat-menu-item
-          [routerLink]="['/', growthTrackingPage]"
-          routerLinkActive="menu-item-active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          [disabled]="!userHaveBabies()"
-          >
-          {{ strings.GROWTH_TRACKING }}
-        </button>
+    <button
+      mat-menu-item
+      [routerLink]="['/', growthTrackingPage]"
+      routerLinkActive="menu-item-active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [disabled]="!userHaveBabies()"
+    >
+      {{ strings.GROWTH_TRACKING }}
+    </button>
 
-        <mat-divider></mat-divider>
+    <mat-divider></mat-divider>
 
-        <button
-          mat-menu-item
-          [routerLink]="['/', babyInfoPage]"
-          routerLinkActive="menu-item-active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          [disabled]="!userHaveBabies()"
-          >
-          {{ strings.BABY_INFO }}
-        </button>
-        <button
-          mat-menu-item
-          [routerLink]="['/', addBabyPage]"
-          routerLinkActive="menu-item-active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          [disabled]="userHaveBabies()"
-          >
-          {{ strings.ADD_BABY }}
-        </button>
+    <button
+      mat-menu-item
+      [routerLink]="['/', babyInfoPage]"
+      routerLinkActive="menu-item-active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [disabled]="!userHaveBabies()"
+    >
+      {{ strings.BABY_INFO }}
+    </button>
+    <button
+      mat-menu-item
+      [routerLink]="['/', addBabyPage]"
+      routerLinkActive="menu-item-active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [disabled]="userHaveBabies()"
+    >
+      {{ strings.ADD_BABY }}
+    </button>
 
-        <mat-divider></mat-divider>
+    <mat-divider></mat-divider>
 
-        <button mat-menu-item (click)="logout()">{{ strings.LOGOUT }}</button>
-      </mat-menu>
-    </mat-toolbar>
+    <button mat-menu-item (click)="logout()">{{ strings.LOGOUT }}</button>
+  </mat-menu>
+</mat-toolbar>

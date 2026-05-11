@@ -27,8 +27,8 @@ import NavbarStrings from './navbar.strings';
     MatButtonModule,
     MatIconModule,
     MatMenuModule,
-    MatDividerModule
-],
+    MatDividerModule,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
@@ -53,5 +53,9 @@ export class NavbarComponent {
 
   public logout() {
     this.authService.logout();
+  }
+
+  public onImageError(event: Event): void {
+    (event.target as HTMLImageElement).style.display = 'none';
   }
 }
