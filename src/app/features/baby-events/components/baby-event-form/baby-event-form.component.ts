@@ -44,7 +44,7 @@ export class BabyEventFormComponent {
 
   public eventForm = this.fb.group({
     time: [this.data?.time ?? new Date()],
-    comment: [this.data?.comment ?? '', [Validators.maxLength(55)]],
+    comment: [this.data?.comment ?? '', [Validators.maxLength(62)]],
   });
 
   public onSubmit(): void {

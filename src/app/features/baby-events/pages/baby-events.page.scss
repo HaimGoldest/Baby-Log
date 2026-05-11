@@ -1,0 +1,11 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.event-list-viewport {
+  flex: 1;
+  min-height: 0;
+}
