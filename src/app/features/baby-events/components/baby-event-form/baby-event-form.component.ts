@@ -1,6 +1,5 @@
-
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -32,8 +31,8 @@ import BabyEventFormStrings from './baby-event-form.strings';
     MatDatepickerModule,
     MatNativeDateModule,
     MatIconModule,
-    MatTimepickerModule
-],
+    MatTimepickerModule,
+  ],
   templateUrl: './baby-event-form.component.html',
   styleUrls: ['./baby-event-form.component.scss'],
 })
@@ -45,7 +44,7 @@ export class BabyEventFormComponent {
 
   public eventForm = this.fb.group({
     time: [this.data?.time ?? new Date()],
-    comment: [this.data?.comment ?? ''],
+    comment: [this.data?.comment ?? '', [Validators.maxLength(55)]],
   });
 
   public onSubmit(): void {

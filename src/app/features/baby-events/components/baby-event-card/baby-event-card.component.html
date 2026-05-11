@@ -10,8 +10,8 @@
       />
       <span class="time-info">
         <mat-card-subtitle class="time-text">
-          {{ event.time | date : "dd/MM/yy" }} -
-          {{ event.time | date : "HH:mm" }}
+          {{ event.time | date: "dd/MM/yy" }} -
+          {{ event.time | date: "HH:mm" }}
         </mat-card-subtitle>
       </span>
       <button
@@ -29,15 +29,15 @@
           <span>{{ strings.EDIT }}</span>
         </button>
         @if (filterMode) {
-        <button mat-menu-item (click)="onUnfilter()">
-          <mat-icon color="accent">filter_none</mat-icon>
-          <span>{{ strings.UNFILTER }}</span>
-        </button>
+          <button mat-menu-item (click)="onUnfilter()">
+            <mat-icon color="accent">filter_none</mat-icon>
+            <span>{{ strings.UNFILTER }}</span>
+          </button>
         } @else {
-        <button mat-menu-item (click)="onFilter()">
-          <mat-icon color="accent">filter</mat-icon>
-          <span>{{ strings.FILTER }}</span>
-        </button>
+          <button mat-menu-item (click)="onFilter()">
+            <mat-icon color="accent">filter</mat-icon>
+            <span>{{ strings.FILTER }}</span>
+          </button>
         }
         <button mat-menu-item (click)="onDelete()">
           <mat-icon color="warn">delete</mat-icon>
@@ -47,21 +47,26 @@
     </div>
 
     @if (event.comment) {
-    <p>
-      <strong>{{ strings.COMMENT }}:</strong> {{ event.comment }}
-    </p>
+      <div class="comment-section">
+        <p>
+          <strong>{{ strings.COMMENT }}:</strong> {{ event.comment }}
+        </p>
+      </div>
     }
   </div>
 
   <div class="users-section">
     @if (event.createdBy === event.lastEditedBy) {
-    <p class="same-user">
-      {{`${strings.CREATED_AND_EDITED_BY}: ${event.createdBy}` }}
-    </p>
+      <p class="same-user">
+        {{ `${strings.CREATED_AND_EDITED_BY}: ${event.createdBy}` }}
+      </p>
     } @else {
-    <p class="creation">{{`${strings.CREATED_BY}: ${event.createdBy}` }}</p>
-    @if (event.lastEditedBy) {
-    <p class="editing">{{`${strings.EDITED_BY}: ${event.lastEditedBy}` }}</p>
-    } }
+      <p class="creation">{{ `${strings.CREATED_BY}: ${event.createdBy}` }}</p>
+      @if (event.lastEditedBy) {
+        <p class="editing">
+          {{ `${strings.EDITED_BY}: ${event.lastEditedBy}` }}
+        </p>
+      }
+    }
   </div>
 </mat-card>

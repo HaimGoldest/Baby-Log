@@ -43,6 +43,9 @@ firestore-debug.log
 ui-debug.log
 *-debug.log
 
+# Firebase Emulator local data
+firebase-emulator-data/
+
 # System files
 .DS_Store
 Thumbs.db
