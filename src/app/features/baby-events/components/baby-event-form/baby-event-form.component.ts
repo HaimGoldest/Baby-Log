@@ -6,7 +6,6 @@ import { MatNativeDateModule } from '@angular/material/core';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatTimepickerModule } from '@angular/material/timepicker';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import {
@@ -31,25 +30,39 @@ import BabyEventFormStrings from './baby-event-form.strings';
     MatDatepickerModule,
     MatNativeDateModule,
     MatIconModule,
-    MatTimepickerModule,
   ],
   templateUrl: './baby-event-form.component.html',
   styleUrls: ['./baby-event-form.component.scss'],
 })
 export class BabyEventFormComponent {
   private fb = inject(FormBuilder);
-  public dialogRef = inject(MatDialogRef<BabyEventFormComponent>);
   private data = inject<BabyEvent>(MAT_DIALOG_DATA);
+  private initialTime = this.data?.time ? new Date(this.data.time) : new Date();
+
+  public dialogRef = inject(MatDialogRef<BabyEventFormComponent>);
   public strings = BabyEventFormStrings;
 
   public eventForm = this.fb.group({
-    time: [this.data?.time ?? new Date()],
+    date: [this.initialTime],
+    time: [this.toTimeString(this.initialTime), [Validators.required]],
     comment: [this.data?.comment ?? '', [Validators.maxLength(62)]],
   });
 
   public onSubmit(): void {
     if (this.eventForm.valid) {
-      this.dialogRef.close(this.eventForm.value);
+      const { date, time, comment } = this.eventForm.value;
+      const [hours, minutes] = (time ?? '').split(':').map(Number);
+
+      const merged = new Date(date ?? this.initialTime);
+      merged.setHours(hours, minutes, 0, 0);
+
+      this.dialogRef.close({ time: merged, comment });
     }
+  }
+
+  private toTimeString(date: Date): string {
+    const hours = `${date.getHours()}`.padStart(2, '0');
+    const minutes = `${date.getMinutes()}`.padStart(2, '0');
+    return `${hours}:${minutes}`;
   }
 }

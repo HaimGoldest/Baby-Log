@@ -7,7 +7,7 @@
     <input
       matInput
       [matDatepicker]="datepicker"
-      formControlName="time"
+      formControlName="date"
       (click)="datepicker.open()"
     />
     <mat-datepicker #datepicker></mat-datepicker>
@@ -16,14 +16,7 @@
 
   <mat-form-field appearance="outline">
     <mat-label>{{ strings.TIME }}</mat-label>
-    <input
-      matInput
-      [matTimepicker]="timepicker"
-      formControlName="time"
-      type="time"
-    />
-    <mat-timepicker #timepicker></mat-timepicker>
-    <mat-timepicker-toggle [for]="timepicker" matSuffix></mat-timepicker-toggle>
+    <input matInput formControlName="time" type="time" />
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="full-width">
