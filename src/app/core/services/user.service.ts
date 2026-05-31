@@ -33,7 +33,7 @@ export class UserService {
   private _userPictureUrl = signal<string | null>(null);
   public readonly userPictureUrl = this._userPictureUrl.asReadonly();
 
-  public userHaveBabies = computed(() => this.user()?.babiesUids.length > 0);
+  public userHaveBabies = computed(() => (this.user()?.babiesUids.length ?? 0) > 0);
 
   private userSubscription: Subscription | null = null;
 
@@ -41,11 +41,11 @@ export class UserService {
     this.stopListeningToUserChanges();
 
     const existing = await firstValueFrom(
-      this.firestoreHelper.get<User>(this.usersCollection, firebaseUser.uid)
+      this.firestoreHelper.get<User>(this.usersCollection, firebaseUser.uid),
     );
     const UserFactoryResult = UserFactory.createUserObject(
       existing,
-      firebaseUser
+      firebaseUser,
     );
     this._user.set(UserFactoryResult.user);
     this.startListeningToUserChanges(firebaseUser.uid);
@@ -99,10 +99,12 @@ export class UserService {
   public async addExistingBaby(babyUid: string): Promise<void> {
     try {
       const baby = await this.babiesService.setBaby(babyUid, this._user());
-      if (!baby) {
-        console.error('No baby found with the given UID:', babyUid);
+      if (!this._user || !baby) {
+        console.error('Failed to add baby to the user');
+        return;
       }
-      await firstValueFrom(this.addBabyIdToUser(this._user(), babyUid));
+
+      await firstValueFrom(this.addBabyIdToUser(this._user()!, babyUid));
       console.log('Existing baby was added to the user:', baby);
       this.navigateAfterAddingBaby();
     } catch (error) {
@@ -132,7 +134,7 @@ export class UserService {
         catchError((err) => {
           console.error('Failed to create user in DB:', err);
           return throwError(() => err);
-        })
+        }),
       );
   }
 
@@ -143,15 +145,15 @@ export class UserService {
       })
       .pipe(
         tap(() =>
-          console.log(`Added babyId ${newBabyUid} to user ${user.uid}`)
+          console.log(`Added babyId ${newBabyUid} to user ${user.uid}`),
         ),
         catchError((err) => {
           console.error(
             `Failed to add babyId ${newBabyUid} to user ${user.uid}`,
-            err
+            err,
           );
           return throwError(() => err);
-        })
+        }),
       );
   }
 
@@ -163,15 +165,15 @@ export class UserService {
       })
       .pipe(
         tap(() =>
-          console.log(`Removed babyId ${babyUid} from user ${user.uid}`)
+          console.log(`Removed babyId ${babyUid} from user ${user.uid}`),
         ),
         catchError((err) => {
           console.error(
             `Failed to remove babyId ${babyUid} from user ${user.uid}`,
-            err
+            err,
           );
           return throwError(() => err);
-        })
+        }),
       );
   }
 
