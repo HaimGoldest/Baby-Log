@@ -2,13 +2,19 @@ import { Component, computed, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './features/navbar/navbar.component';
 import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
+import { NotificationHostComponent } from './shared/components/notification-host/notification-host.component';
 import { RouteTrackerService } from './core/services/route-tracker.service';
 import { AppService } from './core/services/app.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NavbarComponent, LoadingSpinnerComponent],
+  imports: [
+    RouterOutlet,
+    NavbarComponent,
+    LoadingSpinnerComponent,
+    NotificationHostComponent,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })

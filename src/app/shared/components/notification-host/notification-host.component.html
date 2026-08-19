@@ -1,0 +1,17 @@
+@if (notifications().length > 0) {
+<div class="notification-host" role="status" aria-live="polite">
+  @for (notification of notifications(); track notification.id) {
+  <button
+    type="button"
+    class="notification-item"
+    (click)="dismiss(notification.id)"
+  >
+    <app-alert-message
+      [type]="notification.type"
+      [title]="notification.title"
+      [message]="notification.message"
+    ></app-alert-message>
+  </button>
+  }
+</div>
+}

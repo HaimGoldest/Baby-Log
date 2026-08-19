@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnDestroy,
+} from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { BabyMeasurementsService } from '../services/baby-measurements.service';
@@ -7,6 +12,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { BabyMeasurement } from '../../../models/baby.model';
 import { GrowthTrackingListComponent } from '../components/growth-tracking-list/growth-tracking-list.component';
+import { NotificationService } from '../../../core/services/notification.service';
+import NotificationStrings from '../../../shared/strings/notification.strings';
 
 @Component({
   selector: 'app-growth-tracking',
@@ -21,6 +28,7 @@ import { GrowthTrackingListComponent } from '../components/growth-tracking-list/
   styleUrl: './growth-tracking.page.scss',
 })
 export class GrowthTrackingPage implements OnDestroy {
+  private notificationService = inject(NotificationService);
   private destroy$ = new Subject<void>();
 
   public constructor(
@@ -66,11 +74,9 @@ export class GrowthTrackingPage implements OnDestroy {
     try {
       await this.babyMeasurementsService.addMeasurement(measurement);
     } catch (error) {
-      this.showError('Error adding measurement. Please try again later.');
+      this.notificationService.error(
+        NotificationStrings.ADD_MEASUREMENT_FAILED
+      );
     }
-  }
-
-  private showError(message: string) {
-    // todo - implement generic error dialog
   }
 }

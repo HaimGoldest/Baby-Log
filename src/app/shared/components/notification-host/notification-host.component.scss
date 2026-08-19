@@ -1,0 +1,49 @@
+.notification-host {
+  position: fixed;
+  bottom: 16px;
+  inset-inline: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  pointer-events: none;
+}
+
+.notification-item {
+  width: 100%;
+  max-width: 600px;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  cursor: pointer;
+  pointer-events: auto;
+  animation: notification-enter 150ms ease-out;
+}
+
+.notification-item ::ng-deep .alert-card {
+  margin: 0;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 25%);
+}
+
+@keyframes notification-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notification-item {
+    animation: none;
+  }
+}

@@ -11,6 +11,8 @@ import { UserService } from '../../core/services/user.service';
 import { AppRoute } from '../../enums/app-route.enum';
 import { AppService } from '../../core/services/app.service';
 import BabyInfoStrings from './baby-info.strings';
+import { NotificationService } from '../../core/services/notification.service';
+import NotificationStrings from '../../shared/strings/notification.strings';
 
 @Component({
   standalone: true,
@@ -26,6 +28,7 @@ export class BabyInfoPage {
   private router = inject(Router);
   private clipboard = inject(Clipboard);
   private snackBar = inject(MatSnackBar);
+  private notificationService = inject(NotificationService);
 
   public strings = BabyInfoStrings;
 
@@ -67,7 +70,7 @@ export class BabyInfoPage {
       await this.userService.deleteBabyFromUser(this.baby());
       this.navigateAfterBabyDeletion();
     } catch (error) {
-      // todo - show error message dialog
+      this.notificationService.error(NotificationStrings.DELETE_BABY_FAILED);
     }
   }
 

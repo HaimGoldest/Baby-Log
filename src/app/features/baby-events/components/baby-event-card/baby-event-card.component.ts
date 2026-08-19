@@ -19,6 +19,8 @@ import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import { UserService } from '../../../../core/services/user.service';
+import { NotificationService } from '../../../../core/services/notification.service';
+import NotificationStrings from '../../../../shared/strings/notification.strings';
 import BabyEventCardStrings from './baby-event-card.strings';
 import GetCategoryName from '../../utils/baby-event-categories.strings';
 
@@ -43,6 +45,7 @@ export class BabyEventCardComponent {
   private babyEventsService = inject(BabyEventsService);
   private userService = inject(UserService);
   private dialog = inject(MatDialog);
+  private notificationService = inject(NotificationService);
   private destroy$ = new Subject<void>();
 
   public strings = BabyEventCardStrings;
@@ -90,16 +93,16 @@ export class BabyEventCardComponent {
     try {
       await this.babyEventsService.updateEvent(editedEvent);
     } catch (error) {
-      this.showError('Error updating measurement');
+      this.notificationService.error(NotificationStrings.UPDATE_EVENT_FAILED);
     }
   }
 
-  public onDelete(): void {
+  public async onDelete(): Promise<void> {
+    // todo : add confirmation dialog
     try {
-      this.babyEventsService.deleteEvent(this.event);
-      // todo : add confirmation dialog
+      await this.babyEventsService.deleteEvent(this.event);
     } catch (error) {
-      // todo : show error message
+      this.notificationService.error(NotificationStrings.DELETE_EVENT_FAILED);
     }
   }
 
@@ -109,9 +112,5 @@ export class BabyEventCardComponent {
 
   public onUnfilter(): void {
     this.unfilter.emit();
-  }
-
-  private showError(message: string) {
-    // todo - implement generic error dialog
   }
 }

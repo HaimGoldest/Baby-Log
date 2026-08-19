@@ -6,12 +6,14 @@ import {
 import { provideRouter } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { environment } from '../environments/environment';
-import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideFirebaseApp, initializeApp, getApp } from '@angular/fire/app';
 import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
 import {
   provideFirestore,
-  getFirestore,
+  initializeFirestore,
   connectFirestoreEmulator,
+  persistentLocalCache,
+  persistentMultipleTabManager,
 } from '@angular/fire/firestore';
 import {
   provideStorage,
@@ -59,7 +61,14 @@ export const appConfig: ApplicationConfig = {
     }),
 
     provideFirestore(() => {
-      const firestore = getFirestore();
+      // IndexedDB-backed cache: writes queued while offline survive a page
+      // reload and are flushed once connectivity returns. Without it the cache
+      // is memory-only and any un-acknowledged write is lost on refresh.
+      const firestore = initializeFirestore(getApp(), {
+        localCache: persistentLocalCache({
+          tabManager: persistentMultipleTabManager(),
+        }),
+      });
 
       if (environment.useFirebaseEmulators) {
         connectFirestoreEmulator(firestore, '127.0.0.1', 8080);
