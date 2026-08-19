@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  inject,
   Input,
   OnDestroy,
 } from '@angular/core';
@@ -13,6 +14,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { BabyMeasurementsService } from '../../../services/baby-measurements.service';
 import { BabyMeasurement } from '../../../../../models/baby.model';
+import { NotificationService } from '../../../../../core/services/notification.service';
+import NotificationStrings from '../../../../../shared/strings/notification.strings';
 import GrowthTrackingListItemStrings from './growth-tracking-list-item.strings';
 
 @Component({
@@ -31,6 +34,7 @@ import GrowthTrackingListItemStrings from './growth-tracking-list-item.strings';
 })
 export class GrowthTrackingListItemComponent implements OnDestroy {
   @Input({ required: true }) measurement!: BabyMeasurement;
+  private notificationService = inject(NotificationService);
   private destroy$ = new Subject<void>();
 
   public strings = GrowthTrackingListItemStrings;
@@ -49,7 +53,9 @@ export class GrowthTrackingListItemComponent implements OnDestroy {
     try {
       await this.babyMeasurementsService.deleteMeasurement(this.measurement);
     } catch (error) {
-      this.showError('Error deleting measurement');
+      this.notificationService.error(
+        NotificationStrings.DELETE_MEASUREMENT_FAILED
+      );
     }
   }
 
@@ -86,11 +92,9 @@ export class GrowthTrackingListItemComponent implements OnDestroy {
     try {
       await this.babyMeasurementsService.updateMeasurement(editedMeasurement);
     } catch (error) {
-      this.showError('Error updating measurement');
+      this.notificationService.error(
+        NotificationStrings.UPDATE_MEASUREMENT_FAILED
+      );
     }
-  }
-
-  private showError(message: string) {
-    // todo - implement generic error dialog
   }
 }

@@ -10,6 +10,8 @@ import {
 import { BabyEventCategory, BabyEvent } from '../../../../../models/baby.model';
 import { BabyEventsService } from '../../../services/baby-events.service';
 import { UserService } from '../../../../../core/services/user.service';
+import { NotificationService } from '../../../../../core/services/notification.service';
+import NotificationStrings from '../../../../../shared/strings/notification.strings';
 
 @Component({
   selector: 'app-baby-events-panel-item',
@@ -22,6 +24,7 @@ import { UserService } from '../../../../../core/services/user.service';
 export class BabyEventsPanelItemComponent {
   private babyEventsService = inject(BabyEventsService);
   private userService = inject(UserService);
+  private notificationService = inject(NotificationService);
   @Input({ required: true }) babyEventCategory: BabyEventCategory;
   @Output() filter = new EventEmitter<BabyEventCategory>();
 
@@ -42,7 +45,7 @@ export class BabyEventsPanelItemComponent {
     try {
       await this.babyEventsService.addEvent(newEvent);
     } catch (error) {
-      // todo - show error message to the user
+      this.notificationService.error(NotificationStrings.ADD_EVENT_FAILED);
     }
   }
 

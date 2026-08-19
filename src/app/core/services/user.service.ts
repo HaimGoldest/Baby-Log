@@ -1,13 +1,6 @@
 import { computed, inject, Injectable, signal, Signal } from '@angular/core';
 import { User as FirebaseUser } from 'firebase/auth';
-import {
-  Subscription,
-  firstValueFrom,
-  from,
-  Observable,
-  throwError,
-} from 'rxjs';
-import { tap, catchError } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { User } from '../../models/user.model';
 import { UserFactory } from '../../factories/user.factory';
 import { BabiesService } from './babies.service';
@@ -33,15 +26,18 @@ export class UserService {
   private _userPictureUrl = signal<string | null>(null);
   public readonly userPictureUrl = this._userPictureUrl.asReadonly();
 
-  public userHaveBabies = computed(() => (this.user()?.babiesUids.length ?? 0) > 0);
+  public userHaveBabies = computed(
+    () => (this.user()?.babiesUids.length ?? 0) > 0,
+  );
 
   private userSubscription: Subscription | null = null;
 
   public async initUser(firebaseUser: FirebaseUser): Promise<void> {
     this.stopListeningToUserChanges();
 
-    const existing = await firstValueFrom(
-      this.firestoreHelper.get<User>(this.usersCollection, firebaseUser.uid),
+    const existing = await this.firestoreHelper.get<User>(
+      this.usersCollection,
+      firebaseUser.uid,
     );
     const UserFactoryResult = UserFactory.createUserObject(
       existing,
@@ -52,7 +48,7 @@ export class UserService {
     this._userPictureUrl.set(firebaseUser.photoURL ?? null);
 
     if (UserFactoryResult.needSaving) {
-      await firstValueFrom(this.createUserInDatabase());
+      await this.createUserInDatabase();
     }
     if (this.userHaveBabies()) {
       await this.babiesService.setBaby(UserFactoryResult.user.babiesUids[0]);
@@ -64,9 +60,10 @@ export class UserService {
       const user = this._user();
       if (!user) return;
       await this.babiesService.deleteBaby(user.uid);
-      await firstValueFrom(this.removeBabyIdFromUser(this._user(), baby.uid));
+      await this.removeBabyIdFromUser(user, baby.uid);
     } catch (error) {
       console.error('Failed to delete baby from user:', error);
+      throw error;
     }
   }
 
@@ -88,11 +85,12 @@ export class UserService {
         ...babyData,
         uid: newBabyUid,
       });
-      await firstValueFrom(this.addBabyIdToUser(user, newBabyUid));
+      await this.addBabyIdToUser(user, newBabyUid);
       console.log(`Baby was added to user:`, this.babiesService.baby());
       this.navigateAfterAddingBaby();
     } catch (error) {
       console.error('Failed to add new baby to user:', error);
+      throw error;
     }
   }
 
@@ -104,7 +102,7 @@ export class UserService {
         return;
       }
 
-      await firstValueFrom(this.addBabyIdToUser(this._user()!, babyUid));
+      await this.addBabyIdToUser(this._user()!, babyUid);
       console.log('Existing baby was added to the user:', baby);
       this.navigateAfterAddingBaby();
     } catch (error) {
@@ -120,61 +118,62 @@ export class UserService {
     this.babiesService.dispose();
   }
 
-  private createUserInDatabase(): Observable<void> {
+  private async createUserInDatabase(): Promise<void> {
     const user = this._user();
     if (!user) {
       console.error('No user data to save');
-      return from(Promise.resolve());
+      return;
     }
+
     console.log('Creating user in DB:', user);
-    return this.firestoreHelper
-      .set<User>(this.usersCollection, user.uid, user)
-      .pipe(
-        tap(() => console.log('User created in DB:', user)),
-        catchError((err) => {
-          console.error('Failed to create user in DB:', err);
-          return throwError(() => err);
-        }),
+    try {
+      await this.firestoreHelper.set<User>(
+        this.usersCollection,
+        user.uid,
+        user,
       );
+      console.log('User created in DB:', user);
+    } catch (err) {
+      console.error('Failed to create user in DB:', err);
+      throw err;
+    }
   }
 
-  private addBabyIdToUser(user: User, newBabyUid: string) {
-    return this.firestoreHelper
-      .update<User>(this.usersCollection, user.uid, {
+  private async addBabyIdToUser(
+    user: User,
+    newBabyUid: string,
+  ): Promise<void> {
+    try {
+      await this.firestoreHelper.update<User>(this.usersCollection, user.uid, {
         babiesUids: [...(user.babiesUids ?? []), newBabyUid],
-      })
-      .pipe(
-        tap(() =>
-          console.log(`Added babyId ${newBabyUid} to user ${user.uid}`),
-        ),
-        catchError((err) => {
-          console.error(
-            `Failed to add babyId ${newBabyUid} to user ${user.uid}`,
-            err,
-          );
-          return throwError(() => err);
-        }),
+      });
+      console.log(`Added babyId ${newBabyUid} to user ${user.uid}`);
+    } catch (err) {
+      console.error(
+        `Failed to add babyId ${newBabyUid} to user ${user.uid}`,
+        err,
       );
+      throw err;
+    }
   }
 
-  private removeBabyIdFromUser(user: User, babyUid: string) {
+  private async removeBabyIdFromUser(
+    user: User,
+    babyUid: string,
+  ): Promise<void> {
     const updatedBabiesUids = user.babiesUids.filter((uid) => uid !== babyUid);
-    return this.firestoreHelper
-      .update<User>(this.usersCollection, user.uid, {
+    try {
+      await this.firestoreHelper.update<User>(this.usersCollection, user.uid, {
         babiesUids: updatedBabiesUids,
-      })
-      .pipe(
-        tap(() =>
-          console.log(`Removed babyId ${babyUid} from user ${user.uid}`),
-        ),
-        catchError((err) => {
-          console.error(
-            `Failed to remove babyId ${babyUid} from user ${user.uid}`,
-            err,
-          );
-          return throwError(() => err);
-        }),
+      });
+      console.log(`Removed babyId ${babyUid} from user ${user.uid}`);
+    } catch (err) {
+      console.error(
+        `Failed to remove babyId ${babyUid} from user ${user.uid}`,
+        err,
       );
+      throw err;
+    }
   }
 
   private startListeningToUserChanges(userUid: string) {

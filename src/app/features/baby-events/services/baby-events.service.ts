@@ -10,42 +10,58 @@ export class BabyEventsService {
   private firestoreHelper = inject(FireStoreHelperService);
   private babiesService = inject(BabiesService);
   private babiesCollection = this.babiesService.babiesCollection;
+  private readonly eventsField = 'eventsData' as const;
   private readonly babyUid = computed(() => this.babiesService.baby()?.uid);
 
-  public readonly events = computed(() =>
-    this.babiesService.baby()?.eventsData.sort(
+  public readonly events = computed(() => {
+    const events = this.babiesService.baby()?.eventsData ?? [];
+
+    // Copy before sorting: sort() mutates in place, and the source array
+    // belongs to the baby signal.
+    return [...events].sort(
       // Sort events by date and time in descending order
       (a, b) => b.time.getTime() - a.time.getTime()
-    )
-  );
+    );
+  });
 
-  public async addEvent(newEvent: BabyEvent) {
+  /**
+   * Appends an event atomically via arrayUnion, so a concurrent write from
+   * another user or tab cannot drop it.
+   */
+  public async addEvent(newEvent: BabyEvent): Promise<void> {
     try {
-      const uid = this.firestoreHelper.generateUid();
-      newEvent.uid = uid;
-      await this.firestoreHelper.update<Baby>(
+      const babyUid = this.requireBabyUid();
+      const event: BabyEvent = {
+        ...newEvent,
+        uid: this.firestoreHelper.generateUid(),
+      };
+
+      await this.firestoreHelper.addToArray<Baby>(
         this.babiesCollection,
-        this.babyUid(),
-        {
-          eventsData: [...this.events(), newEvent],
-        }
+        babyUid,
+        this.eventsField,
+        event
       );
-      console.log('Event added successfully:', newEvent);
+      console.log('Event added successfully:', event);
     } catch (error) {
       console.error('Error adding event:', error);
       throw error;
     }
   }
 
-  public async deleteEvent(event: BabyEvent) {
+  /**
+   * Removes an event inside a transaction, so unrelated concurrent changes to
+   * the events array are preserved.
+   */
+  public async deleteEvent(event: BabyEvent): Promise<void> {
     try {
-      const updatedEvents = this.events().filter((m) => m.uid !== event.uid);
-      await this.firestoreHelper.update<Baby>(
+      const babyUid = this.requireBabyUid();
+
+      await this.firestoreHelper.mutateArray<Baby, BabyEvent>(
         this.babiesCollection,
-        this.babyUid(),
-        {
-          eventsData: updatedEvents,
-        }
+        babyUid,
+        this.eventsField,
+        (current) => current.filter((e) => e.uid !== event.uid)
       );
       console.log('Event deleted successfully:', event);
     } catch (error) {
@@ -54,17 +70,29 @@ export class BabyEventsService {
     }
   }
 
-  public async updateEvent(updatedEvent: BabyEvent) {
+  /**
+   * Replaces an event in place inside a transaction, so unrelated concurrent
+   * changes to the events array are preserved.
+   */
+  public async updateEvent(updatedEvent: BabyEvent): Promise<void> {
     try {
-      const otherEvents = this.events().filter(
-        (m) => m.uid !== updatedEvent.uid
-      );
+      const babyUid = this.requireBabyUid();
 
-      await this.firestoreHelper.update<Baby>(
+      await this.firestoreHelper.mutateArray<Baby, BabyEvent>(
         this.babiesCollection,
-        this.babyUid(),
-        {
-          eventsData: [...otherEvents, updatedEvent],
+        babyUid,
+        this.eventsField,
+        (current) => {
+          const index = current.findIndex((e) => e.uid === updatedEvent.uid);
+          if (index === -1) {
+            throw new Error(
+              `Event ${updatedEvent.uid} no longer exists and cannot be updated.`
+            );
+          }
+
+          const next = [...current];
+          next[index] = updatedEvent;
+          return next;
         }
       );
       console.log('Event updated successfully:', updatedEvent);
@@ -72,5 +100,14 @@ export class BabyEventsService {
       console.error('Error updating event:', error);
       throw error;
     }
+  }
+
+  /** Guards against writing to `babies/undefined` when no baby is selected. */
+  private requireBabyUid(): string {
+    const babyUid = this.babyUid();
+    if (!babyUid) {
+      throw new Error('No baby is selected, cannot modify baby events.');
+    }
+    return babyUid;
   }
 }

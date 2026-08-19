@@ -1,5 +1,5 @@
 import { inject, Injectable, signal, Signal, computed } from '@angular/core';
-import { Subscription, firstValueFrom } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Baby } from '../../models/baby.model';
 import { FireStoreHelperService } from '../firebase/fire-store-helper.service';
 import { FireStorageHelperService } from '../firebase/fire-storage-helper.service';
@@ -29,8 +29,9 @@ export class BabiesService {
     this.stopListeningToBabyChanges();
 
     try {
-      const existing = await firstValueFrom(
-        this.firestoreHelper.get<Baby>(this.babiesCollection, babyUid)
+      const existing = await this.firestoreHelper.get<Baby>(
+        this.babiesCollection,
+        babyUid
       );
 
       if (existing) {
@@ -78,8 +79,10 @@ export class BabiesService {
       };
 
       console.log('Creating baby record in DB:', baby);
-      await firstValueFrom(
-        this.firestoreHelper.add<Baby>(this.babiesCollection, baby, baby.uid)
+      await this.firestoreHelper.add<Baby>(
+        this.babiesCollection,
+        baby,
+        baby.uid
       );
       console.log('Baby created in DB:', baby);
       this._baby.set(baby);
@@ -122,12 +125,10 @@ export class BabiesService {
 
       const updatedBaby: Baby = { ...baby, ...babyData } as Baby;
       console.log('Updating baby record:', updatedBaby);
-      await firstValueFrom(
-        this.firestoreHelper.update<Baby>(
-          this.babiesCollection,
-          baby.uid,
-          updatedBaby
-        )
+      await this.firestoreHelper.update<Baby>(
+        this.babiesCollection,
+        baby.uid,
+        updatedBaby
       );
       console.log('Baby updated:', updatedBaby);
       this._baby.set(updatedBaby);
@@ -199,11 +200,9 @@ export class BabiesService {
    */
   private async addUserIdToBaby(baby: Baby, newUserUid: string): Promise<void> {
     console.log(`Adding userId ${newUserUid} to baby ${baby.uid}`);
-    await firstValueFrom(
-      this.firestoreHelper.update<Baby>(this.babiesCollection, baby.uid, {
-        usersUids: [...baby.usersUids, newUserUid],
-      })
-    );
+    await this.firestoreHelper.update<Baby>(this.babiesCollection, baby.uid, {
+      usersUids: [...baby.usersUids, newUserUid],
+    });
     console.log(`UserId ${newUserUid} added to baby record ${baby.uid}`);
   }
 
@@ -216,11 +215,9 @@ export class BabiesService {
   ): Promise<void> {
     console.log(`Removing userId ${userUid} from baby ${baby.uid}`);
     const updated = baby.usersUids.filter((uid) => uid !== userUid);
-    await firstValueFrom(
-      this.firestoreHelper.update<Baby>(this.babiesCollection, baby.uid, {
-        usersUids: updated,
-      })
-    );
+    await this.firestoreHelper.update<Baby>(this.babiesCollection, baby.uid, {
+      usersUids: updated,
+    });
     console.log(`UserId ${userUid} removed from baby record ${baby.uid}`);
   }
 
@@ -230,9 +227,7 @@ export class BabiesService {
   private async deleteBabyFromDatabase(baby: Baby): Promise<void> {
     const imagePath = `${this.imagesRootPath}/${baby.uid}`;
     console.log(`Deleting baby record ${baby.uid}`);
-    await firstValueFrom(
-      this.firestoreHelper.delete(this.babiesCollection, baby.uid)
-    );
+    await this.firestoreHelper.delete(this.babiesCollection, baby.uid);
     console.log('Baby deleted from DB:', baby);
 
     try {
