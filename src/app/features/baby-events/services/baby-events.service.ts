@@ -1,5 +1,6 @@
 import { computed, inject, Injectable } from '@angular/core';
 import { BabiesService } from '../../../core/services/babies.service';
+import { BabiesStore } from '../../../core/stores/babies/babies.store';
 import { Baby, BabyEvent } from '../../../models/baby.model';
 import { FireStoreHelperService } from '../../../core/firebase/fire-store-helper.service';
 
@@ -8,13 +9,13 @@ import { FireStoreHelperService } from '../../../core/firebase/fire-store-helper
 })
 export class BabyEventsService {
   private firestoreHelper = inject(FireStoreHelperService);
-  private babiesService = inject(BabiesService);
-  private babiesCollection = this.babiesService.babiesCollection;
+  private babiesStore = inject(BabiesStore);
+  private babiesCollection = inject(BabiesService).babiesCollection;
   private readonly eventsField = 'eventsData' as const;
-  private readonly babyUid = computed(() => this.babiesService.baby()?.uid);
+  private readonly babyUid = computed(() => this.babiesStore.baby()?.uid);
 
   public readonly events = computed(() => {
-    const events = this.babiesService.baby()?.eventsData ?? [];
+    const events = this.babiesStore.baby()?.eventsData ?? [];
 
     // Copy before sorting: sort() mutates in place, and the source array
     // belongs to the baby signal.

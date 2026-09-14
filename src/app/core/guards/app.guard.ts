@@ -1,19 +1,17 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { UserService } from '../services/user.service';
+import { SessionStore } from '../stores/session/session.store';
 import { AppRoute } from '../../enums/app-route.enum';
 
 export const appGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
-  const authService = inject(AuthService);
-  const userService = inject(UserService);
+  const sessionStore = inject(SessionStore);
 
   const url = state.url.replace(/^\/+/, ''); // remove leading slash
-  const isLoggedIn = authService?.isLoggedIn();
+  const isLoggedIn = sessionStore.isLoggedIn();
   const isLoginPage = url === AppRoute.Login;
   const isAddBabyPage = url === AppRoute.AddBaby;
-  const userHaveBabies = userService?.userHaveBabies();
+  const userHaveBabies = sessionStore.userHaveBabies();
 
   console.log('AppGuard: Trying navigate to', url);
 

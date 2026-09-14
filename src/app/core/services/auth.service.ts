@@ -1,84 +1,34 @@
-import { Injectable, inject, computed, effect, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Injectable, inject } from '@angular/core';
 import {
   Auth,
   authState,
   signOut,
   signInWithPopup,
   GoogleAuthProvider,
+  UserCredential,
   User as FirebaseUser,
 } from '@angular/fire/auth';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { UserService } from './user.service';
-import { AppRoute } from '../../enums/app-route.enum';
-import { AppService } from './app.service';
+import { Observable } from 'rxjs';
 
+/**
+ * Infrastructure gateway around Firebase Auth. Holds no state and makes no
+ * lifecycle decisions: SessionStore consumes `authState$` and orchestrates.
+ */
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private appService = inject(AppService);
   private auth = inject(Auth);
-  private userService = inject(UserService);
-  private router = inject(Router);
-  private authData = toSignal<FirebaseUser | null | undefined>(
-    authState(this.auth),
-    {
-      initialValue: undefined,
-    },
+
+  // Built here so the stream is created inside an injection context, even
+  // though subscribers attach later.
+  public readonly authState$: Observable<FirebaseUser | null> = authState(
+    this.auth,
   );
 
-  public readonly isLoggedIn = computed(() => !!this.userService.user());
-  public readonly loginError = signal<string | null>(null);
-
-  constructor() {
-    effect(() => {
-      const user = this.authData();
-      if (user === undefined) return;
-
-      this.handleAuthChange(user);
-    });
+  public signInWithGoogle(): Promise<UserCredential> {
+    return signInWithPopup(this.auth, new GoogleAuthProvider());
   }
 
-  public async logout(): Promise<void> {
-    try {
-      await signOut(this.auth);
-      console.log('User manually signed out');
-    } catch (err) {
-      console.error('Error manually signing out:', err);
-    }
-  }
-
-  public async signInWithGoogle(): Promise<void> {
-    this.loginError.set(null);
-    this.appService.isLoading.set(true);
-    try {
-      await signInWithPopup(this.auth, new GoogleAuthProvider());
-    } catch (err: any) {
-      this.appService.isLoading.set(false);
-      this.loginError.set(err.message ?? 'Login failed');
-      console.error('Google sign-in error:', err);
-    }
-  }
-
-  private async handleAuthChange(firebaseUser: FirebaseUser | null) {
-    this.appService.isLoading.set(false);
-    console.log('Auth state changed, Firebase User:', firebaseUser);
-    if (firebaseUser) {
-      await this.userService.initUser(firebaseUser);
-      this.navigateAuthUser();
-    } else {
-      this.userService.dispose();
-      console.log('Logged out: moving to login page.');
-      this.router.navigate(['/', AppRoute.Login]);
-    }
-  }
-
-  private navigateAuthUser(): void {
-    const haveBabies = this.userService?.userHaveBabies();
-
-    if (haveBabies) {
-      this.router.navigate(['/', AppRoute.HomePage]);
-    } else {
-      this.router.navigate(['/', AppRoute.AddBaby]);
-    }
+  public signOut(): Promise<void> {
+    return signOut(this.auth);
   }
 }

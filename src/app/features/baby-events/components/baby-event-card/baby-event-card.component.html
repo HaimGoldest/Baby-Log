@@ -1,7 +1,7 @@
 <mat-card class="card-style" (contextmenu)="onEdit($event)">
   <div class="mat-card-content">
     <div class="main-section">
-      <h4 class="card-title">{{ getCategoryName(event.category) }}</h4>
+      <h4 class="card-title">{{ event.category.value }}</h4>
       <img
         mat-card-image
         src="{{ event.category.imagePath }}"

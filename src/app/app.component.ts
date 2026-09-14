@@ -5,6 +5,7 @@ import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loa
 import { NotificationHostComponent } from './shared/components/notification-host/notification-host.component';
 import { RouteTrackerService } from './core/services/route-tracker.service';
 import { AppService } from './core/services/app.service';
+import { SessionStore } from './core/stores/session/session.store';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,9 @@ import { AppService } from './core/services/app.service';
 export class AppComponent {
   private routeTrackerService = inject(RouteTrackerService);
   private appService = inject(AppService);
+
+  // Injected for its side effect: creating the store starts the auth listener.
+  private sessionStore = inject(SessionStore);
 
   /** Show loading spinner while user not logged in and route is not yet resolved or if AppService is in isLoading state.  */
   public readonly showLoadingSpinner = computed(

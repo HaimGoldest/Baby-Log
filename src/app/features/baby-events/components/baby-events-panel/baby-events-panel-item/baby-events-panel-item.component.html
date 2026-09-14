@@ -2,5 +2,8 @@
   class="col-1 btn rounded-circle img-btn"
   (click)="addBabyEvent()"
   (contextmenu)="filterEvent($event)"
-  [style.background-image]="'url(' + babyEventCategory.imagePath + ')'"
+  [attr.aria-label]="babyEventCategory.category.value"
+  [style.background-image]="
+    'url(' + babyEventCategory.category.imagePath + ')'
+  "
 ></button>

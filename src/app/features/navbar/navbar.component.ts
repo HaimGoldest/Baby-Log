@@ -6,9 +6,8 @@ import {
 } from '@angular/core';
 
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service';
-import { UserService } from '../../core/services/user.service';
-import { BabiesService } from '../../core/services/babies.service';
+import { SessionStore } from '../../core/stores/session/session.store';
+import { BabiesStore } from '../../core/stores/babies/babies.store';
 import { AppRoute } from '../../enums/app-route.enum';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -34,14 +33,13 @@ import NavbarStrings from './navbar.strings';
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent {
-  private authService = inject(AuthService);
-  private userService = inject(UserService);
-  private babiesService = inject(BabiesService);
+  private sessionStore = inject(SessionStore);
+  private babiesStore = inject(BabiesStore);
 
-  public isLoggedIn = this.authService.isLoggedIn;
-  public userImageUrl = this.userService.userPictureUrl;
-  public userHaveBabies = this.userService.userHaveBabies;
-  public babyImageUrl = computed(() => this.babiesService.baby()?.imageUrl);
+  public isLoggedIn = this.sessionStore.isLoggedIn;
+  public userImageUrl = this.sessionStore.userimageUrl;
+  public userHaveBabies = this.sessionStore.userHaveBabies;
+  public babyImageUrl = computed(() => this.babiesStore.baby()?.imageUrl);
   public homePage = AppRoute.HomePage;
   public babyEventsPage = AppRoute.BabyEvents;
   public growthTrackingPage = AppRoute.GrowthTracking;
@@ -52,7 +50,7 @@ export class NavbarComponent {
   public strings = NavbarStrings;
 
   public logout() {
-    this.authService.logout();
+    this.sessionStore.signOut();
   }
 
   public onImageError(event: Event): void {

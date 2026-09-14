@@ -1,5 +1,3 @@
-import { BabyEventCategory } from './baby.model';
-
 export interface User {
   uid: string;
   name: string;
@@ -9,7 +7,6 @@ export interface User {
 }
 
 export interface BabyEventFavorites {
-  eventId: string;
+  categoryId: string;
   commonComments: string[];
-  isCategoryEnabled: boolean;
 }

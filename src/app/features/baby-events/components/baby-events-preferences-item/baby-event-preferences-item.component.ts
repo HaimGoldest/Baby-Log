@@ -1,20 +1,15 @@
-
 import {
   Component,
   ChangeDetectionStrategy,
-  inject,
   Input,
   Output,
   EventEmitter,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import BabyEventsPreferencesItemStrings from './baby-event-preferences-item.strings';
-import GetCategoryName from '../../utils/baby-event-categories.strings';
-import { BabyEventCategory } from '../../../../models/baby.model';
+import { BabyEventCategoryView } from '../../../../models/baby.model';
 
 @Component({
   selector: 'app-baby-event-preferences-item',
@@ -22,30 +17,20 @@ import { BabyEventCategory } from '../../../../models/baby.model';
   styleUrl: './baby-event-preferences-item.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
-    FormsModule,
-    MatCardModule,
-    MatCheckboxModule,
-    MatFormFieldModule,
-    MatInputModule
-],
+  imports: [MatCardModule, MatFormFieldModule, MatInputModule],
 })
 export class BabyEventsPreferencesItemComponent {
-  @Input({ required: true }) babyEventCategory: BabyEventCategory;
+  @Input({ required: true }) babyEventCategory: BabyEventCategoryView;
   @Output() modified = new EventEmitter<boolean>();
 
   public strings = BabyEventsPreferencesItemStrings;
 
-  public updateDefaultComment(newValue: string): void {
-    this.babyEventCategory.defaultComment = newValue;
+  public updateCommonComment(newValue: string): void {
+    this.babyEventCategory.favorite.commonComments = newValue ? [newValue] : [];
     this.onChanged();
   }
 
   public onChanged(): void {
     this.modified.emit(true);
-  }
-
-  public getCategoryName(category: BabyEventCategory): string {
-    return GetCategoryName(category);
   }
 }

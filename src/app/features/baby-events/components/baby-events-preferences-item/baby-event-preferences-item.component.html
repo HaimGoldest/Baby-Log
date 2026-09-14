@@ -2,49 +2,25 @@
   <div class="card-header">
     <img
       class="event-img"
-      [src]="babyEventCategory.imagePath"
-      [alt]="babyEventCategory.id"
-      />
+      [src]="babyEventCategory.category.imagePath"
+      [alt]="babyEventCategory.category.id"
+    />
 
-      <div class="title-and-checkboxes">
-        <div class="category-title">
-          {{ getCategoryName(babyEventCategory) }}
-        </div>
-
-        <mat-checkbox
-          [(ngModel)]="babyEventCategory.isCategoryEnabled"
-          (change)="onChanged()"
-          color="primary"
-          >
-          {{ strings.ENABLE_CATEGORY }}
-        </mat-checkbox>
-
-        @if (babyEventCategory.isCategoryEnabled) {
-          <mat-checkbox
-            [(ngModel)]="babyEventCategory.isDefaultCommentEnabled"
-            (change)="onChanged()"
-            >
-            {{ strings.ENABLE_DEFAULT_COMMENT }}
-          </mat-checkbox>
-        }
+    <div class="title-and-checkboxes">
+      <div class="category-title">
+        {{ babyEventCategory.category.value }}
       </div>
     </div>
+  </div>
 
-    @if (
-      babyEventCategory.isCategoryEnabled &&
-      babyEventCategory.isDefaultCommentEnabled
-      ) {
-      <div
-        class="default-comment-field"
-        >
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label> {{ strings.DEFAULT_COMMENT }}</mat-label>
-          <input
-            matInput
-            [value]="babyEventCategory.defaultComment"
-            (input)="updateDefaultComment($event.target.value)"
-            />
-          </mat-form-field>
-        </div>
-      }
-    </mat-card>
+  <div class="default-comment-field">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label> {{ strings.DEFAULT_COMMENT }}</mat-label>
+      <input
+        matInput
+        [value]="babyEventCategory.favorite.commonComments[0] ?? ''"
+        (input)="updateCommonComment($event.target.value)"
+      />
+    </mat-form-field>
+  </div>
+</mat-card>
