@@ -1,4 +1,4 @@
-import { BabyEventCategory } from '../../../models/baby.model';
+import { BabyEventCategory } from '../../models/baby.model';
 
 const BABY_EVENT_CATEGORIES_DATA: BabyEventCategory[] = [
   {
