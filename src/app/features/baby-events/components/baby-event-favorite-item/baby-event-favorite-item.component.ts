@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import BabyEventFavoriteItemStrings from './baby-event-favorite-item.strings';
+import { BABY_NOTE_MAX_LENGTH } from '../../../../core/default-data/baby-event-limits';
 import { FavoriteDraft } from '../../pages/baby-event-preferences.vm';
 
 /**
@@ -41,6 +42,7 @@ export class BabyEventFavoriteItemComponent {
   public removeComment = output<number>();
 
   public strings = BabyEventFavoriteItemStrings;
+  public readonly maxNoteLength = BABY_NOTE_MAX_LENGTH;
 
   public onCommentInput(id: number, target: EventTarget): void {
     this.editComment.emit({ id, text: (target as HTMLInputElement).value });

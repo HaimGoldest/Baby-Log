@@ -51,8 +51,12 @@
           <input
             matInput
             [value]="comment.text"
+            [attr.maxlength]="maxNoteLength"
             (input)="onCommentInput(comment.id, $event.target)"
           />
+          <mat-hint align="end">
+            {{ comment.text.length }}/{{ maxNoteLength }}
+          </mat-hint>
         </mat-form-field>
 
         <button
