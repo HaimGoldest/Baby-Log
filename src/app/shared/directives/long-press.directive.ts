@@ -98,7 +98,11 @@ export class LongPressDirective implements OnDestroy {
   }
 
   public onContextMenu(event: Event): void {
+    // Unconditional, and before any early return: every contextmenu reaching
+    // this element is the browser's menu, and it is never wanted here.
     event.preventDefault();
+    event.stopPropagation();
+
     this.cancelPress();
 
     // Android raises contextmenu at roughly the same moment the timer fires;

@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  OnDestroy,
   computed,
   inject,
   input,
@@ -32,7 +33,7 @@ import BabyEventsPanelItemStrings from './baby-events-panel-item.strings';
     MatMenuModule,
   ],
 })
-export class BabyEventsPanelItemComponent {
+export class BabyEventsPanelItemComponent implements OnDestroy {
   private babyEventsService = inject(BabyEventsService);
   private sessionStore = inject(SessionStore);
   private notificationService = inject(NotificationService);
@@ -41,6 +42,17 @@ export class BabyEventsPanelItemComponent {
   private saving = false;
 
   private readonly menuTrigger = viewChild.required(MatMenuTrigger);
+
+  /**
+   * Bound on `document` in the capture phase only while the menu is open. The
+   * open menu lays a full-screen CDK backdrop over the page, and a right-click
+   * lands on that backdrop rather than on this component, so suppressing the
+   * browser menu on the host alone leaves it appearing over our own.
+   */
+  private readonly suppressContextMenu = (event: Event): void => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
 
   public babyEventCategory = input.required<BabyEventCategoryView>();
   public activeCategoryId = input<string | null>(null);
@@ -92,6 +104,18 @@ export class BabyEventsPanelItemComponent {
   public openMenu(): void {
     const trigger = this.menuTrigger();
     if (!trigger.menuOpen) trigger.openMenu();
+  }
+
+  public onMenuOpened(): void {
+    document.addEventListener('contextmenu', this.suppressContextMenu, true);
+  }
+
+  public onMenuClosed(): void {
+    document.removeEventListener('contextmenu', this.suppressContextMenu, true);
+  }
+
+  public ngOnDestroy(): void {
+    this.onMenuClosed();
   }
 
   public filterEvent(): void {

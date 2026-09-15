@@ -1,9 +1,11 @@
-<div class="panel-item">
+<!-- The press lives on the wrapper, not the button: the button is a circle,
+     and hit testing honours border-radius, so a right-click near the edge of
+     the icon (or on its margin) lands here and would otherwise reach the
+     browser's own context menu. -->
+<div class="panel-item" appLongPress (longPress)="openMenu()">
   <button
     type="button"
     class="img-btn"
-    appLongPress
-    (longPress)="openMenu()"
     (click)="addBabyEvent('')"
     [attr.aria-label]="babyEventCategory().category.value"
     aria-haspopup="menu"
@@ -12,7 +14,12 @@
     "
   ></button>
 
-  <span class="menu-anchor" [matMenuTriggerFor]="menu"></span>
+  <span
+    class="menu-anchor"
+    [matMenuTriggerFor]="menu"
+    (menuOpened)="onMenuOpened()"
+    (menuClosed)="onMenuClosed()"
+  ></span>
 
   <mat-menu #menu="matMenu">
     @for (comment of comments(); track $index) {
