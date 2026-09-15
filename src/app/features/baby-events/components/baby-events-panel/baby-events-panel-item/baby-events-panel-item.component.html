@@ -21,7 +21,7 @@
     (menuClosed)="onMenuClosed()"
   ></span>
 
-  <mat-menu #menu="matMenu">
+  <mat-menu #menu="matMenu" class="notes-menu">
     @for (comment of comments(); track $index) {
       <button mat-menu-item type="button" (click)="addBabyEvent(comment)">
         {{ comment }}

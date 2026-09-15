@@ -20,3 +20,36 @@ body {
   background-color: #f9f9f9 !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
 }
+
+/* Material sets `text-align: left` on menu items with no [dir=rtl] counterpart,
+   which left-aligns Hebrew labels inside their full-width text span. */
+.mat-mdc-menu-item {
+  text-align: start;
+}
+
+/* Notes in the events panel's long-press menu run to BABY_NOTE_MAX_LENGTH (62),
+   which needs two to three lines inside Material's 280px panel cap. The panel
+   renders in a CDK overlay outside the component, so these live here and are
+   scoped by the menu's panelClass. */
+.notes-menu.mat-mdc-menu-panel {
+  max-width: min(320px, calc(100vw - 32px));
+}
+
+.notes-menu .mat-mdc-menu-item {
+  height: auto;
+  min-height: 48px; /* keeps the touch target when a note is short */
+  padding-block: 8px;
+  overflow: visible;
+  line-height: 1.4;
+}
+
+.notes-menu .mat-mdc-menu-item .mat-mdc-menu-item-text {
+  white-space: normal;
+
+  /* The load-bearing rule: the text span is a flex item whose default
+     `min-width: auto` floors its width at min-content, so a token wider than
+     the panel overflows the item and is cut off by Material's `overflow:
+     hidden`. Breaking anywhere collapses min-content and removes the overflow. */
+  overflow-wrap: anywhere;
+  word-break: break-word; /* fallback for older WebKit */
+}
