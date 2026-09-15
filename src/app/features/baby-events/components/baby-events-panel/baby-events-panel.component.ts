@@ -1,9 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
   inject,
-  Output,
+  input,
+  output,
 } from '@angular/core';
 import { BabyEventsPanelItemComponent } from './baby-events-panel-item/baby-events-panel-item.component';
 import { BabyEventCategory } from '../../../../models/baby.model';
@@ -22,7 +22,10 @@ export class BabyEventsPanelComponent {
 
   public activeBabyEventCategories = this.sessionStore.panelCategories;
 
-  @Output() filter = new EventEmitter<BabyEventCategory>();
+  /** Id of the category the list is currently filtered by, if any. */
+  public activeCategoryId = input<string | null>(null);
+
+  public filter = output<BabyEventCategory>();
 
   public onFilter(category: BabyEventCategory): void {
     this.filter.emit(category);

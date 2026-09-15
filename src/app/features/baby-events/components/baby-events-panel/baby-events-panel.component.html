@@ -2,6 +2,7 @@
   @for (item of activeBabyEventCategories(); track item.category.id) {
     <app-baby-events-panel-item
       [babyEventCategory]="item"
+      [activeCategoryId]="activeCategoryId()"
       (filter)="onFilter($event)"
     ></app-baby-events-panel-item>
   }

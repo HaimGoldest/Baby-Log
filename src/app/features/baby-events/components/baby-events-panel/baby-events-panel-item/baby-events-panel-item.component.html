@@ -1,9 +1,33 @@
-<button
-  class="col-1 btn rounded-circle img-btn"
-  (click)="addBabyEvent()"
-  (contextmenu)="filterEvent($event)"
-  [attr.aria-label]="babyEventCategory().category.value"
-  [style.background-image]="
-    'url(' + babyEventCategory().category.imagePath + ')'
-  "
-></button>
+<div class="panel-item">
+  <button
+    type="button"
+    class="img-btn"
+    appLongPress
+    (longPress)="openMenu()"
+    (click)="addBabyEvent('')"
+    [attr.aria-label]="babyEventCategory().category.value"
+    aria-haspopup="menu"
+    [style.background-image]="
+      'url(' + babyEventCategory().category.imagePath + ')'
+    "
+  ></button>
+
+  <span class="menu-anchor" [matMenuTriggerFor]="menu"></span>
+
+  <mat-menu #menu="matMenu">
+    @for (comment of comments(); track $index) {
+      <button mat-menu-item type="button" (click)="addBabyEvent(comment)">
+        {{ comment }}
+      </button>
+    }
+
+    @if (comments().length) {
+      <mat-divider></mat-divider>
+    }
+
+    <button mat-menu-item type="button" (click)="filterEvent()">
+      <mat-icon color="accent">{{ filterIcon() }}</mat-icon>
+      <span>{{ filterLabel() }}</span>
+    </button>
+  </mat-menu>
+</div>
