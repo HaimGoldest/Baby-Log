@@ -1,6 +1,6 @@
-import { BabyEventCategory } from '../models/baby.model';
-import { User } from '../models/user.model';
+import { BabyEventFavorites, User } from '../models/user.model';
 import { User as FirebaseUser } from 'firebase/auth';
+import BABY_EVENT_CATEGORIES_DATA from '../core/default-data/baby-event-categories-data';
 
 export type UserFactoryResult = {
   user: User;
@@ -13,176 +13,60 @@ export class UserFactory {
    */
   public static createUserObject(
     user: Partial<User> | null,
-    authData: FirebaseUser
+    authData: FirebaseUser,
   ): UserFactoryResult {
-    const defaultUser = this.createDefaultUser(authData);
-    const defaultPreferences = defaultUser.babyEventsPreferences;
-
-    let preferences: BabyEventCategory[];
-    let needSaving = this.isMissingSomeBaseProperty(user);
-
-    if (user?.babyEventsPreferences) {
-      preferences = [...user.babyEventsPreferences];
-
-      // Add missing categories
-      for (let defaultPref of defaultPreferences) {
-        const alreadyExists = preferences.some(
-          (category: BabyEventCategory) => category.id === defaultPref.id
-        );
-
-        if (!alreadyExists) {
-          preferences.push(defaultPref);
-          needSaving = true;
-        }
-      }
-
-      // Remove old invalid categories
-      preferences = preferences.filter((pref) => {
-        const stillExists = defaultPreferences.some(
-          (category: BabyEventCategory) => category.id === pref.id
-        );
-
-        if (!stillExists) {
-          needSaving = true;
-        }
-
-        return stillExists;
-      });
-    } else {
-      preferences = [...defaultPreferences];
-      needSaving = true;
-    }
+    const favorites = this.syncEventFavorites(user?.eventFavorites);
 
     const finalUser: User = {
-      uid: user?.uid ?? defaultUser.uid,
-      name: user?.name ?? defaultUser.name,
-      email: user?.email ?? defaultUser.email,
-      babyEventsPreferences: preferences,
-      babiesUids: user?.babiesUids ?? defaultUser.babiesUids,
+      uid: user?.uid ?? authData.uid,
+      name: user?.name ?? authData.displayName ?? 'Unknown User',
+      email: user?.email ?? authData.email ?? 'Unknown Email',
+      eventFavorites: favorites.value,
+      babiesUids: user?.babiesUids ?? [],
     };
 
     return {
       user: finalUser,
-      needSaving,
+      needSaving: this.isMissingSomeBaseProperty(user) || favorites.changed,
     };
   }
 
   /**
    * Check if the user is missing some base properties
    */
-  private static isMissingSomeBaseProperty(user: Partial<User>): boolean {
+  private static isMissingSomeBaseProperty(user: Partial<User> | null): boolean {
     return !user || !user.uid || !user.name || !user.email || !user.babiesUids;
   }
 
   /**
-   * Create default user structure
+   * Favorites are sparse: an absent entry means the user removed that category,
+   * so missing categories are never re-added. An absent or empty list instead
+   * means the user was never initialized, and every category is seeded.
    */
-  private static createDefaultUser(authData: FirebaseUser): User {
-    return {
-      uid: authData.uid,
-      name: authData.displayName ?? 'Unknown User',
-      email: authData.email ?? 'Unknown Email',
-      babyEventsPreferences: this.createDefaultBabyEventPreferences(),
-      babiesUids: [],
-    };
+  private static syncEventFavorites(stored?: BabyEventFavorites[]): {
+    value: BabyEventFavorites[];
+    changed: boolean;
+  } {
+    if (!stored?.length) {
+      return { value: this.createDefaultEventFavorites(), changed: true };
+    }
+
+    const value = stored.filter((favorite) =>
+      BABY_EVENT_CATEGORIES_DATA.some(
+        (category) => category.id === favorite.categoryId,
+      ),
+    );
+
+    return { value, changed: value.length !== stored.length };
   }
 
   /**
-   * Default Baby Event Preferences
+   * Default Baby Event Favorites: every known category, no comments.
    */
-  private static createDefaultBabyEventPreferences(): BabyEventCategory[] {
-    return [
-      {
-        id: 'Bottle',
-        defaultComment: '',
-        imagePath: '../../assets/images/icons8-baby-bottle-96.png',
-        isCategoryEnabled: true,
-        isDefaultCommentEnabled: false,
-      },
-      {
-        id: 'Breastfeeding',
-        defaultComment: '',
-        imagePath: '../../assets/images/icons8-breastfeeding-96.png',
-        isCategoryEnabled: false,
-        isDefaultCommentEnabled: false,
-      },
-      {
-        id: 'BreastPump',
-        defaultComment: '',
-        imagePath: '../../assets/images/icons8-breast-pump-96.png',
-        isCategoryEnabled: false,
-        isDefaultCommentEnabled: false,
-      },
-      {
-        id: 'Diaper',
-        defaultComment: '',
-        imagePath: '../../assets/images/icons8-diaper-96.png',
-        isCategoryEnabled: true,
-        isDefaultCommentEnabled: false,
-      },
-      {
-        id: 'Poo',
-        defaultComment: '',
-        imagePath: '../../assets/images/icons8-pile-of-poo-3d-fluency-96.png',
-        isCategoryEnabled: true,
-        isDefaultCommentEnabled: false,
-      },
-      {
-        id: 'Shower',
-        defaultComment: '',
-        imagePath: '../../assets/images/icons8-shower-96.png',
-        isCategoryEnabled: true,
-        isDefaultCommentEnabled: false,
-      },
-      {
-        id: 'Awake',
-        defaultComment: '',
-        imagePath: '../../assets/images/icons8-sun-96.png',
-        isCategoryEnabled: true,
-        isDefaultCommentEnabled: false,
-      },
-      {
-        id: 'Sleep',
-        defaultComment: '',
-        imagePath: '../../assets/images/icons8-moon-96.png',
-        isCategoryEnabled: true,
-        isDefaultCommentEnabled: false,
-      },
-      {
-        id: 'Fever',
-        defaultComment: '',
-        imagePath: '../../assets/images/icons8-thermometer-96.png',
-        isCategoryEnabled: true,
-        isDefaultCommentEnabled: false,
-      },
-      {
-        id: 'Medication',
-        defaultComment: '',
-        imagePath: '../../assets/images/icons8-pill-96.png',
-        isCategoryEnabled: true,
-        isDefaultCommentEnabled: false,
-      },
-      {
-        id: 'Vomit',
-        defaultComment: '',
-        imagePath: '../../assets/images/icons8-face-vomiting-96.png',
-        isCategoryEnabled: true,
-        isDefaultCommentEnabled: false,
-      },
-      {
-        id: 'Vaccine',
-        defaultComment: '',
-        imagePath: '../../assets/images/icons8-syringe-96.png',
-        isCategoryEnabled: false,
-        isDefaultCommentEnabled: false,
-      },
-      {
-        id: 'Notes',
-        defaultComment: '',
-        imagePath: '../../assets/images/icons8-task-96.png',
-        isCategoryEnabled: true,
-        isDefaultCommentEnabled: false,
-      },
-    ];
+  private static createDefaultEventFavorites(): BabyEventFavorites[] {
+    return BABY_EVENT_CATEGORIES_DATA.map((category) => ({
+      categoryId: category.id,
+      commonComments: [],
+    }));
   }
 }

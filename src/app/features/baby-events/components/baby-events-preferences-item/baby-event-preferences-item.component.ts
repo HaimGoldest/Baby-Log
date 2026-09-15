@@ -9,7 +9,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import BabyEventsPreferencesItemStrings from './baby-event-preferences-item.strings';
-import { BabyEventCategoryView } from '../../../../models/baby.model';
+import { BabyEventCategoryView } from '../../pages/baby-events.vm';
 
 @Component({
   selector: 'app-baby-event-preferences-item',

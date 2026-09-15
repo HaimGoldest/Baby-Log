@@ -1,17 +1,17 @@
-
 import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
   inject,
-  Input,
+  input,
   Output,
 } from '@angular/core';
 import { BabyEventCategory, BabyEvent } from '../../../../../models/baby.model';
 import { BabyEventsService } from '../../../services/baby-events.service';
-import { UserService } from '../../../../../core/services/user.service';
+import { SessionStore } from '../../../../../core/stores/session/session.store';
 import { NotificationService } from '../../../../../core/services/notification.service';
 import NotificationStrings from '../../../../../shared/strings/notification.strings';
+import { BabyEventCategoryView } from '../../../pages/baby-events.vm';
 
 @Component({
   selector: 'app-baby-events-panel-item',
@@ -23,22 +23,18 @@ import NotificationStrings from '../../../../../shared/strings/notification.stri
 })
 export class BabyEventsPanelItemComponent {
   private babyEventsService = inject(BabyEventsService);
-  private userService = inject(UserService);
+  private sessionStore = inject(SessionStore);
   private notificationService = inject(NotificationService);
-  @Input({ required: true }) babyEventCategory: BabyEventCategory;
+  public babyEventCategory = input.required<BabyEventCategoryView>();
   @Output() filter = new EventEmitter<BabyEventCategory>();
 
   public async addBabyEvent(): Promise<void> {
-    const comment = this.babyEventCategory.isDefaultCommentEnabled
-      ? this.babyEventCategory.defaultComment
-      : '';
-
     const newEvent: BabyEvent = {
       uid: 'new',
-      category: this.babyEventCategory,
-      comment: comment,
+      category: this.babyEventCategory().category,
+      comment: this.babyEventCategory().favorite.commonComments[0] ?? '',
       time: new Date(),
-      createdBy: this.userService.user().name,
+      createdBy: this.sessionStore.user().name,
       lastEditedBy: null,
     };
 
@@ -52,6 +48,6 @@ export class BabyEventsPanelItemComponent {
   public filterEvent(event: MouseEvent): void {
     if (event) event.preventDefault();
 
-    this.filter.emit(this.babyEventCategory);
+    this.filter.emit(this.babyEventCategory().category);
   }
 }

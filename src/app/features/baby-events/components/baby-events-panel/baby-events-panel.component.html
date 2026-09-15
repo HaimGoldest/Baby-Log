@@ -1,7 +1,7 @@
 <div class="panel">
-  @for (eventCategory of activeBabyEventCategories(); track eventCategory) {
+  @for (item of activeBabyEventCategories(); track item.category.id) {
     <app-baby-events-panel-item
-      [babyEventCategory]="eventCategory"
+      [babyEventCategory]="item"
       (filter)="onFilter($event)"
     ></app-baby-events-panel-item>
   }

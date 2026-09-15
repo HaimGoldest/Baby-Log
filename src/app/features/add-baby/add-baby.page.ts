@@ -11,8 +11,8 @@ import { MatButtonModule } from '@angular/material/button';
 
 import { AppService } from '../../core/services/app.service';
 import { Observable } from 'rxjs';
-import { BabiesService } from '../../core/services/babies.service';
-import { UserService } from '../../core/services/user.service';
+import { BabiesStore } from '../../core/stores/babies/babies.store';
+import { SessionStore } from '../../core/stores/session/session.store';
 import { Gender } from '../../enums/gender.enum';
 import AddBabyStrings from './add-baby.strings';
 
@@ -35,8 +35,8 @@ import AddBabyStrings from './add-baby.strings';
 })
 export class AddBabyPage {
   private appService = inject(AppService);
-  private userService = inject(UserService);
-  private babiesService = inject(BabiesService);
+  private sessionStore = inject(SessionStore);
+  private babiesStore = inject(BabiesStore);
 
   public isNewBabyMode = true;
   public errorMessage: string | null = null;
@@ -91,14 +91,14 @@ export class AddBabyPage {
     const gender = form.value.gender as Gender;
 
     try {
-      await this.userService.addNewBaby({
+      await this.sessionStore.addNewBaby({
         name: name,
         birthDate: birthDate,
         gender: gender,
         imageUrl: null,
       });
 
-      if (this.selectedImage && this.babiesService.baby()) {
+      if (this.selectedImage && this.babiesStore.baby()) {
         await this.uploadBabyImage();
       }
     } catch (error) {
@@ -109,7 +109,7 @@ export class AddBabyPage {
   private async addExistingBaby(form: NgForm): Promise<void> {
     const uid = form.value.uid;
     try {
-      await this.userService.addExistingBaby(uid);
+      await this.sessionStore.addExistingBaby(uid);
     } catch (error) {
       this.showErrorMessage(
         'Failed to add the baby! (Please make sure you entered a correct baby key)'
@@ -118,9 +118,9 @@ export class AddBabyPage {
   }
 
   private async uploadBabyImage(): Promise<void> {
-    const baby = this.babiesService.baby();
+    const baby = this.babiesStore.baby();
     try {
-      await this.babiesService.uploadBabyImage(baby.uid, this.selectedImage);
+      await this.babiesStore.uploadImage(baby.uid, this.selectedImage);
     } catch (error) {
       this.showErrorMessage('Failed to upload the baby image!');
     }

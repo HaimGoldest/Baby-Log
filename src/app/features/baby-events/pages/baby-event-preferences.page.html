@@ -1,9 +1,9 @@
 <div class="container-fluid">
   <div class="container">
     <h2 class="text-center">{{ strings.HEADER }}</h2>
-    @for (category of babyEventsCategories(); track category.id) {
+    @for (item of babyEventsCategories(); track item.category.id) {
     <app-baby-event-preferences-item
-      [babyEventCategory]="category"
+      [babyEventCategory]="item"
       (modified)="onChanged()"
     ></app-baby-event-preferences-item>
     }

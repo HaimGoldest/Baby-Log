@@ -1,15 +1,13 @@
-
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   EventEmitter,
   inject,
   Output,
 } from '@angular/core';
 import { BabyEventsPanelItemComponent } from './baby-events-panel-item/baby-events-panel-item.component';
 import { BabyEventCategory } from '../../../../models/baby.model';
-import { BabyEventPreferencesService } from '../../services/baby-event-preferences.service';
+import { SessionStore } from '../../../../core/stores/session/session.store';
 
 @Component({
   selector: 'app-baby-events-panel',
@@ -20,10 +18,9 @@ import { BabyEventPreferencesService } from '../../services/baby-event-preferenc
   imports: [BabyEventsPanelItemComponent],
 })
 export class BabyEventsPanelComponent {
-  private preferencesService = inject(BabyEventPreferencesService);
-  public activeBabyEventCategories = computed(() =>
-    this.preferencesService.preferences()?.filter((p) => p.isCategoryEnabled)
-  );
+  private sessionStore = inject(SessionStore);
+
+  public activeBabyEventCategories = this.sessionStore.panelCategories;
 
   @Output() filter = new EventEmitter<BabyEventCategory>();
 

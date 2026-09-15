@@ -18,11 +18,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
-import { UserService } from '../../../../core/services/user.service';
+import { SessionStore } from '../../../../core/stores/session/session.store';
 import { NotificationService } from '../../../../core/services/notification.service';
 import NotificationStrings from '../../../../shared/strings/notification.strings';
 import BabyEventCardStrings from './baby-event-card.strings';
-import GetCategoryName from '../../utils/baby-event-categories.strings';
 
 @Component({
   selector: 'app-baby-event-card',
@@ -43,7 +42,7 @@ import GetCategoryName from '../../utils/baby-event-categories.strings';
 })
 export class BabyEventCardComponent {
   private babyEventsService = inject(BabyEventsService);
-  private userService = inject(UserService);
+  private sessionStore = inject(SessionStore);
   private dialog = inject(MatDialog);
   private notificationService = inject(NotificationService);
   private destroy$ = new Subject<void>();
@@ -78,16 +77,12 @@ export class BabyEventCardComponent {
       });
   }
 
-  public getCategoryName(category: BabyEventCategory): string {
-    return GetCategoryName(category);
-  }
-
   private async updateEvent(data: BabyEvent): Promise<void> {
     const editedEvent: BabyEvent = {
       ...this.event,
       ...data,
       time: new Date(data.time),
-      lastEditedBy: this.userService.user().name,
+      lastEditedBy: this.sessionStore.user().name,
     };
 
     try {

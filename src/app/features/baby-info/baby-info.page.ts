@@ -6,8 +6,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { BabiesService } from '../../core/services/babies.service';
-import { UserService } from '../../core/services/user.service';
+import { BabiesStore } from '../../core/stores/babies/babies.store';
+import { SessionStore } from '../../core/stores/session/session.store';
 import { AppRoute } from '../../enums/app-route.enum';
 import { AppService } from '../../core/services/app.service';
 import BabyInfoStrings from './baby-info.strings';
@@ -23,8 +23,8 @@ import NotificationStrings from '../../shared/strings/notification.strings';
 })
 export class BabyInfoPage {
   private appService = inject(AppService);
-  private babiesService = inject(BabiesService);
-  private userService = inject(UserService);
+  private babiesStore = inject(BabiesStore);
+  private sessionStore = inject(SessionStore);
   private router = inject(Router);
   private clipboard = inject(Clipboard);
   private snackBar = inject(MatSnackBar);
@@ -32,8 +32,8 @@ export class BabyInfoPage {
 
   public strings = BabyInfoStrings;
 
-  public baby = this.babiesService.baby;
-  public babyImageUrl = computed(() => this.babiesService.baby()?.imageUrl);
+  public baby = this.babiesStore.baby;
+  public babyImageUrl = computed(() => this.babiesStore.baby()?.imageUrl);
 
   public onImageSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -45,9 +45,9 @@ export class BabyInfoPage {
   }
 
   private uploadNewImage(file: File): void {
-    if (this.baby().uid) {
-      this.babiesService
-        .uploadBabyImage(this.baby().uid, file)
+    if (this.baby()?.uid) {
+      this.babiesStore
+        .uploadImage(this.baby().uid, file)
         .then(() => {
           this.snackBar.open('Image updated successfully', 'Close', {
             duration: 2000,
@@ -67,7 +67,7 @@ export class BabyInfoPage {
 
   public async deleteBaby(): Promise<void> {
     try {
-      await this.userService.deleteBabyFromUser(this.baby());
+      await this.sessionStore.removeBaby(this.baby());
       this.navigateAfterBabyDeletion();
     } catch (error) {
       this.notificationService.error(NotificationStrings.DELETE_BABY_FAILED);

@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { BabyEventPreferencesService } from '../services/baby-event-preferences.service';
 import { BabyEventsPreferencesItemComponent } from '../components/baby-events-preferences-item/baby-event-preferences-item.component';
 import { AppRoute } from '../../../enums/app-route.enum';
 import BabyEventsPreferencesStrings from './baby-event-preferences.strings';
+import { SessionStore } from '../../../core/stores/session/session.store';
 import { NotificationService } from '../../../core/services/notification.service';
 import NotificationStrings from '../../../shared/strings/notification.strings';
 
@@ -16,11 +16,11 @@ import NotificationStrings from '../../../shared/strings/notification.strings';
   imports: [BabyEventsPreferencesItemComponent],
 })
 export class BabyEventsPreferencesPage {
-  private preferencesService = inject(BabyEventPreferencesService);
+  private sessionStore = inject(SessionStore);
   private router = inject(Router);
   private notificationService = inject(NotificationService);
 
-  public babyEventsCategories = this.preferencesService.preferences;
+  public babyEventsCategories = this.sessionStore.panelCategories;
   public hasChanged = false;
   public strings = BabyEventsPreferencesStrings;
 
@@ -32,14 +32,14 @@ export class BabyEventsPreferencesPage {
     if (!this.hasChanged) return;
 
     try {
-      await this.preferencesService.updatePreferences(
-        this.babyEventsCategories()
+      await this.sessionStore.updateEventFavorites(
+        this.babyEventsCategories().map((item) => item.favorite),
       );
       this.hasChanged = false;
       this.navigateEventsPage();
     } catch (error) {
       this.notificationService.error(
-        NotificationStrings.SAVE_PREFERENCES_FAILED
+        NotificationStrings.SAVE_PREFERENCES_FAILED,
       );
     }
   }
