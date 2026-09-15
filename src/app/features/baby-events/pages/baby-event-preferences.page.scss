@@ -1,12 +1,78 @@
+/* `main` in the app shell is a flex column with overflow hidden, so the page
+   scrolls itself instead of the document. */
 :host {
-  position: absolute;
-  width: 100%;
-  padding-bottom: 60px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
-h2 {
+.preferences-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 8px 8px 88px; /* bottom padding clears the fixed action bar */
+}
+
+.page-title {
+  margin: 0 0 16px;
   color: darkblue;
   font-weight: bold;
+  text-align: center;
+}
+
+.section {
+  width: 100%;
+}
+
+.section-title {
+  margin: 0 0 8px;
+  color: darkblue;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.section-divider {
+  width: 100%;
+  margin: 16px 0;
+}
+
+.available-card {
+  padding: 4px 10px !important;
+}
+
+.available-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+
+  & + .available-row {
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .event-img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .category-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: darkblue;
+  }
+
+  .add-favorite {
+    margin-inline-start: auto;
+    color: darkgreen !important;
+  }
 }
 
 .action-buttons {
@@ -18,8 +84,8 @@ h2 {
   gap: 16px;
   z-index: 1000;
 
-  .save {
-    background-color: darkgreen !important;
+  .save:not([disabled]) {
+    background-color: #4caf50 !important;
     color: white !important;
   }
 }

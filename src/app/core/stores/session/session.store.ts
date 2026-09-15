@@ -39,15 +39,21 @@ export const SessionStore = signalStore(
     userHaveBabies: computed(() => (user()?.babiesUids.length ?? 0) > 0),
     eventFavorites: computed(() => user()?.eventFavorites ?? []),
 
-    /** Sparse join: a category is listed only if the user has a favorite for it. */
-    panelCategories: computed(() => {
-      const favorites = user()?.eventFavorites ?? [];
-
-      return BABY_EVENT_CATEGORIES_DATA.map((category) => ({
-        category,
-        favorite: favorites.find((f) => f.categoryId === category.id),
-      })).filter((item) => !!item.favorite);
-    }),
+    /**
+     * Sparse join driven by the favorites list: a category is listed only if
+     * the user has a favorite for it, and the order is the user's own saved
+     * order rather than the order of the static category data.
+     */
+    panelCategories: computed(() =>
+      (user()?.eventFavorites ?? [])
+        .map((favorite) => ({
+          category: BABY_EVENT_CATEGORIES_DATA.find(
+            (c) => c.id === favorite.categoryId,
+          ),
+          favorite,
+        }))
+        .filter((item) => !!item.category),
+    ),
   })),
   withMethods((store) => {
     const watchUser = rxMethod<string | null>(
@@ -159,15 +165,23 @@ export const SessionStore = signalStore(
        * @param favorites The updated list of event favorites for the user.
        * @returns A promise that resolves when the update is complete.
        */
-      updateEventFavorites(favorites: BabyEventFavorites[]): Promise<void> {
+      async updateEventFavorites(
+        favorites: BabyEventFavorites[],
+      ): Promise<void> {
         const user = store.user();
         if (!user) {
           throw new Error('No user is signed in, cannot save event favorites.');
         }
 
-        return store._userService.update(user.uid, {
+        await store._userService.update(user.uid, {
           eventFavorites: favorites,
         });
+
+        // Patched locally after the write, not before: the watcher only
+        // re-emits on a server round trip, so the panel would otherwise keep
+        // rendering the previous order, while a failed write must not leave
+        // the local state claiming a success that never happened.
+        patchState(store, { user: { ...user, eventFavorites: favorites } });
       },
 
       /**

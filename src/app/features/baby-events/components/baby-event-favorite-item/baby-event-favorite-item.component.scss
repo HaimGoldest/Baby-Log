@@ -1,0 +1,66 @@
+.favorite-card {
+  padding: 10px !important;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.event-img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.category-title {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: darkblue;
+}
+
+.order-controls {
+  display: flex;
+  margin-inline-start: auto;
+}
+
+.remove-favorite {
+  color: darkred !important;
+}
+
+.comments-section {
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+}
+
+.comment-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  .comment-field {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Pulls the button up out of the form field's subscript row, so it sits
+     level with the input itself rather than with the whole wrapper. */
+  .remove-comment {
+    margin-bottom: 20px;
+    color: darkred !important;
+  }
+}
+
+.no-comments {
+  margin: 0 0 8px;
+  color: #666;
+}
+
+.add-comment {
+  align-self: flex-start;
+  color: darkgreen !important;
+}

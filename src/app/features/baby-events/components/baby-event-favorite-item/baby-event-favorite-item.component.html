@@ -1,0 +1,83 @@
+<mat-card class="card-style favorite-card">
+  <div class="card-header">
+    <img
+      class="event-img"
+      [src]="favorite().category.imagePath"
+      [alt]="favorite().category.id"
+    />
+
+    <span class="category-title">{{ favorite().category.value }}</span>
+
+    <div class="order-controls">
+      <button
+        mat-icon-button
+        type="button"
+        [disabled]="isFirst()"
+        [matTooltip]="strings.MOVE_UP"
+        [attr.aria-label]="strings.MOVE_UP"
+        (click)="moveUp.emit()"
+      >
+        <mat-icon>arrow_upward</mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        type="button"
+        [disabled]="isLast()"
+        [matTooltip]="strings.MOVE_DOWN"
+        [attr.aria-label]="strings.MOVE_DOWN"
+        (click)="moveDown.emit()"
+      >
+        <mat-icon>arrow_downward</mat-icon>
+      </button>
+    </div>
+
+    <button
+      mat-button
+      type="button"
+      class="remove-favorite"
+      (click)="remove.emit()"
+    >
+      <mat-icon>star_border</mat-icon>
+      <span>{{ strings.REMOVE_FAVORITE }}</span>
+    </button>
+  </div>
+
+  <div class="comments-section">
+    @for (comment of favorite().comments; track comment.id) {
+      <div class="comment-row">
+        <mat-form-field appearance="outline" class="comment-field">
+          <mat-label>{{ strings.COMMENT }}</mat-label>
+          <input
+            matInput
+            [value]="comment.text"
+            (input)="onCommentInput(comment.id, $event.target)"
+          />
+        </mat-form-field>
+
+        <button
+          mat-icon-button
+          type="button"
+          class="remove-comment"
+          [matTooltip]="strings.REMOVE_COMMENT"
+          [attr.aria-label]="strings.REMOVE_COMMENT"
+          (click)="removeComment.emit(comment.id)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    } @empty {
+      <p class="no-comments">{{ strings.NO_COMMENTS }}</p>
+    }
+
+    <button
+      mat-button
+      type="button"
+      class="add-comment"
+      (click)="addComment.emit()"
+    >
+      <mat-icon>add</mat-icon>
+      <span>{{ strings.ADD_COMMENT }}</span>
+    </button>
+  </div>
+</mat-card>
