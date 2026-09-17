@@ -14,7 +14,7 @@ import { concatMap, from, of, pipe, switchMap, tap } from 'rxjs';
 import { User as FirebaseUser } from 'firebase/auth';
 import { BabyEventFavorites, User } from '../../../models/user.model';
 import { Baby } from '../../../models/baby.model';
-import { UserFactory } from '../../../factories/user.factory';
+import { reconcileUser } from '../../user/user-reconciler';
 import { AppRoute } from '../../../enums/app-route.enum';
 import { AppService } from '../../services/app.service';
 import { AuthService } from '../../services/auth.service';
@@ -76,10 +76,7 @@ export const SessionStore = signalStore(
       firebaseUser: FirebaseUser,
     ): Promise<void> => {
       const existing = await store._userService.get(firebaseUser.uid);
-      const { user, needSaving } = UserFactory.createUserObject(
-        existing,
-        firebaseUser,
-      );
+      const { user, needSaving } = reconcileUser(existing, firebaseUser);
 
       // Persist before attaching the watcher: the first snapshot would
       // otherwise overwrite the reconciled user with the stale document.
