@@ -44,7 +44,7 @@ const BABY_EVENT_CATEGORIES_DATA: BabyEventCategory[] = [
   {
     id: 'Fever',
     value: 'חום',
-    imagePath: '../../assets/images/icons8-thermometer-96.png',
+    imagePath: '../../assets/images/icons8-fever-96.png',
   },
   {
     id: 'Medication',
@@ -61,6 +61,18 @@ const BABY_EVENT_CATEGORIES_DATA: BabyEventCategory[] = [
     value: 'חיסון',
     imagePath: '../../assets/images/icons8-syringe-96.png',
   },
+  {
+    id: 'food',
+    value: 'אוכל',
+    imagePath: '../../assets/images/icons8-soup-96.png',
+  },
+
+  {
+    id: 'Snack',
+    value: 'חטיף',
+    imagePath: '../../assets/images/icons8-snack-96.png',
+  },
+
   {
     id: 'Notes',
     value: 'כללי',
