@@ -1,5 +1,4 @@
 import { computed, inject } from '@angular/core';
-import { Router } from '@angular/router';
 import {
   patchState,
   signalStore,
@@ -15,12 +14,10 @@ import { User as FirebaseUser } from 'firebase/auth';
 import { BabyEventFavorites, User } from '../../../models/user.model';
 import { Baby } from '../../../models/baby.model';
 import { reconcileUser } from '../../user/user-reconciler';
-import { AppRoute } from '../../../enums/app-route.enum';
 import { AppService } from '../../services/app.service';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import { BabiesStore } from '../babies/babies.store';
-import BABY_EVENT_CATEGORIES_DATA from '../../default-data/baby-event-categories-data';
 import { initialSessionState } from './session.state';
 import { NewBabyData } from '../babies/babies.state';
 
@@ -32,28 +29,11 @@ export const SessionStore = signalStore(
     _userService: inject(UserService),
     _babiesStore: inject(BabiesStore),
     _appService: inject(AppService),
-    _router: inject(Router),
   })),
   withComputed(({ user }) => ({
     isLoggedIn: computed(() => !!user()),
     userHaveBabies: computed(() => (user()?.babiesUids.length ?? 0) > 0),
     eventFavorites: computed(() => user()?.eventFavorites ?? []),
-
-    /**
-     * Sparse join driven by the favorites list: a category is listed only if
-     * the user has a favorite for it, and the order is the user's own saved
-     * order rather than the order of the static category data.
-     */
-    panelCategories: computed(() =>
-      (user()?.eventFavorites ?? [])
-        .map((favorite) => ({
-          category: BABY_EVENT_CATEGORIES_DATA.find(
-            (c) => c.id === favorite.categoryId,
-          ),
-          favorite,
-        }))
-        .filter((item) => !!item.category),
-    ),
   })),
   withMethods((store) => {
     const watchUser = rxMethod<string | null>(
@@ -85,27 +65,25 @@ export const SessionStore = signalStore(
       patchState(store, {
         user,
         userimageUrl: firebaseUser.photoURL ?? null,
-        status: 'ready',
         loginError: null,
       });
       watchUser(user.uid);
 
-      const haveBabies = user.babiesUids.length > 0;
-      if (haveBabies) {
+      if (user.babiesUids.length > 0) {
         await store._babiesStore.select(user.babiesUids[0], user);
       }
 
-      store._router.navigate([
-        '/',
-        haveBabies ? AppRoute.HomePage : AppRoute.AddBaby,
-      ]);
+      // Flipped last, deliberately: `status` is what the app shell navigates
+      // on, so it must not read 'ready' until the user and their baby are both
+      // loaded. Patching it earlier would route to the events page before the
+      // baby arrived, rendering an empty list for a frame.
+      patchState(store, { status: 'ready' });
     };
 
     const handleSignedOut = (): void => {
       watchUser(null);
       store._babiesStore.clear();
       patchState(store, { ...initialSessionState, status: 'signed-out' });
-      store._router.navigate(['/', AppRoute.Login]);
     };
 
     const handleAuthChange = async (
@@ -183,20 +161,20 @@ export const SessionStore = signalStore(
 
       /**
        * Adds a new baby for the currently signed-in user.
+       *
+       * A data operation only: it resolves once the baby exists and is linked,
+       * and rejects otherwise. The caller decides where to navigate.
        * @param babyData The data for the new baby to be added.
-       * @returns A promise that resolves when the new baby is successfully added.
        */
       async addNewBaby(babyData: NewBabyData): Promise<void> {
         const user = store.user();
         if (!user) {
-          console.error('No user data available to add a new baby.');
-          return;
+          throw new Error('No user is signed in, cannot add a baby.');
         }
 
         try {
           const baby = await store._babiesStore.createBaby(user.uid, babyData);
           await attachBabyToUser(user, baby.uid);
-          store._router.navigate(['/', AppRoute.BabyEventPreferences]);
         } catch (error) {
           console.error('Failed to add new baby to user:', error);
           throw error;
@@ -205,25 +183,24 @@ export const SessionStore = signalStore(
 
       /**
        * Adds an existing baby to the currently signed-in user.
+       *
+       * Rejects when no baby carries that uid, so a mistyped key surfaces to
+       * the caller instead of resolving as a silent no-op.
        * @param babyUid The UID of the existing baby to be added.
-       * @returns A promise that resolves when the baby is successfully added.
        */
       async addExistingBaby(babyUid: string): Promise<void> {
         const user = store.user();
         if (!user) {
-          console.error('No user data available to add a baby.');
-          return;
+          throw new Error('No user is signed in, cannot add a baby.');
         }
 
         try {
           const baby = await store._babiesStore.select(babyUid, user);
           if (!baby) {
-            console.error('Failed to add baby to the user');
-            return;
+            throw new Error(`No baby exists with the uid ${babyUid}.`);
           }
 
           await attachBabyToUser(user, babyUid);
-          store._router.navigate(['/', AppRoute.BabyEventPreferences]);
         } catch (error) {
           console.error('Failed to add existing baby:', error);
           throw error;
@@ -237,7 +214,9 @@ export const SessionStore = signalStore(
        */
       async removeBaby(baby: Baby): Promise<void> {
         const user = store.user();
-        if (!user) return;
+        if (!user) {
+          throw new Error('No user is signed in, cannot remove a baby.');
+        }
 
         try {
           await store._babiesStore.deleteBaby(user.uid);
