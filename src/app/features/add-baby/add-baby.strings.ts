@@ -13,6 +13,12 @@ export default class AddBabyStrings {
   public static readonly BABY_UID_INFO =
     'קוד תינוק הוא מזהה ייחודי של התינוק, ניתן למצוא אותו בפרטי התינוק אצל משתמש אחר.';
 
+  public static readonly ADD_BABY_FAILED = 'הוספת התינוק נכשלה. נסה שוב.';
+  public static readonly ADD_EXISTING_BABY_FAILED =
+    'הוספת התינוק נכשלה! (אנא ודא שהזנת קוד תינוק תקין)';
+  public static readonly UPLOAD_IMAGE_FAILED =
+    'העלאת תמונת התינוק נכשלה. נסה שוב.';
+
   public static readonly ADD_BABY = 'הוספת תינוק';
   public static readonly ADD_TO_EXISTING_BABY = 'הוספת תינוק קיים';
   public static readonly ADD_TO_NEW_BABY = 'הוספת תינוק חדש';

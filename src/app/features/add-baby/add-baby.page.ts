@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -42,13 +47,26 @@ export class AddBabyPage {
   private router = inject(Router);
 
   public isNewBabyMode = true;
-  public errorMessage: string | null = null;
+
+  /**
+   * A signal, not a plain field: it is set from a rejected promise, long after
+   * the submit event that marked this OnPush view dirty. A plain field written
+   * there is never picked up, so the message only surfaced on the next
+   * interaction. A signal marks the view itself, whatever the context.
+   */
+  public errorMessage = signal<string | null>(null);
   public selectedImage: File | null = null;
   public imagePreview$?: Observable<string>;
   public strings = AddBabyStrings;
 
   onSwitchMode() {
     this.isNewBabyMode = !this.isNewBabyMode;
+    this.clearErrorMessage();
+  }
+
+  /** Bound to the form's `input` event, so editing any field dismisses it. */
+  public clearErrorMessage(): void {
+    this.errorMessage.set(null);
   }
 
   onImageSelected(event: Event) {
@@ -73,6 +91,8 @@ export class AddBabyPage {
 
   public async onSubmit(form: NgForm) {
     if (!form.valid) return;
+
+    this.clearErrorMessage();
     this.appService.isLoading.set(true);
 
     try {
@@ -88,7 +108,7 @@ export class AddBabyPage {
         await this.router.navigate(['/', AppRoute.BabyEventPreferences]);
       }
     } catch {
-      this.showErrorMessage('Failed to create the baby!');
+      this.showErrorMessage(this.strings.ADD_BABY_FAILED);
     } finally {
       this.appService.isLoading.set(false);
     }
@@ -114,7 +134,7 @@ export class AddBabyPage {
 
       return true;
     } catch (error) {
-      this.showErrorMessage('Failed to create the baby!');
+      this.showErrorMessage(this.strings.ADD_BABY_FAILED);
       return false;
     }
   }
@@ -125,9 +145,7 @@ export class AddBabyPage {
       await this.sessionStore.addExistingBaby(uid);
       return true;
     } catch (error) {
-      this.showErrorMessage(
-        'Failed to add the baby! (Please make sure you entered a correct baby key)'
-      );
+      this.showErrorMessage(this.strings.ADD_EXISTING_BABY_FAILED);
       return false;
     }
   }
@@ -137,15 +155,16 @@ export class AddBabyPage {
     try {
       await this.babiesStore.uploadImage(baby.uid, this.selectedImage);
     } catch (error) {
-      this.showErrorMessage('Failed to upload the baby image!');
+      this.showErrorMessage(this.strings.UPLOAD_IMAGE_FAILED);
     }
   }
 
   private showErrorMessage(message: string) {
     // todo - use generic error dialog component
-    this.errorMessage = message;
-    setTimeout(() => {
-      this.errorMessage = null;
-    }, 5000);
+    //
+    // No auto-dismiss timer: overlapping timers from repeated attempts used to
+    // clear a newer message on an older one's schedule. It stays until the
+    // user edits the form or submits again.
+    this.errorMessage.set(message);
   }
 }

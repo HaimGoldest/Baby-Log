@@ -6,6 +6,7 @@
   <form
     #authForm="ngForm"
     (ngSubmit)="onSubmit(authForm)"
+    (input)="clearErrorMessage()"
     class="add-baby-form"
     >
     @if (isNewBabyMode) {
@@ -92,7 +93,7 @@
         </form>
 
         <!-- Error Message -->
-        @if (errorMessage) {
-          <div class="error-message">{{ errorMessage }}</div>
+        @if (errorMessage(); as message) {
+          <div class="error-message" role="alert">{{ message }}</div>
         }
       </div>
