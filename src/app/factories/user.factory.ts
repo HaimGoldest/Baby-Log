@@ -39,34 +39,26 @@ export class UserFactory {
   }
 
   /**
-   * Favorites are sparse: an absent entry means the user removed that category,
-   * so missing categories are never re-added. An absent or empty list instead
-   * means the user was never initialized, and every category is seeded.
+   * Favorites are sparse and never seeded: an absent entry means the user
+   * removed that category, and an absent or empty list means they have not
+   * chosen any yet. Both stay empty, and the preferences page is where the
+   * first category gets added.
+   *
+   * The only reconciliation done here is dropping entries whose category no
+   * longer exists in the catalogue.
    */
   private static syncEventFavorites(stored?: BabyEventFavorites[]): {
     value: BabyEventFavorites[];
     changed: boolean;
   } {
-    if (!stored?.length) {
-      return { value: this.createDefaultEventFavorites(), changed: true };
-    }
+    const favorites = stored ?? [];
 
-    const value = stored.filter((favorite) =>
+    const value = favorites.filter((favorite) =>
       BABY_EVENT_CATEGORIES_DATA.some(
         (category) => category.id === favorite.categoryId,
       ),
     );
 
-    return { value, changed: value.length !== stored.length };
-  }
-
-  /**
-   * Default Baby Event Favorites: every known category, no comments.
-   */
-  private static createDefaultEventFavorites(): BabyEventFavorites[] {
-    return BABY_EVENT_CATEGORIES_DATA.map((category) => ({
-      categoryId: category.id,
-      commonComments: [],
-    }));
+    return { value, changed: value.length !== favorites.length };
   }
 }

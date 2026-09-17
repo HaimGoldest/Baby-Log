@@ -18,6 +18,12 @@
   background-color: #f44336;
 }
 
+/* Deep orange rather than the lighter amber: the card prints white text, and
+   #ff9800 does not carry it at an accessible contrast. */
+.alert-card.warning {
+  background-color: #e65100;
+}
+
 .alert-title {
   margin: 0 0 8px 0;
   font-weight: bold;

@@ -72,6 +72,23 @@ export class BabyEventsPreferencesPage {
     () => serializeDraft(this.draft()) !== this.baseline(),
   );
 
+  /**
+   * At least one favorite is mandatory: with none, the events panel is empty
+   * and no event can be created, so saving that state is never allowed.
+   */
+  public readonly canSave = computed(
+    () => this.isDirty() && this.draft().length > 0,
+  );
+
+  /**
+   * Persisted favorites, not the draft: with none saved, the events page
+   * bounces straight back here through the route guard, so cancelling would
+   * appear to do nothing. Disabled instead of silently looping.
+   */
+  public readonly canCancel = computed(
+    () => this.sessionStore.eventFavorites().length > 0,
+  );
+
   public readonly availableCategories = computed(() =>
     BABY_EVENT_CATEGORIES_DATA.filter(
       (category) =>
@@ -121,7 +138,7 @@ export class BabyEventsPreferencesPage {
   }
 
   public async save(): Promise<void> {
-    if (!this.isDirty()) return;
+    if (!this.canSave()) return;
 
     const favorites: BabyEventFavorites[] = this.draft().map((item) => ({
       categoryId: item.category.id,
@@ -143,6 +160,8 @@ export class BabyEventsPreferencesPage {
   }
 
   public cancel(): void {
+    if (!this.canCancel()) return;
+
     this.seedDraft();
     this.navigateEventsPage();
   }

@@ -11,7 +11,9 @@ export const appGuard: CanActivateFn = (route, state) => {
   const isLoggedIn = sessionStore.isLoggedIn();
   const isLoginPage = url === AppRoute.Login;
   const isAddBabyPage = url === AppRoute.AddBaby;
+  const isBabyEventsPage = url === AppRoute.BabyEvents;
   const userHaveBabies = sessionStore.userHaveBabies();
+  const userHaveFavorites = sessionStore.eventFavorites().length > 0;
 
   console.log('AppGuard: Trying navigate to', url);
 
@@ -26,6 +28,15 @@ export const appGuard: CanActivateFn = (route, state) => {
   if (isLoggedIn && !userHaveBabies && !isAddBabyPage) {
     console.log('AppGuard: Navigating to', AppRoute.AddBaby);
     return router.createUrlTree(['/', AppRoute.AddBaby]);
+  }
+
+  // Favorites are never seeded, so a user who has chosen none has an empty
+  // events panel and no way to create an event. Preferences is the only
+  // useful destination; redirecting from the guard keeps the empty page from
+  // rendering at all.
+  if (isLoggedIn && userHaveBabies && isBabyEventsPage && !userHaveFavorites) {
+    console.log('AppGuard: Navigating to', AppRoute.BabyEventPreferences);
+    return router.createUrlTree(['/', AppRoute.BabyEventPreferences]);
   }
 
   // Redirect to home if logged in and trying to access login page

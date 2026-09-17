@@ -18,7 +18,7 @@
       ></app-baby-event-favorite-item>
     } @empty {
       <app-alert-message
-        type="info"
+        type="warning"
         [title]="strings.NO_FAVORITES_TITLE"
         [message]="strings.NO_FAVORITES_MESSAGE"
       ></app-alert-message>
@@ -69,13 +69,19 @@
     mat-raised-button
     type="button"
     class="save"
-    [disabled]="!isDirty()"
+    [disabled]="!canSave()"
     (click)="save()"
   >
     {{ strings.SAVE }}
   </button>
 
-  <button mat-button type="button" class="cancel" (click)="cancel()">
+  <button
+    mat-button
+    type="button"
+    class="cancel"
+    [disabled]="!canCancel()"
+    (click)="cancel()"
+  >
     {{ strings.CANCEL }}
   </button>
 </div>
