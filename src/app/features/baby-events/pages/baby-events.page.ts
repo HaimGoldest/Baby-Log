@@ -40,6 +40,10 @@ export class BabyEventsComponent {
   public readonly strings = BabyEventsStrings;
   public filterMode = computed(() => this.currentFilteredCategory() !== null);
 
+  public readonly activeCategoryId = computed(
+    () => this.currentFilteredCategory()?.id ?? null,
+  );
+
   public readonly displayedEvents = computed(() =>
     this.filterMode() ? this.filteredEvents() : this.allEvents(),
   );

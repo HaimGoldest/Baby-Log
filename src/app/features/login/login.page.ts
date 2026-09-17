@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
-import { AuthService } from '../../core/services/auth.service';
+import { SessionStore } from '../../core/stores/session/session.store';
 import LoginStrings from './login.strings';
 
 @Component({
@@ -12,12 +12,12 @@ import LoginStrings from './login.strings';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage {
-  private authService = inject(AuthService);
+  private sessionStore = inject(SessionStore);
 
   public strings = LoginStrings;
-  public loginError = this.authService.loginError;
+  public loginError = this.sessionStore.loginError;
 
   signInWithGoogle(): void {
-    this.authService.signInWithGoogle();
+    this.sessionStore.signIn();
   }
 }

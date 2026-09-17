@@ -1,4 +1,7 @@
-<app-baby-events-panel (filter)="onFilter($event)"></app-baby-events-panel>
+<app-baby-events-panel
+  [activeCategoryId]="activeCategoryId()"
+  (filter)="onFilter($event)"
+></app-baby-events-panel>
 <hr />
 
 @if (displayedEvents().length === 0) {

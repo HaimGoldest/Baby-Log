@@ -21,7 +21,10 @@
 
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>{{ strings.COMMENT }}</mat-label>
-    <input matInput formControlName="comment" />
+    <input matInput formControlName="comment" [maxlength]="maxNoteLength" />
+    <mat-hint align="end">
+      {{ eventForm.controls.comment.value?.length ?? 0 }}/{{ maxNoteLength }}
+    </mat-hint>
   </mat-form-field>
 </mat-dialog-content>
 

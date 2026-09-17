@@ -1,9 +1,12 @@
-import { BabyEventCategory } from './baby.model';
-
 export interface User {
   uid: string;
   name: string;
   email: string;
-  babyEventsPreferences: BabyEventCategory[];
+  eventFavorites: BabyEventFavorites[];
   babiesUids: string[];
+}
+
+export interface BabyEventFavorites {
+  categoryId: string;
+  commonComments: string[];
 }

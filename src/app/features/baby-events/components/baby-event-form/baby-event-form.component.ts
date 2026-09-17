@@ -15,6 +15,7 @@ import {
 } from '@angular/material/dialog';
 
 import { BabyEvent } from '../../../../models/baby.model';
+import { BABY_NOTE_MAX_LENGTH } from '../../../../core/default-data/baby-event-limits';
 import BabyEventFormStrings from './baby-event-form.strings';
 
 @Component({
@@ -41,11 +42,15 @@ export class BabyEventFormComponent {
 
   public dialogRef = inject(MatDialogRef<BabyEventFormComponent>);
   public strings = BabyEventFormStrings;
+  public readonly maxNoteLength = BABY_NOTE_MAX_LENGTH;
 
   public eventForm = this.fb.group({
     date: [this.initialTime],
     time: [this.toTimeString(this.initialTime), [Validators.required]],
-    comment: [this.data?.comment ?? '', [Validators.maxLength(62)]],
+    // No maxLength validator here: the template's [maxlength] binding both
+    // caps the field natively and attaches Angular's validator, which still
+    // guards a note that was already over the cap before it was introduced.
+    comment: [this.data?.comment ?? ''],
   });
 
   public onSubmit(): void {

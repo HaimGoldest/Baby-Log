@@ -1,23 +1,87 @@
-<div class="container-fluid">
-  <div class="container">
-    <h2 class="text-center">{{ strings.HEADER }}</h2>
-    @for (category of babyEventsCategories(); track category.id) {
-    <app-baby-event-preferences-item
-      [babyEventCategory]="category"
-      (modified)="onChanged()"
-    ></app-baby-event-preferences-item>
-    }
+<div class="preferences-page">
+  <h2 class="page-title">{{ strings.HEADER }}</h2>
 
-    <div class="action-buttons">
-      <button
-        mat-fab
-        [class.save]="hasChanged"
-        [disabled]="!hasChanged"
-        (click)="save()"
-      >
-        {{ strings.SAVE }}
-      </button>
-      <button mat-button (click)="cancel()">{{ strings.CANCEL }}</button>
-    </div>
-  </div>
+  <section class="section">
+    <h3 class="section-title">{{ strings.ACTIVE_SECTION }}</h3>
+
+    @for (item of favorites(); track item.category.id) {
+      <app-baby-event-favorite-item
+        [favorite]="item"
+        [isFirst]="$first"
+        [isLast]="$last"
+        (moveUp)="moveUp($index)"
+        (moveDown)="moveDown($index)"
+        (remove)="removeFavorite($index)"
+        (addComment)="addComment($index)"
+        (editComment)="editComment($index, $event)"
+        (removeComment)="removeComment($index, $event)"
+      ></app-baby-event-favorite-item>
+    } @empty {
+      <app-alert-message
+        type="warning"
+        [title]="strings.NO_FAVORITES_TITLE"
+        [message]="strings.NO_FAVORITES_MESSAGE"
+      ></app-alert-message>
+    }
+  </section>
+
+  <mat-divider class="section-divider"></mat-divider>
+
+  <section class="section">
+    <h3 class="section-title">{{ strings.AVAILABLE_SECTION }}</h3>
+
+    @if (availableCategories().length === 0) {
+      <app-alert-message
+        type="info"
+        [title]="strings.ALL_ADDED_TITLE"
+        [message]="strings.ALL_ADDED_MESSAGE"
+      ></app-alert-message>
+    } @else {
+      <mat-card class="card-style available-card">
+        @for (category of availableCategories(); track category.id) {
+          <div class="available-row">
+            <img
+              class="event-img"
+              [src]="category.imagePath"
+              [alt]="category.id"
+            />
+
+            <span class="category-title">{{ category.value }}</span>
+
+            <button
+              mat-button
+              type="button"
+              class="add-favorite"
+              (click)="addFavorite(category)"
+            >
+              <mat-icon>star</mat-icon>
+              <span>{{ strings.ADD_FAVORITE }}</span>
+            </button>
+          </div>
+        }
+      </mat-card>
+    }
+  </section>
+</div>
+
+<div class="action-buttons">
+  <button
+    mat-raised-button
+    type="button"
+    class="save"
+    [disabled]="!canSave()"
+    (click)="save()"
+  >
+    {{ strings.SAVE }}
+  </button>
+
+  <button
+    mat-button
+    type="button"
+    class="cancel"
+    [disabled]="!canCancel()"
+    (click)="cancel()"
+  >
+    {{ strings.CANCEL }}
+  </button>
 </div>

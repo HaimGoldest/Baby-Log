@@ -1,6 +1,40 @@
-<button
-  class="col-1 btn rounded-circle img-btn"
-  (click)="addBabyEvent()"
-  (contextmenu)="filterEvent($event)"
-  [style.background-image]="'url(' + babyEventCategory.imagePath + ')'"
-></button>
+<!-- The press lives on the wrapper, not the button: the button is a circle,
+     and hit testing honours border-radius, so a right-click near the edge of
+     the icon (or on its margin) lands here and would otherwise reach the
+     browser's own context menu. -->
+<div class="panel-item" appLongPress (longPress)="openMenu()">
+  <button
+    type="button"
+    class="img-btn"
+    (click)="addBabyEvent('')"
+    [attr.aria-label]="babyEventCategory().category.value"
+    aria-haspopup="menu"
+    [style.background-image]="
+      'url(' + babyEventCategory().category.imagePath + ')'
+    "
+  ></button>
+
+  <span
+    class="menu-anchor"
+    [matMenuTriggerFor]="menu"
+    (menuOpened)="onMenuOpened()"
+    (menuClosed)="onMenuClosed()"
+  ></span>
+
+  <mat-menu #menu="matMenu" class="notes-menu">
+    @for (comment of comments(); track $index) {
+      <button mat-menu-item type="button" (click)="addBabyEvent(comment)">
+        {{ comment }}
+      </button>
+    }
+
+    @if (comments().length) {
+      <mat-divider></mat-divider>
+    }
+
+    <button mat-menu-item type="button" (click)="filterEvent()">
+      <mat-icon color="accent">{{ filterIcon() }}</mat-icon>
+      <span>{{ filterLabel() }}</span>
+    </button>
+  </mat-menu>
+</div>
