@@ -69,11 +69,22 @@ export class AddBabyPage {
     this.errorMessage.set(null);
   }
 
+  /**
+   * No loading state: the preview is read lazily, once the async pipe
+   * subscribes, and a local file reads in milliseconds. The global spinner
+   * this used to toggle never covered the read, and stayed on for good when
+   * the input came back empty.
+   */
   onImageSelected(event: Event) {
-    this.appService.isLoading.set(true);
-
     const file = (event.target as HTMLInputElement).files?.[0];
-    if (!file) return;
+
+    // Mirror the input: when it comes back empty, drop the previous image
+    // too, so the preview always shows what will be uploaded.
+    if (!file) {
+      this.selectedImage = null;
+      this.imagePreview$ = undefined;
+      return;
+    }
 
     this.selectedImage = file;
 
@@ -86,7 +97,6 @@ export class AddBabyPage {
       reader.onerror = (err) => sub.error(err);
       reader.readAsDataURL(file);
     });
-    this.appService.isLoading.set(false);
   }
 
   public async onSubmit(form: NgForm) {

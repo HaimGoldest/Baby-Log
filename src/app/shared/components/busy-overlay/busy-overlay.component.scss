@@ -1,0 +1,14 @@
+:host {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* The card background (#f9f9f9) at 70%, so the content stays readable
+     underneath while clearly marked as not interactive. */
+  background-color: rgba(249, 249, 249, 0.7);
+  border-radius: inherit;
+  cursor: progress;
+}

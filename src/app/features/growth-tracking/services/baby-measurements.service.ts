@@ -3,6 +3,10 @@ import { BabiesService } from '../../../core/services/babies.service';
 import { BabiesStore } from '../../../core/stores/babies/babies.store';
 import { Baby, BabyMeasurement } from '../../../models/baby.model';
 import { FireStoreHelperService } from '../../../core/firebase/fire-store-helper.service';
+import {
+  PendingKind,
+  PendingWrites,
+} from '../../../core/firebase/pending-writes';
 
 @Injectable({
   providedIn: 'root',
@@ -25,9 +29,21 @@ export class BabyMeasurementsService {
     );
   });
 
+  // Declared after `measurements`, which it observes.
+  private readonly pending = new PendingWrites(this.measurements);
+
+  /** The in-flight write for a measurement, or null when there is none. */
+  public pendingKind(uid: string): PendingKind | null {
+    return this.pending.kindOf(uid);
+  }
+
   /**
    * Appends a measurement atomically via arrayUnion, so a concurrent write
    * from another user or tab cannot drop it.
+   *
+   * The local cache shows the measurement at once, and it stays `syncing`
+   * until the server acknowledges it, which lasts until reconnect while
+   * offline.
    */
   public async addMeasurement(
     newMeasurement: BabyMeasurement
@@ -39,11 +55,13 @@ export class BabyMeasurementsService {
         uid: this.firestoreHelper.generateUid(),
       };
 
-      await this.firestoreHelper.addToArray<Baby>(
-        this.babiesCollection,
-        babyUid,
-        this.measurementsField,
-        measurement
+      await this.pending.track(measurement.uid, 'syncing', () =>
+        this.firestoreHelper.addToArray<Baby>(
+          this.babiesCollection,
+          babyUid,
+          this.measurementsField,
+          measurement
+        )
       );
       console.log('Measurement added successfully:', measurement);
     } catch (error) {
@@ -55,6 +73,8 @@ export class BabyMeasurementsService {
   /**
    * Removes a measurement inside a transaction, so unrelated concurrent
    * changes to the measurements array are preserved.
+   *
+   * The measurement stays `saving` until it is gone from the list.
    */
   public async deleteMeasurement(
     measurement: BabyMeasurement
@@ -62,11 +82,17 @@ export class BabyMeasurementsService {
     try {
       const babyUid = this.requireBabyUid();
 
-      await this.firestoreHelper.mutateArray<Baby, BabyMeasurement>(
-        this.babiesCollection,
-        babyUid,
-        this.measurementsField,
-        (current) => current.filter((m) => m.uid !== measurement.uid)
+      await this.pending.track(
+        measurement.uid,
+        'saving',
+        () =>
+          this.firestoreHelper.mutateArray<Baby, BabyMeasurement>(
+            this.babiesCollection,
+            babyUid,
+            this.measurementsField,
+            (current) => current.filter((m) => m.uid !== measurement.uid)
+          ),
+        (measurements) => !measurements.some((m) => m.uid === measurement.uid)
       );
       console.log('Measurement deleted successfully:', measurement);
     } catch (error) {
@@ -78,6 +104,8 @@ export class BabyMeasurementsService {
   /**
    * Replaces a measurement in place inside a transaction, so unrelated
    * concurrent changes to the measurements array are preserved.
+   *
+   * The measurement stays `saving` until the list shows the edit.
    */
   public async updateMeasurement(
     updatedMeasurement: BabyMeasurement
@@ -85,24 +113,31 @@ export class BabyMeasurementsService {
     try {
       const babyUid = this.requireBabyUid();
 
-      await this.firestoreHelper.mutateArray<Baby, BabyMeasurement>(
-        this.babiesCollection,
-        babyUid,
-        this.measurementsField,
-        (current) => {
-          const index = current.findIndex(
-            (m) => m.uid === updatedMeasurement.uid
-          );
-          if (index === -1) {
-            throw new Error(
-              `Measurement ${updatedMeasurement.uid} no longer exists and cannot be updated.`
-            );
-          }
+      await this.pending.track(
+        updatedMeasurement.uid,
+        'saving',
+        () =>
+          this.firestoreHelper.mutateArray<Baby, BabyMeasurement>(
+            this.babiesCollection,
+            babyUid,
+            this.measurementsField,
+            (current) => {
+              const index = current.findIndex(
+                (m) => m.uid === updatedMeasurement.uid
+              );
+              if (index === -1) {
+                throw new Error(
+                  `Measurement ${updatedMeasurement.uid} no longer exists and cannot be updated.`
+                );
+              }
 
-          const next = [...current];
-          next[index] = updatedMeasurement;
-          return next;
-        }
+              const next = [...current];
+              next[index] = updatedMeasurement;
+              return next;
+            }
+          ),
+        (measurements) =>
+          measurements.some((m) => this.matchesEdit(m, updatedMeasurement))
       );
       console.log('Measurement updated successfully:', updatedMeasurement);
     } catch (error) {
@@ -118,5 +153,19 @@ export class BabyMeasurementsService {
       throw new Error('No baby is selected, cannot modify baby measurements.');
     }
     return babyUid;
+  }
+
+  /** Whether `measurement` already carries every field an edit can change. */
+  private matchesEdit(
+    measurement: BabyMeasurement,
+    edited: BabyMeasurement
+  ): boolean {
+    return (
+      measurement.uid === edited.uid &&
+      measurement.date.getTime() === edited.date.getTime() &&
+      measurement.height === edited.height &&
+      measurement.weight === edited.weight &&
+      measurement.headMeasure === edited.headMeasure
+    );
   }
 }

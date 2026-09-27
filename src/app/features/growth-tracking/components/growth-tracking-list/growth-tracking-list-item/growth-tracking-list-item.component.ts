@@ -15,7 +15,11 @@ import { MatMenuModule } from '@angular/material/menu';
 import { BabyMeasurementsService } from '../../../services/baby-measurements.service';
 import { BabyMeasurement } from '../../../../../models/baby.model';
 import { NotificationService } from '../../../../../core/services/notification.service';
+import { OfflineError } from '../../../../../core/firebase/fire-store-helper.service';
+import { PendingKind } from '../../../../../core/firebase/pending-writes';
 import NotificationStrings from '../../../../../shared/strings/notification.strings';
+import { BusyOverlayComponent } from '../../../../../shared/components/busy-overlay/busy-overlay.component';
+import { SyncPendingIconComponent } from '../../../../../shared/components/sync-pending-icon/sync-pending-icon.component';
 import GrowthTrackingListItemStrings from './growth-tracking-list-item.strings';
 
 @Component({
@@ -28,6 +32,8 @@ import GrowthTrackingListItemStrings from './growth-tracking-list-item.strings';
     MatIconModule,
     MatMenuModule,
     MatButtonModule,
+    BusyOverlayComponent,
+    SyncPendingIconComponent,
   ],
   templateUrl: './growth-tracking-list-item.component.html',
   styleUrl: './growth-tracking-list-item.component.scss',
@@ -49,17 +55,31 @@ export class GrowthTrackingListItemComponent implements OnDestroy {
     this.destroy$.complete();
   }
 
+  /**
+   * Read from the service by uid rather than kept here, so the state is not
+   * lost when the list re-creates this component mid-write.
+   */
+  public pendingKind(): PendingKind | null {
+    return this.babyMeasurementsService.pendingKind(this.measurement.uid);
+  }
+
   public async onDelete() {
+    if (this.pendingKind()) return;
+
     try {
       await this.babyMeasurementsService.deleteMeasurement(this.measurement);
     } catch (error) {
       this.notificationService.error(
-        NotificationStrings.DELETE_MEASUREMENT_FAILED
+        error instanceof OfflineError
+          ? NotificationStrings.CONNECTION_REQUIRED
+          : NotificationStrings.DELETE_MEASUREMENT_FAILED
       );
     }
   }
 
   public async openEditMeasurementForm(): Promise<void> {
+    if (this.pendingKind()) return;
+
     const { GrowthTrackingFormComponent } = await import(
       '../../growth-tracking-form/growth-tracking-form.component'
     );
@@ -93,7 +113,9 @@ export class GrowthTrackingListItemComponent implements OnDestroy {
       await this.babyMeasurementsService.updateMeasurement(editedMeasurement);
     } catch (error) {
       this.notificationService.error(
-        NotificationStrings.UPDATE_MEASUREMENT_FAILED
+        error instanceof OfflineError
+          ? NotificationStrings.CONNECTION_REQUIRED
+          : NotificationStrings.UPDATE_MEASUREMENT_FAILED
       );
     }
   }

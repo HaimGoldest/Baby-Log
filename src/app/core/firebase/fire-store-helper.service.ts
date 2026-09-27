@@ -25,6 +25,18 @@ import {
 import { Observable } from 'rxjs';
 
 /**
+ * Thrown by operations that need the server, such as transactions, when the
+ * browser reports no network. Failing up front replaces the SDK's own retries,
+ * which take several seconds to give up while offline.
+ */
+export class OfflineError extends Error {
+  public constructor(message = 'The client is offline.') {
+    super(message);
+    this.name = 'OfflineError';
+  }
+}
+
+/**
  * Thin wrapper around the Firestore SDK.
  *
  * One-shot operations return a `Promise` so that `await` always waits for the
@@ -291,7 +303,8 @@ export class FireStoreHelperService {
    * eliminating the lost-update race of a client-side read-modify-write.
    *
    * Note: transactions require connectivity. Unlike `addToArray`, they are not
-   * queued while offline.
+   * queued while offline, and reject with `OfflineError` straight away when the
+   * browser reports no network.
    *
    * @param collectionName Firestore collection path.
    * @param uid Document ID.
@@ -312,6 +325,14 @@ export class FireStoreHelperService {
         `[FireStoreHelperService] transaction on ${collectionName}/${uid}.${field}`
       );
       try {
+        // Only trusted when false: a server that is unreachable while the
+        // browser reports a network still goes through the SDK's retries.
+        if (!navigator.onLine) {
+          throw new OfflineError(
+            `[FireStoreHelperService] offline, cannot run a transaction on ${collectionName}/${uid}.`
+          );
+        }
+
         await runTransaction(this.firestore, async (transaction) => {
           const snap = await transaction.get(refDoc);
           if (!snap.exists()) {

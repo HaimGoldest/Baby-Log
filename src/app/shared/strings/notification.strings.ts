@@ -4,6 +4,8 @@ export default class NotificationStrings {
   public static readonly INFO_TITLE = 'שימו לב';
 
   public static readonly TRY_AGAIN = 'נסו שוב מאוחר יותר.';
+  public static readonly CONNECTION_REQUIRED =
+    'אין חיבור לרשת. עריכה ומחיקה זמינות רק כשיש חיבור.';
 
   public static readonly ADD_EVENT_FAILED =
     'הוספת האירוע נכשלה והוא לא נשמר. נסו שוב.';

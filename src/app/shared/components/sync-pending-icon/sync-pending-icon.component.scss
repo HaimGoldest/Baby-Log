@@ -1,0 +1,22 @@
+/* Held back for the first second: an online add is acknowledged well within
+   it, so the icon only appears for writes that are genuinely waiting instead
+   of flickering on every tap. */
+:host {
+  display: inline-flex;
+  align-items: center;
+  color: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  animation: sync-pending-fade-in 200ms ease-in 1s forwards;
+}
+
+mat-icon {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+}
+
+@keyframes sync-pending-fade-in {
+  to {
+    opacity: 1;
+  }
+}
