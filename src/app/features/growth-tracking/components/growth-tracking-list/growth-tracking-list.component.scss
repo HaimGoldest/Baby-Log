@@ -1,0 +1,5 @@
+/* A block formatting context, so the last card's bottom margin stays inside
+   the list rather than collapsing through the page wrappers. */
+.measurements-list {
+  display: flow-root;
+}
