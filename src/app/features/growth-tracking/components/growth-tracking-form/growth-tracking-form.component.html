@@ -18,6 +18,11 @@
           [for]="datepicker"
           matSuffix
         ></mat-datepicker-toggle>
+        @if (measurementForm.get('date')?.invalid) {
+          <mat-error>
+            {{ strings.ENTER_VALID_DATE }}
+          </mat-error>
+        }
       </mat-form-field>
 
       <!-- Weight Field -->
@@ -28,13 +33,7 @@
           matInput
           formControlName="weight"
           placeholder="{{ strings.WEIGHT_PLACEHOLDER }}"
-          required
           />
-          @if (measurementForm.get('weight')?.hasError('required')) {
-            <mat-error>
-              {{ strings.WEIGHT_IS_REQUIRED }}
-            </mat-error>
-          }
           @if (measurementForm.get('weight')?.hasError('pattern')) {
             <mat-error>
               {{ strings.ENTER_VALID_NUMBER }}
@@ -50,13 +49,7 @@
             matInput
             formControlName="height"
             placeholder="{{ strings.HEIGHT_PLACEHOLDER }}"
-            required
             />
-            @if (measurementForm.get('height')?.hasError('required')) {
-              <mat-error>
-                {{ strings.HEIGHT_IS_REQUIRED }}
-              </mat-error>
-            }
             @if (measurementForm.get('height')?.hasError('pattern')) {
               <mat-error>
                 {{ strings.ENTER_VALID_NUMBER }}
@@ -72,14 +65,7 @@
               matInput
               formControlName="headMeasure"
               placeholder="{{ strings.HEAD_PLACEHOLDER }}"
-              required
               />
-              @if (measurementForm.get('headMeasure')?.hasError('required')) {
-                <mat-error
-                  >
-                  {{ strings.HEAD_IS_REQUIRED }}
-                </mat-error>
-              }
               @if (measurementForm.get('headMeasure')?.hasError('pattern')) {
                 <mat-error
                   >
@@ -87,6 +73,10 @@
                 </mat-error>
               }
             </mat-form-field>
+
+            @if (measurementForm.hasError('atLeastOneMeasurement')) {
+              <p class="form-error">{{ strings.AT_LEAST_ONE_MEASUREMENT }}</p>
+            }
           </form>
         </mat-dialog-content>
 

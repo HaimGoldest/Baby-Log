@@ -12,15 +12,15 @@
     <div class="measurements-container">
       <div class="measurement">
         <p class="measurement-title">{{ strings.WEIGHT }}</p>
-        <p class="measurement-value">{{ measurement.weight }}</p>
+        <p class="measurement-value">{{ measurement.weight ?? '-' }}</p>
       </div>
       <div class="measurement">
         <p class="measurement-title">{{ strings.HEIGHT }}</p>
-        <p class="measurement-value">{{ measurement.height }}</p>
+        <p class="measurement-value">{{ measurement.height ?? '-' }}</p>
       </div>
       <div class="measurement">
         <p class="measurement-title">{{ strings.HEAD }}</p>
-        <p class="measurement-value">{{ measurement.headMeasure }}</p>
+        <p class="measurement-value">{{ measurement.headMeasure ?? '-' }}</p>
       </div>
     </div>
 

@@ -8,12 +8,9 @@ import {
 } from '@angular/core';
 import { BabyEventsService } from '../../services/baby-events.service';
 import { BabyEvent, BabyEventCategory } from '../../../../models/baby.model';
-import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
@@ -35,13 +32,10 @@ import BabyEventCardStrings from './baby-event-card.strings';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
     MatCardModule,
     MatIconModule,
     MatMenuModule,
     MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
     BusyOverlayComponent,
     SyncPendingIconComponent,
   ],

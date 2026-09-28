@@ -13,8 +13,7 @@ export default class GrowthTrackingFormStrings {
   public static readonly SAVE = 'שמירה';
   public static readonly CANCEL = 'ביטול';
 
-  public static readonly WEIGHT_IS_REQUIRED = 'נדרש משקל התינוק';
-  public static readonly HEIGHT_IS_REQUIRED = 'נדרש גובה התינוק';
-  public static readonly HEAD_IS_REQUIRED = 'נדרש היקף ראש התינוק';
+  public static readonly AT_LEAST_ONE_MEASUREMENT = 'יש להזין לפחות מדידה אחת';
   public static readonly ENTER_VALID_NUMBER = 'יש להזין מספר תקין';
+  public static readonly ENTER_VALID_DATE = 'יש להזין תאריך תקין';
 }

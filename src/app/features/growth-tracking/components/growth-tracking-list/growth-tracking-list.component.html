@@ -1,16 +1,14 @@
-<div class="row">
-  <div class="col-xs-12">
-    @for (measurement of measurements(); track measurement.uid) {
-    <app-growth-tracking-list-item
-      [measurement]="measurement"
-    ></app-growth-tracking-list-item>
-    } @empty {
-    <app-alert-message
-      type="info"
-      [title]="strings.NO_MEASURMENTS_FOUND"
-      [message]="strings.ADD_NEW_MEASURMENTS"
-    >
-    </app-alert-message>
-    }
-  </div>
+<div class="measurements-list">
+  @for (measurement of measurements(); track measurement.uid) {
+  <app-growth-tracking-list-item
+    [measurement]="measurement"
+  ></app-growth-tracking-list-item>
+  } @empty {
+  <app-alert-message
+    type="info"
+    [title]="strings.NO_MEASURMENTS_FOUND"
+    [message]="strings.ADD_NEW_MEASURMENTS"
+  >
+  </app-alert-message>
+  }
 </div>
