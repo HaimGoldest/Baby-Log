@@ -20,7 +20,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import { SessionStore } from '../../../../core/stores/session/session.store';
 import { NotificationService } from '../../../../core/services/notification.service';
+import { OfflineError } from '../../../../core/firebase/fire-store-helper.service';
+import { PendingKind } from '../../../../core/firebase/pending-writes';
 import NotificationStrings from '../../../../shared/strings/notification.strings';
+import { BusyOverlayComponent } from '../../../../shared/components/busy-overlay/busy-overlay.component';
+import { SyncPendingIconComponent } from '../../../../shared/components/sync-pending-icon/sync-pending-icon.component';
 import BabyEventCardStrings from './baby-event-card.strings';
 
 @Component({
@@ -38,6 +42,8 @@ import BabyEventCardStrings from './baby-event-card.strings';
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
+    BusyOverlayComponent,
+    SyncPendingIconComponent,
   ],
 })
 export class BabyEventCardComponent {
@@ -54,8 +60,18 @@ export class BabyEventCardComponent {
   @Output() filter = new EventEmitter<BabyEventCategory>();
   @Output() unfilter = new EventEmitter<void>();
 
+  /**
+   * Read from the service by uid rather than kept here: the virtual scroll
+   * recycles this component for other events, and a moved event can leave the
+   * rendered range mid-write.
+   */
+  public pendingKind(): PendingKind | null {
+    return this.babyEventsService.pendingKind(this.event.uid);
+  }
+
   public async onEdit(event?: MouseEvent): Promise<void> {
     if (event) event.preventDefault();
+    if (this.pendingKind()) return;
 
     const { BabyEventFormComponent } = await import(
       '../../components/baby-event-form/baby-event-form.component'
@@ -88,16 +104,26 @@ export class BabyEventCardComponent {
     try {
       await this.babyEventsService.updateEvent(editedEvent);
     } catch (error) {
-      this.notificationService.error(NotificationStrings.UPDATE_EVENT_FAILED);
+      this.notificationService.error(
+        error instanceof OfflineError
+          ? NotificationStrings.CONNECTION_REQUIRED
+          : NotificationStrings.UPDATE_EVENT_FAILED
+      );
     }
   }
 
   public async onDelete(): Promise<void> {
+    if (this.pendingKind()) return;
+
     // todo : add confirmation dialog
     try {
       await this.babyEventsService.deleteEvent(this.event);
     } catch (error) {
-      this.notificationService.error(NotificationStrings.DELETE_EVENT_FAILED);
+      this.notificationService.error(
+        error instanceof OfflineError
+          ? NotificationStrings.CONNECTION_REQUIRED
+          : NotificationStrings.DELETE_EVENT_FAILED
+      );
     }
   }
 

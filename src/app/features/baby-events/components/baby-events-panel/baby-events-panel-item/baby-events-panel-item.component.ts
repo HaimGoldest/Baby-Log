@@ -38,8 +38,13 @@ export class BabyEventsPanelItemComponent implements OnDestroy {
   private sessionStore = inject(SessionStore);
   private notificationService = inject(NotificationService);
 
-  /** Guards a rapid double tap from writing the same event twice. */
-  private saving = false;
+  /**
+   * Guards a rapid double tap from writing the same event twice. Time-based
+   * rather than held until the write resolves: offline, the write only
+   * resolves on reconnect, which silently swallowed every later tap.
+   */
+  private static readonly DOUBLE_TAP_WINDOW_MS = 800;
+  private lastAddAt = 0;
 
   private readonly menuTrigger = viewChild.required(MatMenuTrigger);
 
@@ -80,8 +85,14 @@ export class BabyEventsPanelItemComponent implements OnDestroy {
 
   /** A plain tap saves with no comment; the menu passes the chosen one. */
   public async addBabyEvent(comment: string): Promise<void> {
-    if (this.saving) return;
-    this.saving = true;
+    const now = Date.now();
+    if (
+      now - this.lastAddAt <
+      BabyEventsPanelItemComponent.DOUBLE_TAP_WINDOW_MS
+    ) {
+      return;
+    }
+    this.lastAddAt = now;
 
     const newEvent: BabyEvent = {
       uid: 'new',
@@ -96,8 +107,6 @@ export class BabyEventsPanelItemComponent implements OnDestroy {
       await this.babyEventsService.addEvent(newEvent);
     } catch (error) {
       this.notificationService.error(NotificationStrings.ADD_EVENT_FAILED);
-    } finally {
-      this.saving = false;
     }
   }
 

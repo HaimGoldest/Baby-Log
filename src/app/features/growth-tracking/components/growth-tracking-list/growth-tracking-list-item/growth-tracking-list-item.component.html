@@ -1,8 +1,13 @@
-<mat-card class="card-style">
+@let pending = pendingKind();
+
+<mat-card class="card-style" [attr.aria-busy]="pending === 'saving'">
   <div class="mat-card-content">
     <div class="date">
       {{ measurement?.date | date : "dd/MM/yy" }}
     </div>
+    @if (pending === 'syncing') {
+      <app-sync-pending-icon class="sync-icon"></app-sync-pending-icon>
+    }
 
     <div class="measurements-container">
       <div class="measurement">
@@ -23,20 +28,33 @@
     <button
       mat-icon-button
       [matMenuTriggerFor]="menu"
+      [disabled]="pending === 'saving'"
       aria-label="Icon-button with a menu"
       class="menu-button"
     >
       <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item (click)="openEditMeasurementForm()">
+      <button
+        mat-menu-item
+        [disabled]="pending !== null"
+        (click)="openEditMeasurementForm()"
+      >
         <mat-icon color="primary">edit</mat-icon>
         <span>{{ strings.EDIT }}</span>
       </button>
-      <button mat-menu-item (click)="onDelete()">
+      <button
+        mat-menu-item
+        [disabled]="pending !== null"
+        (click)="onDelete()"
+      >
         <mat-icon color="warn">delete</mat-icon>
         <span>{{ strings.DELETE }}</span>
       </button>
     </mat-menu>
   </div>
+
+  @if (pending === 'saving') {
+    <app-busy-overlay></app-busy-overlay>
+  }
 </mat-card>

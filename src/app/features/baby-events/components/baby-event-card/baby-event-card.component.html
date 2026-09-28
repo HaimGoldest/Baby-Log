@@ -1,4 +1,10 @@
-<mat-card class="card-style" (contextmenu)="onEdit($event)">
+@let pending = pendingKind();
+
+<mat-card
+  class="card-style"
+  [attr.aria-busy]="pending === 'saving'"
+  (contextmenu)="onEdit($event)"
+>
   <div class="mat-card-content">
     <div class="main-section">
       <h4 class="card-title">{{ event.category.value }}</h4>
@@ -14,9 +20,13 @@
           {{ event.time | date: "HH:mm" }}
         </mat-card-subtitle>
       </span>
+      @if (pending === 'syncing') {
+        <app-sync-pending-icon class="sync-icon"></app-sync-pending-icon>
+      }
       <button
         mat-icon-button
         [matMenuTriggerFor]="menu"
+        [disabled]="pending === 'saving'"
         aria-label="Icon-button with a menu"
         class="menu-button"
       >
@@ -24,7 +34,7 @@
       </button>
 
       <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="onEdit()">
+        <button mat-menu-item [disabled]="pending !== null" (click)="onEdit()">
           <mat-icon color="primary">edit</mat-icon>
           <span>{{ strings.EDIT }}</span>
         </button>
@@ -39,7 +49,11 @@
             <span>{{ strings.FILTER }}</span>
           </button>
         }
-        <button mat-menu-item (click)="onDelete()">
+        <button
+          mat-menu-item
+          [disabled]="pending !== null"
+          (click)="onDelete()"
+        >
           <mat-icon color="warn">delete</mat-icon>
           <span>{{ strings.DELETE }}</span>
         </button>
@@ -69,4 +83,8 @@
       }
     }
   </div>
+
+  @if (pending === 'saving') {
+    <app-busy-overlay></app-busy-overlay>
+  }
 </mat-card>

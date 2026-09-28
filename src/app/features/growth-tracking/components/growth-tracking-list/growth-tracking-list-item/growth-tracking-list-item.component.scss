@@ -10,6 +10,11 @@
     font-weight: bold;
   }
 
+  .sync-icon {
+    flex: 0 0 auto;
+    margin-inline-start: 6px;
+  }
+
   .measurements-container {
     flex: 1 1 auto;
     display: flex;
