@@ -11,12 +11,16 @@ export interface Baby {
   usersUids: string[];
 }
 
+/**
+ * Each measurement is optional and stored as null when not taken, but the
+ * form only saves a record that has at least one of them.
+ */
 export interface BabyMeasurement {
   uid: string;
   date: Date;
-  height: number;
-  weight: number;
-  headMeasure: number;
+  height: number | null;
+  weight: number | null;
+  headMeasure: number | null;
 }
 
 export interface BabyEvent {
