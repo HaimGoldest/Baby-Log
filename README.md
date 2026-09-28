@@ -8,7 +8,7 @@
 
 > Baby-Log is a SaaS (Software as a Service) web application born from a personal challenge.<br>
 > Recognizing the lack of adequate solutions in the market (both free and paid), I developed this dedicated application to address a specific need.<br>
-> Built using "Angular framework" with "Bootstrap 5" and "Angular Materials" Libraries for its user interface (with plans to transition exclusively to Angular Materials).<br>
+> Built using "Angular framework" with the "Angular Material" library for its user interface.<br>
 > This application use Firebase (Google Cloud) for the backend.<br>
 > Baby-Log represents a tailored solution to a problem that demanded a custom approach.
 
