@@ -31,6 +31,24 @@ module.exports = defineConfig([
           style: "kebab-case",
         },
       ],
+      "@typescript-eslint/explicit-function-return-type": [
+        "error",
+        {
+          allowExpressions: true,
+          allowTypedFunctionExpressions: true,
+          allowHigherOrderFunctions: true,
+          allowDirectConstAssertionInArrowFunctions: true,
+        },
+      ],
+      "@typescript-eslint/explicit-member-accessibility": [
+        "error",
+        {
+          accessibility: "explicit",
+          overrides: {
+            constructors: "no-public",
+          },
+        },
+      ],
     },
   },
   {
@@ -40,5 +58,5 @@ module.exports = defineConfig([
       angular.configs.templateAccessibility,
     ],
     rules: {},
-  }
+  },
 ]);
