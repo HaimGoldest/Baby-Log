@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { SessionStore } from '../stores/session/session.store';
-import { AppRoute } from '../../enums/app-route.enum';
+import { AppRoute, HOME_ROUTE } from '../../enums/app-route.enum';
 
 export const appGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
@@ -41,14 +41,14 @@ export const appGuard: CanActivateFn = (route, state) => {
 
   // Redirect to home if logged in and trying to access login page
   if (isLoggedIn && isLoginPage) {
-    console.log('AppGuard: Navigating to', AppRoute.HomePage);
-    return router.createUrlTree(['/', AppRoute.HomePage]);
+    console.log('AppGuard: Navigating to', HOME_ROUTE);
+    return router.createUrlTree(['/', HOME_ROUTE]);
   }
 
   // Redirect to home if logged in, habe a baby and trying to access add-baby page
   if (isLoggedIn && userHaveBabies && isAddBabyPage) {
-    console.log('AppGuard: Navigating to', AppRoute.HomePage);
-    return router.createUrlTree(['/', AppRoute.HomePage]);
+    console.log('AppGuard: Navigating to', HOME_ROUTE);
+    return router.createUrlTree(['/', HOME_ROUTE]);
   }
 
   // Allow access if logged in and not trying to access login page or if not logged in and accessing login page

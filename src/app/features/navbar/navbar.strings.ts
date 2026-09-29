@@ -5,4 +5,6 @@ export default class NavbarStrings {
   public static readonly ADD_BABY = 'הוספת תינוק';
   public static readonly BABY_INFO = 'פרטי תינוק';
   public static readonly LOGOUT = 'יציאה';
+  public static readonly USER_IMAGE_ALT = 'תמונת משתמש';
+  public static readonly BABY_IMAGE_ALT = 'תמונת התינוק';
 }

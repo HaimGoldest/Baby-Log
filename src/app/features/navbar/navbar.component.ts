@@ -8,7 +8,7 @@ import {
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SessionStore } from '../../core/stores/session/session.store';
 import { BabiesStore } from '../../core/stores/babies/babies.store';
-import { AppRoute } from '../../enums/app-route.enum';
+import { AppRoute, HOME_ROUTE } from '../../enums/app-route.enum';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -40,7 +40,7 @@ export class NavbarComponent {
   public userImageUrl = this.sessionStore.userimageUrl;
   public userHaveBabies = this.sessionStore.userHaveBabies;
   public babyImageUrl = computed(() => this.babiesStore.baby()?.imageUrl);
-  public homePage = AppRoute.HomePage;
+  public homePage = HOME_ROUTE;
   public babyEventsPage = AppRoute.BabyEvents;
   public growthTrackingPage = AppRoute.GrowthTracking;
   public babyEventPreferencesPage = AppRoute.BabyEventPreferences;

@@ -10,6 +10,7 @@ import {
   uploadBytes,
   getDownloadURL,
   deleteObject,
+  StorageError,
 } from '@angular/fire/storage';
 
 @Injectable({ providedIn: 'root' })
@@ -33,8 +34,8 @@ export class FireStorageHelperService {
       const r = ref(this.storage, path);
       try {
         return await getDownloadURL(r);
-      } catch (e: any) {
-        if (e.code === 'storage/object-not-found') {
+      } catch (e: unknown) {
+        if (e instanceof StorageError && e.code === 'storage/object-not-found') {
           console.warn('File not found:', path);
           return null;
         }
@@ -51,8 +52,8 @@ export class FireStorageHelperService {
       try {
         await deleteObject(r);
         console.log('File deleted successfully:', path);
-      } catch (e: any) {
-        if (e.code === 'storage/object-not-found') {
+      } catch (e: unknown) {
+        if (e instanceof StorageError && e.code === 'storage/object-not-found') {
           console.warn('File not found for deletion:', path);
           return;
         }

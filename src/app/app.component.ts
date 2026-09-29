@@ -6,7 +6,7 @@ import { NotificationHostComponent } from './shared/components/notification-host
 import { RouteTrackerService } from './core/services/route-tracker.service';
 import { AppService } from './core/services/app.service';
 import { SessionStore } from './core/stores/session/session.store';
-import { AppRoute } from './enums/app-route.enum';
+import { AppRoute, HOME_ROUTE } from './enums/app-route.enum';
 
 @Component({
   selector: 'app-root',
@@ -45,7 +45,7 @@ export class AppComponent {
       const status = this.sessionStore.status();
 
       if (status === 'ready') {
-        this.router.navigate(['/', AppRoute.HomePage]);
+        this.router.navigate(['/', HOME_ROUTE]);
       } else if (status === 'signed-out') {
         this.router.navigate(['/', AppRoute.Login]);
       }
