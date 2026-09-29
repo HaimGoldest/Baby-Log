@@ -30,7 +30,7 @@ import { Observable } from 'rxjs';
  * which take several seconds to give up while offline.
  */
 export class OfflineError extends Error {
-  public constructor(message = 'The client is offline.') {
+  constructor(message = 'The client is offline.') {
     super(message);
     this.name = 'OfflineError';
   }

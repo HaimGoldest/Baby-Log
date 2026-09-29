@@ -35,7 +35,7 @@ export class AppComponent {
       this.appService.isLoading(),
   );
 
-  public constructor() {
+  constructor() {
     // Navigation on session transitions lives at the shell rather than in the
     // store: the store owns data, and `appGuard` owns the routing rules.
     // Aiming at the home page is enough - the guard redirects on from there

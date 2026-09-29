@@ -59,7 +59,7 @@ export class AddBabyPage {
   public imagePreview$?: Observable<string>;
   public strings = AddBabyStrings;
 
-  onSwitchMode() {
+  public onSwitchMode(): void {
     this.isNewBabyMode = !this.isNewBabyMode;
     this.clearErrorMessage();
   }
@@ -75,7 +75,7 @@ export class AddBabyPage {
    * this used to toggle never covered the read, and stayed on for good when
    * the input came back empty.
    */
-  onImageSelected(event: Event) {
+  public onImageSelected(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
 
     // Mirror the input: when it comes back empty, drop the previous image
@@ -99,7 +99,7 @@ export class AddBabyPage {
     });
   }
 
-  public async onSubmit(form: NgForm) {
+  public async onSubmit(form: NgForm): Promise<void> {
     if (!form.valid) return;
 
     this.clearErrorMessage();
@@ -143,7 +143,7 @@ export class AddBabyPage {
       }
 
       return true;
-    } catch (error) {
+    } catch {
       this.showErrorMessage(this.strings.ADD_BABY_FAILED);
       return false;
     }
@@ -154,7 +154,7 @@ export class AddBabyPage {
     try {
       await this.sessionStore.addExistingBaby(uid);
       return true;
-    } catch (error) {
+    } catch {
       this.showErrorMessage(this.strings.ADD_EXISTING_BABY_FAILED);
       return false;
     }
@@ -164,12 +164,12 @@ export class AddBabyPage {
     const baby = this.babiesStore.baby();
     try {
       await this.babiesStore.uploadImage(baby.uid, this.selectedImage);
-    } catch (error) {
+    } catch {
       this.showErrorMessage(this.strings.UPLOAD_IMAGE_FAILED);
     }
   }
 
-  private showErrorMessage(message: string) {
+  private showErrorMessage(message: string): void {
     // todo - use generic error dialog component
     //
     // No auto-dismiss timer: overlapping timers from repeated attempts used to

@@ -37,7 +37,7 @@ export class PendingWrites<T extends { uid: string }> {
   private readonly state = signal<ReadonlyMap<string, PendingKind>>(new Map());
   private readonly items$: Observable<readonly T[]>;
 
-  public constructor(items: Signal<readonly T[]>) {
+  constructor(items: Signal<readonly T[]>) {
     this.items$ = toObservable(items);
   }
 

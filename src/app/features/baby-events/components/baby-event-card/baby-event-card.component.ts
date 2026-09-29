@@ -51,8 +51,8 @@ export class BabyEventCardComponent {
 
   @Input({ required: true }) public event: BabyEvent;
   @Input({ required: true }) public filterMode: boolean;
-  @Output() filter = new EventEmitter<BabyEventCategory>();
-  @Output() unfilter = new EventEmitter<void>();
+  @Output() public filter = new EventEmitter<BabyEventCategory>();
+  @Output() public unfilter = new EventEmitter<void>();
 
   /**
    * Read from the service by uid rather than kept here: the virtual scroll

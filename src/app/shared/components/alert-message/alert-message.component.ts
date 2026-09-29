@@ -10,7 +10,7 @@ import { MatCardModule } from '@angular/material/card';
   styleUrls: ['./alert-message.component.scss'],
 })
 export class AlertMessageComponent {
-  @Input() type: 'success' | 'error' | 'info' | 'warning' = 'info';
-  @Input() title = '';
-  @Input() message = '';
+  @Input() public type: 'success' | 'error' | 'info' | 'warning' = 'info';
+  @Input() public title = '';
+  @Input() public message = '';
 }

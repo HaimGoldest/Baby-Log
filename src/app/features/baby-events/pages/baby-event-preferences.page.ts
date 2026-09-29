@@ -96,7 +96,7 @@ export class BabyEventsPreferencesPage {
     ),
   );
 
-  public constructor() {
+  constructor() {
     this.seedDraft();
   }
 
@@ -152,7 +152,7 @@ export class BabyEventsPreferencesPage {
     try {
       await this.sessionStore.updateEventFavorites(favorites);
       this.navigateEventsPage();
-    } catch (error) {
+    } catch {
       this.notificationService.error(
         NotificationStrings.SAVE_PREFERENCES_FAILED,
       );

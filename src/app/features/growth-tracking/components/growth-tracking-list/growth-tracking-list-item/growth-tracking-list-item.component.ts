@@ -39,16 +39,13 @@ import GrowthTrackingListItemStrings from './growth-tracking-list-item.strings';
   styleUrl: './growth-tracking-list-item.component.scss',
 })
 export class GrowthTrackingListItemComponent implements OnDestroy {
-  @Input({ required: true }) measurement!: BabyMeasurement;
+  @Input({ required: true }) public measurement!: BabyMeasurement;
+  private babyMeasurementsService = inject(BabyMeasurementsService);
+  private dialog = inject(MatDialog);
   private notificationService = inject(NotificationService);
   private destroy$ = new Subject<void>();
 
   public strings = GrowthTrackingListItemStrings;
-
-  public constructor(
-    private babyMeasurementsService: BabyMeasurementsService,
-    private dialog: MatDialog
-  ) {}
 
   public ngOnDestroy(): void {
     this.destroy$.next();
@@ -63,7 +60,7 @@ export class GrowthTrackingListItemComponent implements OnDestroy {
     return this.babyMeasurementsService.pendingKind(this.measurement.uid);
   }
 
-  public async onDelete() {
+  public async onDelete(): Promise<void> {
     if (this.pendingKind()) return;
 
     try {
@@ -100,7 +97,7 @@ export class GrowthTrackingListItemComponent implements OnDestroy {
       });
   }
 
-  private async updateMeasurement(data: BabyMeasurement) {
+  private async updateMeasurement(data: BabyMeasurement): Promise<void> {
     const editedMeasurement: BabyMeasurement = {
       ...this.measurement,
       date: new Date(data.date),

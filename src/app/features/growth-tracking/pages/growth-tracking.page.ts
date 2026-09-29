@@ -28,13 +28,10 @@ import NotificationStrings from '../../../shared/strings/notification.strings';
   styleUrl: './growth-tracking.page.scss',
 })
 export class GrowthTrackingPage implements OnDestroy {
+  private babyMeasurementsService = inject(BabyMeasurementsService);
+  private dialog = inject(MatDialog);
   private notificationService = inject(NotificationService);
   private destroy$ = new Subject<void>();
-
-  public constructor(
-    private babyMeasurementsService: BabyMeasurementsService,
-    private dialog: MatDialog
-  ) {}
 
   public ngOnDestroy(): void {
     this.destroy$.next();
@@ -73,7 +70,7 @@ export class GrowthTrackingPage implements OnDestroy {
 
     try {
       await this.babyMeasurementsService.addMeasurement(measurement);
-    } catch (error) {
+    } catch {
       this.notificationService.error(
         NotificationStrings.ADD_MEASUREMENT_FAILED
       );

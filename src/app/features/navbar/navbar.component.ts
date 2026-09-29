@@ -49,7 +49,7 @@ export class NavbarComponent {
 
   public strings = NavbarStrings;
 
-  public logout() {
+  public logout(): void {
     this.sessionStore.signOut();
   }
 

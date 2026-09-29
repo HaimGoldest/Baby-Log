@@ -52,7 +52,7 @@ export class BabyEventsComponent {
     return event.uid;
   }
 
-  onFilter(category: BabyEventCategory) {
+  public onFilter(category: BabyEventCategory): void {
     if (category === this.currentFilteredCategory()) {
       this.onUnfilter();
       return;
@@ -61,7 +61,7 @@ export class BabyEventsComponent {
     this.currentFilteredCategory.set(category);
   }
 
-  onUnfilter() {
+  public onUnfilter(): void {
     this.currentFilteredCategory.set(null);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -69,7 +69,7 @@ export class BabyInfoPage {
     try {
       await this.sessionStore.removeBaby(this.baby());
       this.navigateAfterBabyDeletion();
-    } catch (error) {
+    } catch {
       this.notificationService.error(NotificationStrings.DELETE_BABY_FAILED);
     }
   }
@@ -82,7 +82,7 @@ export class BabyInfoPage {
     });
   }
 
-  private navigateAfterBabyDeletion() {
+  private navigateAfterBabyDeletion(): void {
     this.router.navigate(['/', AppRoute.AddBaby]);
   }
 }

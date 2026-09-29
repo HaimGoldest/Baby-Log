@@ -1,4 +1,4 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, Signal, signal, computed, inject } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
 import { AppRoute } from '../../enums/app-route.enum';
@@ -7,8 +7,9 @@ import { AppRoute } from '../../enums/app-route.enum';
 export class RouteTrackerService {
   private readonly _currentRoute = signal<AppRoute | ''>('');
   public readonly currentRoute = this._currentRoute.asReadonly();
+  private router = inject(Router);
 
-  constructor(private router: Router) {
+  constructor() {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
@@ -24,7 +25,7 @@ export class RouteTrackerService {
   /**
    * Returns a signal<boolean> if the current route equals the given AppRoute
    */
-  public isCurrentRoute(route: AppRoute) {
+  public isCurrentRoute(route: AppRoute): Signal<boolean> {
     return computed(() => this.currentRoute() === route);
   }
 

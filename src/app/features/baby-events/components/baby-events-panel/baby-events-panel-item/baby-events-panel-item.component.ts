@@ -105,7 +105,7 @@ export class BabyEventsPanelItemComponent implements OnDestroy {
 
     try {
       await this.babyEventsService.addEvent(newEvent);
-    } catch (error) {
+    } catch {
       this.notificationService.error(NotificationStrings.ADD_EVENT_FAILED);
     }
   }
