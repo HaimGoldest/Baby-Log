@@ -59,8 +59,8 @@ export class BabyEventsPanelItemComponent implements OnDestroy {
     event.stopPropagation();
   };
 
-  public babyEventCategory = input.required<BabyEventCategoryView>();
-  public activeCategoryId = input<string | null>(null);
+  public readonly babyEventCategory = input.required<BabyEventCategoryView>();
+  public readonly activeCategoryId = input<string | null>(null);
   public filter = output<BabyEventCategory>();
 
   public readonly strings = BabyEventsPanelItemStrings;

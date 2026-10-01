@@ -1,11 +1,13 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
+  computed,
+  DestroyRef,
   inject,
-  Input,
-  Output,
+  input,
+  output,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BabyEventsService } from '../../services/baby-events.service';
 import { BabyEvent, BabyEventCategory } from '../../../../models/baby.model';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,11 +16,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
-import { Subject, takeUntil } from 'rxjs';
 import { SessionStore } from '../../../../core/stores/session/session.store';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { OfflineError } from '../../../../core/firebase/fire-store-helper.service';
-import { PendingKind } from '../../../../core/firebase/pending-writes';
 import NotificationStrings from '../../../../shared/strings/notification.strings';
 import { BusyOverlayComponent } from '../../../../shared/components/busy-overlay/busy-overlay.component';
 import { SyncPendingIconComponent } from '../../../../shared/components/sync-pending-icon/sync-pending-icon.component';
@@ -45,27 +45,32 @@ export class BabyEventCardComponent {
   private sessionStore = inject(SessionStore);
   private dialog = inject(MatDialog);
   private notificationService = inject(NotificationService);
-  private destroy$ = new Subject<void>();
+  private destroyRef = inject(DestroyRef);
 
   public strings = BabyEventCardStrings;
 
-  @Input({ required: true }) public event: BabyEvent;
-  @Input({ required: true }) public filterMode: boolean;
-  @Output() public filter = new EventEmitter<BabyEventCategory>();
-  @Output() public unfilter = new EventEmitter<void>();
+  public readonly event = input.required<BabyEvent>();
+  public readonly filterMode = input.required<boolean>();
+  public readonly filter = output<BabyEventCategory>();
+  public readonly unfilter = output<void>();
 
   /**
    * Read from the service by uid rather than kept here: the virtual scroll
    * recycles this component for other events, and a moved event can leave the
    * rendered range mid-write.
    */
-  public pendingKind(): PendingKind | null {
-    return this.babyEventsService.pendingKind(this.event.uid);
-  }
+  public readonly pendingKind = computed(() =>
+    this.babyEventsService.pendingKind(this.event().uid),
+  );
 
   public async onEdit(event?: MouseEvent): Promise<void> {
     if (event) event.preventDefault();
     if (this.pendingKind()) return;
+
+    // Captured before anything async: the virtual scroll can recycle this
+    // component for another event while the dialog is open, and the edit
+    // must still land on the event it was opened for.
+    const babyEvent = this.event();
 
     const { BabyEventFormComponent } = await import(
       '../../components/baby-event-form/baby-event-form.component'
@@ -74,22 +79,25 @@ export class BabyEventCardComponent {
     const dialogRef = this.dialog.open(BabyEventFormComponent, {
       width: '90vw',
       maxWidth: '300px',
-      data: this.event,
+      data: babyEvent,
     });
 
     dialogRef
       .afterClosed()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((result: BabyEvent) => {
         if (result) {
-          this.updateEvent(result);
+          this.updateEvent(babyEvent, result);
         }
       });
   }
 
-  private async updateEvent(data: BabyEvent): Promise<void> {
+  private async updateEvent(
+    babyEvent: BabyEvent,
+    data: BabyEvent
+  ): Promise<void> {
     const editedEvent: BabyEvent = {
-      ...this.event,
+      ...babyEvent,
       ...data,
       time: new Date(data.time),
       lastEditedBy: this.sessionStore.user().name,
@@ -111,7 +119,7 @@ export class BabyEventCardComponent {
 
     // todo : add confirmation dialog
     try {
-      await this.babyEventsService.deleteEvent(this.event);
+      await this.babyEventsService.deleteEvent(this.event());
     } catch (error) {
       this.notificationService.error(
         error instanceof OfflineError
@@ -122,7 +130,7 @@ export class BabyEventCardComponent {
   }
 
   public onFilter(): void {
-    this.filter.emit(this.event.category);
+    this.filter.emit(this.event().category);
   }
 
   public onUnfilter(): void {

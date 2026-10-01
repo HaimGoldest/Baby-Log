@@ -1,10 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   inject,
-  OnDestroy,
 } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { BabyMeasurementsService } from '../services/baby-measurements.service';
 import { MatIconModule } from '@angular/material/icon';
@@ -27,16 +27,11 @@ import NotificationStrings from '../../../shared/strings/notification.strings';
   templateUrl: './growth-tracking.page.html',
   styleUrl: './growth-tracking.page.scss',
 })
-export class GrowthTrackingPage implements OnDestroy {
+export class GrowthTrackingPage {
   private babyMeasurementsService = inject(BabyMeasurementsService);
   private dialog = inject(MatDialog);
   private notificationService = inject(NotificationService);
-  private destroy$ = new Subject<void>();
-
-  public ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
+  private destroyRef = inject(DestroyRef);
 
   public async openAddMeasurementForm(): Promise<void> {
     const { GrowthTrackingFormComponent } = await import(
@@ -51,7 +46,7 @@ export class GrowthTrackingPage implements OnDestroy {
 
     dialogRef
       .afterClosed()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((result: BabyMeasurement) => {
         if (result) {
           this.addMeasurement(result);

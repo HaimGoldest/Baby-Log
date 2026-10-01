@@ -49,6 +49,8 @@ module.exports = defineConfig([
           },
         },
       ],
+      "@angular-eslint/prefer-signals": "error",
+      "@angular-eslint/prefer-output-emitter-ref": "error",
     },
   },
   {

@@ -30,9 +30,9 @@ import { FavoriteDraft } from '../../pages/baby-event-preferences.vm';
   ],
 })
 export class BabyEventFavoriteItemComponent {
-  public favorite = input.required<FavoriteDraft>();
-  public isFirst = input.required<boolean>();
-  public isLast = input.required<boolean>();
+  public readonly favorite = input.required<FavoriteDraft>();
+  public readonly isFirst = input.required<boolean>();
+  public readonly isLast = input.required<boolean>();
 
   public moveUp = output<void>();
   public moveDown = output<void>();

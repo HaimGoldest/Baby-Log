@@ -1,6 +1,6 @@
 <div class="add-baby-container">
   <h2 class="page-title">
-    {{ isNewBabyMode ? strings.ADD_NEW_BABY : strings.ADD_EXISTING_BABY }}
+    {{ isNewBabyMode() ? strings.ADD_NEW_BABY : strings.ADD_EXISTING_BABY }}
   </h2>
 
   <form
@@ -9,7 +9,7 @@
     (input)="clearErrorMessage()"
     class="add-baby-form"
     >
-    @if (isNewBabyMode) {
+    @if (isNewBabyMode()) {
       <!-- Name -->
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>{{ strings.BABY_NAME }}</mat-label>
@@ -54,7 +54,7 @@
               accept="image/*"
               (change)="onImageSelected($event)"
               />
-              @if (imagePreview$ | async; as preview) {
+              @if (imagePreview(); as preview) {
                 <div class="image-preview">
                   <img [src]="preview" alt="Selected Image" />
                 </div>
@@ -86,7 +86,7 @@
               class="change_mode_button"
               (click)="onSwitchMode()"
               >
-              {{ isNewBabyMode ? strings.ADD_TO_EXISTING_BABY :
+              {{ isNewBabyMode() ? strings.ADD_TO_EXISTING_BABY :
               strings.ADD_TO_NEW_BABY }}
             </button>
           </div>

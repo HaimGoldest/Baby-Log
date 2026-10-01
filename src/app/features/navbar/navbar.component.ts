@@ -39,7 +39,9 @@ export class NavbarComponent {
   public isLoggedIn = this.sessionStore.isLoggedIn;
   public userImageUrl = this.sessionStore.userimageUrl;
   public userHaveBabies = this.sessionStore.userHaveBabies;
-  public babyImageUrl = computed(() => this.babiesStore.baby()?.imageUrl);
+  public readonly babyImageUrl = computed(
+    () => this.babiesStore.baby()?.imageUrl,
+  );
   public homePage = HOME_ROUTE;
   public babyEventsPage = AppRoute.BabyEvents;
   public growthTrackingPage = AppRoute.GrowthTracking;

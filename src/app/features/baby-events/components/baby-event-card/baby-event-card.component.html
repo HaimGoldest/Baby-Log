@@ -7,17 +7,17 @@
 >
   <div class="mat-card-content">
     <div class="main-section">
-      <h4 class="card-title">{{ event.category.value }}</h4>
+      <h4 class="card-title">{{ event().category.value }}</h4>
       <img
         mat-card-image
-        src="{{ event.category.imagePath }}"
-        alt="{{ event.category.id }}"
+        src="{{ event().category.imagePath }}"
+        alt="{{ event().category.id }}"
         class="event-img"
       />
       <span class="time-info">
         <mat-card-subtitle class="time-text">
-          {{ event.time | date: "dd/MM/yy" }} -
-          {{ event.time | date: "HH:mm" }}
+          {{ event().time | date: "dd/MM/yy" }} -
+          {{ event().time | date: "HH:mm" }}
         </mat-card-subtitle>
       </span>
       @if (pending === 'syncing') {
@@ -38,7 +38,7 @@
           <mat-icon color="primary">edit</mat-icon>
           <span>{{ strings.EDIT }}</span>
         </button>
-        @if (filterMode) {
+        @if (filterMode()) {
           <button mat-menu-item (click)="onUnfilter()">
             <mat-icon color="accent">filter_none</mat-icon>
             <span>{{ strings.UNFILTER }}</span>
@@ -60,25 +60,25 @@
       </mat-menu>
     </div>
 
-    @if (event.comment) {
+    @if (event().comment) {
       <div class="comment-section">
         <p>
-          <strong>{{ strings.COMMENT }}:</strong> {{ event.comment }}
+          <strong>{{ strings.COMMENT }}:</strong> {{ event().comment }}
         </p>
       </div>
     }
   </div>
 
   <div class="users-section">
-    @if (event.createdBy === event.lastEditedBy) {
+    @if (event().createdBy === event().lastEditedBy) {
       <p class="same-user">
-        {{ `${strings.CREATED_AND_EDITED_BY}: ${event.createdBy}` }}
+        {{ `${strings.CREATED_AND_EDITED_BY}: ${event().createdBy}` }}
       </p>
     } @else {
-      <p class="creation">{{ `${strings.CREATED_BY}: ${event.createdBy}` }}</p>
-      @if (event.lastEditedBy) {
+      <p class="creation">{{ `${strings.CREATED_BY}: ${event().createdBy}` }}</p>
+      @if (event().lastEditedBy) {
         <p class="editing">
-          {{ `${strings.EDITED_BY}: ${event.lastEditedBy}` }}
+          {{ `${strings.EDITED_BY}: ${event().lastEditedBy}` }}
         </p>
       }
     }

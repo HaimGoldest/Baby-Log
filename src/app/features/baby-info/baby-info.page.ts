@@ -33,7 +33,9 @@ export class BabyInfoPage {
   public strings = BabyInfoStrings;
 
   public baby = this.babiesStore.baby;
-  public babyImageUrl = computed(() => this.babiesStore.baby()?.imageUrl);
+  public readonly babyImageUrl = computed(
+    () => this.babiesStore.baby()?.imageUrl,
+  );
 
   public onImageSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
