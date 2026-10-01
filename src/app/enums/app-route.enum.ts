@@ -1,5 +1,4 @@
 export enum AppRoute {
-  HomePage = 'baby-events',
   BabyEvents = 'baby-events',
   BabyEventPreferences = 'preferences',
   GrowthTracking = 'growth-tracking',
@@ -8,3 +7,5 @@ export enum AppRoute {
   Login = 'login',
   Loading = 'loading',
 }
+
+export const HOME_ROUTE = AppRoute.BabyEvents;

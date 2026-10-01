@@ -28,7 +28,9 @@ import { AlertMessageComponent } from '../../../shared/components/alert-message/
 })
 export class BabyEventsComponent {
   private readonly babyEventsService = inject(BabyEventsService);
-  private currentFilteredCategory = signal<BabyEventCategory | null>(null);
+  private readonly currentFilteredCategory = signal<BabyEventCategory | null>(
+    null,
+  );
 
   private readonly allEvents = this.babyEventsService.events;
   private readonly filteredEvents = computed(() =>
@@ -38,7 +40,9 @@ export class BabyEventsComponent {
   );
 
   public readonly strings = BabyEventsStrings;
-  public filterMode = computed(() => this.currentFilteredCategory() !== null);
+  public readonly filterMode = computed(
+    () => this.currentFilteredCategory() !== null,
+  );
 
   public readonly activeCategoryId = computed(
     () => this.currentFilteredCategory()?.id ?? null,
@@ -52,8 +56,10 @@ export class BabyEventsComponent {
     return event.uid;
   }
 
-  onFilter(category: BabyEventCategory) {
-    if (category === this.currentFilteredCategory()) {
+  public onFilter(category: BabyEventCategory): void {
+    // By id, not by reference: a card emits the category stored on its event,
+    // while the panel emits the catalogue's own object for the same category.
+    if (category.id === this.activeCategoryId()) {
       this.onUnfilter();
       return;
     }
@@ -61,7 +67,7 @@ export class BabyEventsComponent {
     this.currentFilteredCategory.set(category);
   }
 
-  onUnfilter() {
+  public onUnfilter(): void {
     this.currentFilteredCategory.set(null);
   }
 }

@@ -1,11 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
+  DestroyRef,
   inject,
-  Input,
-  OnDestroy,
+  input,
 } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,7 +17,6 @@ import { BabyMeasurementsService } from '../../../services/baby-measurements.ser
 import { BabyMeasurement } from '../../../../../models/baby.model';
 import { NotificationService } from '../../../../../core/services/notification.service';
 import { OfflineError } from '../../../../../core/firebase/fire-store-helper.service';
-import { PendingKind } from '../../../../../core/firebase/pending-writes';
 import NotificationStrings from '../../../../../shared/strings/notification.strings';
 import { BusyOverlayComponent } from '../../../../../shared/components/busy-overlay/busy-overlay.component';
 import { SyncPendingIconComponent } from '../../../../../shared/components/sync-pending-icon/sync-pending-icon.component';
@@ -38,36 +38,28 @@ import GrowthTrackingListItemStrings from './growth-tracking-list-item.strings';
   templateUrl: './growth-tracking-list-item.component.html',
   styleUrl: './growth-tracking-list-item.component.scss',
 })
-export class GrowthTrackingListItemComponent implements OnDestroy {
-  @Input({ required: true }) measurement!: BabyMeasurement;
+export class GrowthTrackingListItemComponent {
+  public readonly measurement = input.required<BabyMeasurement>();
+  private babyMeasurementsService = inject(BabyMeasurementsService);
+  private dialog = inject(MatDialog);
   private notificationService = inject(NotificationService);
-  private destroy$ = new Subject<void>();
+  private destroyRef = inject(DestroyRef);
 
   public strings = GrowthTrackingListItemStrings;
-
-  public constructor(
-    private babyMeasurementsService: BabyMeasurementsService,
-    private dialog: MatDialog
-  ) {}
-
-  public ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
 
   /**
    * Read from the service by uid rather than kept here, so the state is not
    * lost when the list re-creates this component mid-write.
    */
-  public pendingKind(): PendingKind | null {
-    return this.babyMeasurementsService.pendingKind(this.measurement.uid);
-  }
+  public readonly pendingKind = computed(() =>
+    this.babyMeasurementsService.pendingKind(this.measurement().uid),
+  );
 
-  public async onDelete() {
+  public async onDelete(): Promise<void> {
     if (this.pendingKind()) return;
 
     try {
-      await this.babyMeasurementsService.deleteMeasurement(this.measurement);
+      await this.babyMeasurementsService.deleteMeasurement(this.measurement());
     } catch (error) {
       this.notificationService.error(
         error instanceof OfflineError
@@ -80,6 +72,10 @@ export class GrowthTrackingListItemComponent implements OnDestroy {
   public async openEditMeasurementForm(): Promise<void> {
     if (this.pendingKind()) return;
 
+    // Captured before anything async, so the edit lands on the measurement
+    // the dialog was opened for even if this component is rebound meanwhile.
+    const measurement = this.measurement();
+
     const { GrowthTrackingFormComponent } = await import(
       '../../growth-tracking-form/growth-tracking-form.component'
     );
@@ -87,22 +83,25 @@ export class GrowthTrackingListItemComponent implements OnDestroy {
     const dialogRef = this.dialog.open(GrowthTrackingFormComponent, {
       width: '90vw',
       maxWidth: '300px',
-      data: this.measurement,
+      data: measurement,
     });
 
     dialogRef
       .afterClosed()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((result: BabyMeasurement) => {
         if (result) {
-          this.updateMeasurement(result);
+          this.updateMeasurement(measurement, result);
         }
       });
   }
 
-  private async updateMeasurement(data: BabyMeasurement) {
+  private async updateMeasurement(
+    measurement: BabyMeasurement,
+    data: BabyMeasurement
+  ): Promise<void> {
     const editedMeasurement: BabyMeasurement = {
-      ...this.measurement,
+      ...measurement,
       date: new Date(data.date),
       height: data.height,
       weight: data.weight,

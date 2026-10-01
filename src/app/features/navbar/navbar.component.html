@@ -19,6 +19,7 @@
     <img
       class="nav-image"
       [src]="userImageUrl()"
+      [alt]="strings.USER_IMAGE_ALT"
       (error)="onImageError($event)"
     />
   }
@@ -27,6 +28,7 @@
     <img
       class="nav-image"
       [src]="babyImageUrl()"
+      [alt]="strings.BABY_IMAGE_ALT"
       (error)="onImageError($event)"
     />
   }

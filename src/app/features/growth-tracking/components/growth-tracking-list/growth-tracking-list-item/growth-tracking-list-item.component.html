@@ -3,7 +3,7 @@
 <mat-card class="card-style" [attr.aria-busy]="pending === 'saving'">
   <div class="mat-card-content">
     <div class="date">
-      {{ measurement?.date | date : "dd/MM/yy" }}
+      {{ measurement().date | date : "dd/MM/yy" }}
     </div>
     @if (pending === 'syncing') {
       <app-sync-pending-icon class="sync-icon"></app-sync-pending-icon>
@@ -12,15 +12,15 @@
     <div class="measurements-container">
       <div class="measurement">
         <p class="measurement-title">{{ strings.WEIGHT }}</p>
-        <p class="measurement-value">{{ measurement.weight ?? '-' }}</p>
+        <p class="measurement-value">{{ measurement().weight ?? '-' }}</p>
       </div>
       <div class="measurement">
         <p class="measurement-title">{{ strings.HEIGHT }}</p>
-        <p class="measurement-value">{{ measurement.height ?? '-' }}</p>
+        <p class="measurement-value">{{ measurement().height ?? '-' }}</p>
       </div>
       <div class="measurement">
         <p class="measurement-title">{{ strings.HEAD }}</p>
-        <p class="measurement-value">{{ measurement.headMeasure ?? '-' }}</p>
+        <p class="measurement-value">{{ measurement().headMeasure ?? '-' }}</p>
       </div>
     </div>
 

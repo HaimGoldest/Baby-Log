@@ -4,7 +4,6 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -16,7 +15,6 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonModule } from '@angular/material/button';
 
 import { AppService } from '../../core/services/app.service';
-import { Observable } from 'rxjs';
 import { BabiesStore } from '../../core/stores/babies/babies.store';
 import { SessionStore } from '../../core/stores/session/session.store';
 import { AppRoute } from '../../enums/app-route.enum';
@@ -26,7 +24,6 @@ import AddBabyStrings from './add-baby.strings';
 @Component({
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -46,7 +43,7 @@ export class AddBabyPage {
   private babiesStore = inject(BabiesStore);
   private router = inject(Router);
 
-  public isNewBabyMode = true;
+  public readonly isNewBabyMode = signal(true);
 
   /**
    * A signal, not a plain field: it is set from a rejected promise, long after
@@ -54,13 +51,13 @@ export class AddBabyPage {
    * there is never picked up, so the message only surfaced on the next
    * interaction. A signal marks the view itself, whatever the context.
    */
-  public errorMessage = signal<string | null>(null);
+  public readonly errorMessage = signal<string | null>(null);
   public selectedImage: File | null = null;
-  public imagePreview$?: Observable<string>;
+  public readonly imagePreview = signal<string | null>(null);
   public strings = AddBabyStrings;
 
-  onSwitchMode() {
-    this.isNewBabyMode = !this.isNewBabyMode;
+  public onSwitchMode(): void {
+    this.isNewBabyMode.update((isNew) => !isNew);
     this.clearErrorMessage();
   }
 
@@ -70,43 +67,38 @@ export class AddBabyPage {
   }
 
   /**
-   * No loading state: the preview is read lazily, once the async pipe
-   * subscribes, and a local file reads in milliseconds. The global spinner
+   * No loading state: a local file reads in milliseconds. The global spinner
    * this used to toggle never covered the read, and stayed on for good when
    * the input came back empty.
    */
-  onImageSelected(event: Event) {
+  public onImageSelected(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
 
     // Mirror the input: when it comes back empty, drop the previous image
     // too, so the preview always shows what will be uploaded.
-    if (!file) {
-      this.selectedImage = null;
-      this.imagePreview$ = undefined;
-      return;
-    }
+    this.selectedImage = file ?? null;
+    this.imagePreview.set(null);
+    if (!file) return;
 
-    this.selectedImage = file;
-
-    this.imagePreview$ = new Observable<string>((sub) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        sub.next(reader.result as string);
-        sub.complete();
-      };
-      reader.onerror = (err) => sub.error(err);
-      reader.readAsDataURL(file);
-    });
+    const reader = new FileReader();
+    reader.onload = () => {
+      // Reads can finish out of order: a slow read of an earlier pick must
+      // not replace the preview of the file that is actually selected.
+      if (this.selectedImage === file) {
+        this.imagePreview.set(reader.result as string);
+      }
+    };
+    reader.readAsDataURL(file);
   }
 
-  public async onSubmit(form: NgForm) {
+  public async onSubmit(form: NgForm): Promise<void> {
     if (!form.valid) return;
 
     this.clearErrorMessage();
     this.appService.isLoading.set(true);
 
     try {
-      const added = this.isNewBabyMode
+      const added = this.isNewBabyMode()
         ? await this.addNewBaby(form)
         : await this.addExistingBaby(form);
 
@@ -143,7 +135,7 @@ export class AddBabyPage {
       }
 
       return true;
-    } catch (error) {
+    } catch {
       this.showErrorMessage(this.strings.ADD_BABY_FAILED);
       return false;
     }
@@ -154,7 +146,7 @@ export class AddBabyPage {
     try {
       await this.sessionStore.addExistingBaby(uid);
       return true;
-    } catch (error) {
+    } catch {
       this.showErrorMessage(this.strings.ADD_EXISTING_BABY_FAILED);
       return false;
     }
@@ -164,12 +156,12 @@ export class AddBabyPage {
     const baby = this.babiesStore.baby();
     try {
       await this.babiesStore.uploadImage(baby.uid, this.selectedImage);
-    } catch (error) {
+    } catch {
       this.showErrorMessage(this.strings.UPLOAD_IMAGE_FAILED);
     }
   }
 
-  private showErrorMessage(message: string) {
+  private showErrorMessage(message: string): void {
     // todo - use generic error dialog component
     //
     // No auto-dismiss timer: overlapping timers from repeated attempts used to

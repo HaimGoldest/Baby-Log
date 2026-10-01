@@ -17,7 +17,7 @@ export class LoginPage {
   public strings = LoginStrings;
   public loginError = this.sessionStore.loginError;
 
-  signInWithGoogle(): void {
+  public signInWithGoogle(): void {
     this.sessionStore.signIn();
   }
 }

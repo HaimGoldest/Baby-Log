@@ -117,9 +117,11 @@ export const SessionStore = signalStore(
 
         try {
           await store._authService.signInWithGoogle();
-        } catch (err: any) {
+        } catch (err: unknown) {
           store._appService.isLoading.set(false);
-          patchState(store, { loginError: err?.message ?? 'Login failed' });
+          patchState(store, {
+            loginError: err instanceof Error ? err.message : 'Login failed',
+          });
           console.error('Google sign-in error:', err);
         }
       },

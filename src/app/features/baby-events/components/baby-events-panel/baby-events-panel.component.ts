@@ -31,7 +31,7 @@ export class BabyEventsPanelComponent {
    * Built here rather than in SessionStore so the category catalogue stays a
    * feature concern and core does not import from a feature.
    */
-  public activeBabyEventCategories = computed<BabyEventCategoryView[]>(() =>
+  public readonly activeBabyEventCategories = computed<BabyEventCategoryView[]>(() =>
     this.sessionStore
       .eventFavorites()
       .map((favorite) => ({
@@ -44,7 +44,7 @@ export class BabyEventsPanelComponent {
   );
 
   /** Id of the category the list is currently filtered by, if any. */
-  public activeCategoryId = input<string | null>(null);
+  public readonly activeCategoryId = input<string | null>(null);
 
   public filter = output<BabyEventCategory>();
 

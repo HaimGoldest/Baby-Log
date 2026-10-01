@@ -21,6 +21,8 @@ import {
   DocumentData,
   QueryDocumentSnapshot,
   FirestoreDataConverter,
+  Timestamp,
+  UpdateData,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
@@ -30,7 +32,7 @@ import { Observable } from 'rxjs';
  * which take several seconds to give up while offline.
  */
 export class OfflineError extends Error {
-  public constructor(message = 'The client is offline.') {
+  constructor(message = 'The client is offline.') {
     super(message);
     this.name = 'OfflineError';
   }
@@ -240,7 +242,7 @@ export class FireStoreHelperService {
         data
       );
       try {
-        await updateDoc(refDoc, data as any);
+        await updateDoc(refDoc, data as UpdateData<T>);
         console.log(`[FireStoreHelperService] updated ${collectionName}/${uid}`);
       } catch (err) {
         console.error(
@@ -368,7 +370,7 @@ export class FireStoreHelperService {
   public delete(collectionName: string, uid: string): Promise<void> {
     this.assertUid(collectionName, uid);
     return runInInjectionContext(this.env, async () => {
-      const refDoc = this.getDocRef<any>(collectionName, uid);
+      const refDoc = this.getDocRef<DocumentData>(collectionName, uid);
       console.log(`[FireStoreHelperService] delete ${collectionName}/${uid}`);
       try {
         await deleteDoc(refDoc);
@@ -393,8 +395,10 @@ export class FireStoreHelperService {
   }
 
   /** @internal Recursively convert Firestore Timestamps to JS Date */
-  private convertTimestamps(obj: any): any {
-    if (obj && typeof obj.toDate === 'function') return obj.toDate();
+  private convertTimestamps(obj: unknown): unknown {
+    if (obj && typeof (obj as Timestamp).toDate === 'function') {
+      return (obj as Timestamp).toDate();
+    }
     if (Array.isArray(obj)) return obj.map((v) => this.convertTimestamps(v));
     if (obj && typeof obj === 'object') {
       return Object.fromEntries(
