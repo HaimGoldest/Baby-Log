@@ -14,9 +14,10 @@
     <mat-datepicker-toggle [for]="datepicker" matSuffix></mat-datepicker-toggle>
   </mat-form-field>
 
-  <mat-form-field appearance="outline">
+  <mat-form-field appearance="outline" (click)="openTimePicker(timeInput)">
     <mat-label>{{ strings.TIME }}</mat-label>
-    <input matInput formControlName="time" type="time" />
+    <input #timeInput matInput formControlName="time" type="time" />
+    <mat-icon matSuffix>schedule</mat-icon>
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="full-width">

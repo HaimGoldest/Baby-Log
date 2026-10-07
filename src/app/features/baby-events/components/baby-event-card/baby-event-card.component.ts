@@ -80,6 +80,9 @@ export class BabyEventCardComponent {
       width: '90vw',
       maxWidth: '300px',
       data: babyEvent,
+      // Focus the dialog itself, not its first field, so opening it neither
+      // raises the mobile keyboard nor picks a field the user didn't tap.
+      autoFocus: 'dialog',
     });
 
     dialogRef
