@@ -65,6 +65,14 @@ export class BabyEventFormComponent {
     }
   }
 
+  public openTimePicker(input: HTMLInputElement): void {
+    try {
+      input.showPicker();
+    } catch {
+      // Silently fallback if unsupported or already invoked
+    }
+  }
+
   private toTimeString(date: Date): string {
     const hours = `${date.getHours()}`.padStart(2, '0');
     const minutes = `${date.getMinutes()}`.padStart(2, '0');
