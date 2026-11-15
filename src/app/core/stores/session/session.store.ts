@@ -13,6 +13,7 @@ import { concatMap, from, of, pipe, switchMap, tap } from 'rxjs';
 import { User as FirebaseUser } from 'firebase/auth';
 import { BabyEventFavorites, User } from '../../../models/user.model';
 import { Baby } from '../../../models/baby.model';
+import { AppThemeId } from '../../theme/app-themes';
 import { reconcileUser } from '../../user/user-reconciler';
 import { AppService } from '../../services/app.service';
 import { AuthService } from '../../services/auth.service';
@@ -159,6 +160,27 @@ export const SessionStore = signalStore(
         // rendering the previous order, while a failed write must not leave
         // the local state claiming a success that never happened.
         patchState(store, { user: { ...user, eventFavorites: favorites } });
+      },
+
+      /**
+       * Saves the theme to the signed-in user's profile.
+       *
+       * Unlike `updateEventFavorites`, state is not patched afterwards:
+       * ThemeService has already applied the theme, and the watcher delivers
+       * the change locally as soon as it is written. A patch made when this
+       * resolves would be built from the user as it was when the call started,
+       * so if the theme changed again while the write was in flight (offline,
+       * it resolves only on reconnect), it would briefly reinstate the
+       * superseded theme.
+       * @param theme The theme to store on the user's profile.
+       */
+      async updateTheme(theme: AppThemeId): Promise<void> {
+        const user = store.user();
+        if (!user) {
+          throw new Error('No user is signed in, cannot save the theme.');
+        }
+
+        await store._userService.update(user.uid, { theme });
       },
 
       /**

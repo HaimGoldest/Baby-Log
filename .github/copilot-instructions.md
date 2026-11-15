@@ -58,13 +58,17 @@ When suggesting code, prefer practical production-ready Angular code over generi
 
 ## SCSS rules
 
-- Use component SCSS files.
-- Use clear class names.
-- Prefer simple, readable selectors.
-- Avoid deeply nested SCSS.
-- Use mobile-first styles first, then add larger breakpoint overrides.
-- Keep spacing, typography, and layout rules consistent.
-- Avoid global styles unless the styling is truly app-wide.
+Styling is global-first: a single design system in `src/styles.scss`, built on Angular Material 3 (`mat.theme()`) and CSS custom properties.
+
+- Take every visual value from a design token: `--app-*` for app semantics (surfaces, text, brand, status colors, font) or `--mat-sys-*` for Material system roles (e.g. `var(--mat-sys-title-large)` for type).
+- Never put color literals (`#hex`, `rgb()`/`rgba()`, named colors) in component SCSS. If no token fits, add one to `src/styles.scss` rather than hardcoding a value.
+- Theme values live only in the `:root[data-theme='…']` blocks in `src/styles.scss`. To add a theme, add its id to `APP_THEMES` in `src/app/core/theme/app-themes.ts` and give it a matching block.
+- Restyle Material components with token overrides (`mat.<component>-overrides()` in `src/styles.scss`), not by targeting their internal classes.
+- Do not use `!important` or `::ng-deep`.
+- Keep component SCSS focused on layout: display, flex/grid, gap, sizing, positioning, and responsive breakpoints.
+- Use CSS logical properties (`margin-inline-start`, `padding-inline`, `inset-inline`) rather than left/right, so layouts hold in RTL.
+- Use clear class names and simple, readable selectors; avoid deep nesting.
+- Write mobile-first styles, then add larger breakpoint overrides.
 
 ## Code style
 

@@ -21,6 +21,7 @@ const KNOWN_USER_KEYS = {
   email: true,
   eventFavorites: true,
   babiesUids: true,
+  theme: true,
 } satisfies Record<keyof User, true>;
 
 /**
@@ -41,6 +42,11 @@ export function reconcileUser(
     email: stored?.email ?? authData.email ?? 'Unknown Email',
     eventFavorites: favorites.value,
     babiesUids: stored?.babiesUids ?? [],
+    // Carried over as stored, unvalidated: the save below is a full overwrite,
+    // so dropping it here would wipe the user's choice, and a value this build
+    // does not recognise may have been written by a newer one. Omitted rather
+    // than set to undefined, which Firestore rejects.
+    ...(stored?.theme ? { theme: stored.theme } : {}),
   };
 
   return {

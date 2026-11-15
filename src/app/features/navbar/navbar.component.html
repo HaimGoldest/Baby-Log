@@ -122,6 +122,11 @@
 
     <mat-divider></mat-divider>
 
+    <!-- Temporary switcher until a theme picker lands in the redesign. -->
+    <button mat-menu-item (click)="cycleTheme()">
+      <mat-icon>palette</mat-icon>
+      <span>{{ strings.CYCLE_THEME }}</span>
+    </button>
     <button mat-menu-item (click)="logout()">{{ strings.LOGOUT }}</button>
   </mat-menu>
 </mat-toolbar>

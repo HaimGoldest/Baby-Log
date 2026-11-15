@@ -1,56 +1,338 @@
-/* You can add global styles to this file, and also import other style files */
+// =============================================================================
+// Baby-Log design system: the global styling entry point.
+//
+//   1. Material 3 base theme   emits the --mat-sys-* system tokens, once.
+//   2. Theme palettes          raw --app-* values per <html data-theme>. The
+//                              only place in the app where colour literals
+//                              belong.
+//   3. Material role mapping   points --mat-sys-* roles at --app-* tokens, so
+//                              switching data-theme re-colours Material too.
+//   4. Transition shims        M2-era behaviour existing templates still rely
+//                              on. Removed as Phase 2 restyles the components.
+//   5. Base and app-wide rules
+//
+// Adding a theme: add its id to APP_THEMES (src/app/core/theme/app-themes.ts)
+// and a matching `:root[data-theme='<id>']` block to section 2.
+// =============================================================================
 
-/* Base reset: the Bootstrap 5 Reboot rules that matched elements this app (or
-   Angular Material) renders, kept when Bootstrap was removed so element
-   defaults don't shift. Reboot's heading, paragraph and body-font rules are
-   left out, as `.mat-typography` on <body> already overrides them. */
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+// Seeds only the roles section 3 leaves alone (on-error, the -fixed roles,
+// scrim, shadow). Every theme's brand hue comes from its --app-* tokens.
+$_seed-palette: mat.$spring-green-palette;
+
+// Hebrew is set without letter-spacing; M3's tracking values assume Latin.
+$_type-levels: display-large, display-medium, display-small, headline-large,
+  headline-medium, headline-small, title-large, title-medium, title-small,
+  body-large, body-medium, body-small, label-large, label-medium, label-small;
+$_no-tracking: ();
+@each $level in $_type-levels {
+  $_no-tracking: map.set($_no-tracking, #{$level}-tracking, 0);
+}
+
+// -----------------------------------------------------------------------------
+// 1. Material 3 base theme
+// -----------------------------------------------------------------------------
+// `color-scheme` theme type emits every colour as light-dark(), so a theme only
+// has to set the CSS `color-scheme` property to flip whatever section 3 does
+// not map.
+html {
+  @include mat.theme(
+    (
+      color: (
+        primary: $_seed-palette,
+        theme-type: color-scheme,
+      ),
+      typography: (
+        plain-family: var(--app-font-family),
+        brand-family: var(--app-font-family),
+        regular-weight: 400,
+        medium-weight: 500,
+        bold-weight: 700,
+      ),
+      density: 0,
+    ),
+    $_no-tracking
+  );
+}
+
+// -----------------------------------------------------------------------------
+// 2. Theme palettes
+// -----------------------------------------------------------------------------
+// Set these on :root only. Section 3 resolves them on <html>, so a value
+// redefined further down the tree would not reach Material's tokens.
+//
+// `nordic` is also the fallback for a missing or unknown data-theme. The status
+// colours here are shared by every light theme; dark redefines them.
+:root,
+:root[data-theme='nordic'] {
+  color-scheme: light;
+
+  --app-font-family: 'Heebo', sans-serif;
+
+  --app-bg: #faf8f5;
+  --app-surface: #ffffff;
+  --app-surface-subtle: #f2efea;
+  --app-border: #e5e0d8;
+  --app-border-strong: #8a857c;
+  --app-shadow-card: 0 1px 2px rgb(43 47 45 / 6%), 0 2px 8px rgb(43 47 45 / 6%);
+
+  --app-primary: #5f8d7b;
+  --app-on-primary: #ffffff;
+  --app-primary-container: #e8f0ec;
+  --app-on-primary-container: #1e3b31;
+
+  --app-text-primary: #2b2f2d;
+  --app-text-secondary: #535955;
+  --app-text-muted: #686d69;
+
+  --app-success: #2f7a4f;
+  --app-success-bg: #e5f2ea;
+  --app-warning: #94560a;
+  --app-warning-bg: #fbf0dc;
+  --app-danger: #b3372f;
+  --app-danger-bg: #fbe9e7;
+}
+
+:root[data-theme='mint'] {
+  --app-font-family: 'Rubik', sans-serif;
+
+  --app-bg: #f4f7f9;
+  --app-surface: #ffffff;
+  --app-surface-subtle: #eaf0f3;
+  --app-border: #dbe3e8;
+  --app-border-strong: #808d96;
+  --app-shadow-card: 0 1px 2px rgb(31 42 48 / 6%), 0 2px 8px rgb(31 42 48 / 6%);
+
+  --app-primary: #2a7b88;
+  --app-on-primary: #ffffff;
+  --app-primary-container: #e0f0f2;
+  --app-on-primary-container: #0d3940;
+
+  --app-text-primary: #1f2a30;
+  --app-text-secondary: #4a5961;
+  --app-text-muted: #5e6c74;
+}
+
+:root[data-theme='terracotta'] {
+  --app-font-family: 'Assistant', sans-serif;
+
+  --app-bg: #fdf9f6;
+  --app-surface: #ffffff;
+  --app-surface-subtle: #f6eee8;
+  --app-border: #ebe0d8;
+  --app-border-strong: #918780;
+  --app-shadow-card: 0 1px 2px rgb(56 44 39 / 6%), 0 2px 8px rgb(56 44 39 / 6%);
+
+  --app-primary: #c86d51;
+  --app-on-primary: #ffffff;
+  --app-primary-container: #f9eae4;
+  --app-on-primary-container: #5a2515;
+
+  --app-text-primary: #382c27;
+  --app-text-secondary: #5f524b;
+  --app-text-muted: #74665f;
+}
+
+// Low-glare night mode: no pure white anywhere, and a primary light enough to
+// carry dark text.
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --app-font-family: 'Heebo', sans-serif;
+
+  --app-bg: #121619;
+  --app-surface: #1e2429;
+  --app-surface-subtle: #262d33;
+  --app-border: #313940;
+  --app-border-strong: #768089;
+  --app-shadow-card: 0 1px 2px rgb(0 0 0 / 40%), 0 2px 8px rgb(0 0 0 / 30%);
+
+  --app-primary: #7eb5a0;
+  --app-on-primary: #0d2a20;
+  --app-primary-container: #25332e;
+  --app-on-primary-container: #cbe5da;
+
+  --app-text-primary: #e8ecef;
+  --app-text-secondary: #b3bcc3;
+  --app-text-muted: #929ca4;
+
+  --app-success: #7cc79b;
+  --app-success-bg: #1b3225;
+  --app-warning: #e7b062;
+  --app-warning-bg: #382a15;
+  --app-danger: #f2a097;
+  --app-danger-bg: #3e2220;
+}
+
+// -----------------------------------------------------------------------------
+// 3. Material role mapping
+// -----------------------------------------------------------------------------
+// Covers every colour role the Material components in use read. Secondary and
+// tertiary share the brand hue until the themes define an accent of their own;
+// `color="accent"` resolves to tertiary.
+html {
+  @include mat.theme-overrides(
+    (
+      primary: var(--app-primary),
+      on-primary: var(--app-on-primary),
+      primary-container: var(--app-primary-container),
+      on-primary-container: var(--app-on-primary-container),
+      secondary: var(--app-primary),
+      on-secondary: var(--app-on-primary),
+      secondary-container: var(--app-primary-container),
+      on-secondary-container: var(--app-on-primary-container),
+      tertiary: var(--app-primary),
+      on-tertiary: var(--app-on-primary),
+      tertiary-container: var(--app-primary-container),
+      on-tertiary-container: var(--app-on-primary-container),
+      surface-tint: var(--app-primary),
+      inverse-primary: var(--app-primary-container),
+
+      // The page sits on `surface`; cards, menus and dialogs on the containers.
+      background: var(--app-bg),
+      on-background: var(--app-text-primary),
+      surface: var(--app-bg),
+      surface-dim: var(--app-surface-subtle),
+      surface-bright: var(--app-surface),
+      surface-container-lowest: var(--app-surface),
+      surface-container-low: var(--app-surface),
+      surface-container: var(--app-surface),
+      surface-container-high: var(--app-surface),
+      surface-container-highest: var(--app-surface-subtle),
+      surface-variant: var(--app-surface-subtle),
+      on-surface: var(--app-text-primary),
+      on-surface-variant: var(--app-text-secondary),
+      inverse-surface: var(--app-text-primary),
+      inverse-on-surface: var(--app-surface),
+      outline: var(--app-border-strong),
+      outline-variant: var(--app-border),
+
+      error: var(--app-danger),
+      error-container: var(--app-danger-bg),
+      on-error-container: var(--app-danger),
+    )
+  );
+}
+
+// -----------------------------------------------------------------------------
+// 4. Transition shims (remove as Phase 2 restyles each consumer)
+// -----------------------------------------------------------------------------
+// The M2-only APIs below read this theme object. With system variables on,
+// everything it emits is var(--mat-sys-*), so it follows the active data-theme.
+$_compat-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: light,
+      primary: $_seed-palette,
+      use-system-variables: true,
+    ),
+    typography: (
+      use-system-variables: true,
+    ),
+    density: (
+      scale: 0,
+    ),
+  )
+);
+
+// `color="primary|accent|warn"` (15 elements), `.mat-elevation-z4` (navbar),
+// and the `.mat-typography` element styles on <body>.
+@include mat.color-variants-backwards-compatibility($_compat-theme);
+@include mat.elevation-classes();
+@include mat.typography-hierarchy($_compat-theme);
+
+// The elevation classes read --mat-app-elevation-shadow-level-N, which only M2
+// themes define, and Material 21's built-in fallback is invalid CSS (a bare
+// `--mat-sys-shadow` with no var()), so without these they render no shadow.
+// M3's six levels are M2's z1/z3/z6/z8/z12 shadows; each z maps to the nearest.
+@function _m3-level-for-z($z) {
+  @if $z == 0 {
+    @return 0;
+  }
+  @if $z <= 2 {
+    @return 1;
+  }
+  @if $z <= 5 {
+    @return 2;
+  }
+  @if $z <= 7 {
+    @return 3;
+  }
+  @if $z <= 11 {
+    @return 4;
+  }
+  @return 5;
+}
+
+html {
+  @for $z from 0 through 24 {
+    --mat-app-elevation-shadow-level-#{$z}: var(--mat-sys-level#{_m3-level-for-z($z)});
+  }
+}
+
+// M3's hierarchy maps h1-h4 onto the display scale (h2 becomes 45px) and body
+// text onto 16px. Pin both to the M2 sizes the templates were built against,
+// which fixed-height elements such as the 150px event card depend on.
+.mat-typography {
+  font: var(--mat-sys-body-medium);
+}
+
+.mat-typography h1 {
+  font: var(--mat-sys-headline-small);
+  margin: 0 0 16px;
+}
+
+.mat-typography h2 {
+  font: var(--mat-sys-title-large);
+  margin: 0 0 16px;
+}
+
+.mat-typography h3 {
+  font: var(--mat-sys-title-medium);
+  margin: 0 0 16px;
+}
+
+.mat-typography h4 {
+  font: var(--mat-sys-body-large);
+  margin: 0 0 16px;
+}
+
+// -----------------------------------------------------------------------------
+// 5. Base and app-wide rules
+// -----------------------------------------------------------------------------
+// The layout-bearing part of the old Bootstrap Reboot. Its colour rules are
+// gone; these stay because component styles assume them (e.g. `.card-style`
+// pairs width: 100% with padding and a border).
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  :root {
-    scroll-behavior: smooth;
-  }
+html,
+body {
+  height: 100%;
 }
 
 body {
-  color: #212529;
-  background-color: #fff;
+  margin: 0;
+  font-family: var(--app-font-family);
+  color: var(--app-text-primary);
+  background-color: var(--app-bg);
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
 }
 
+a {
+  color: var(--app-primary);
+}
+
 hr {
   margin: 1rem 0;
-  color: inherit;
   border: 0;
-  border-top: 1px solid;
-  opacity: 0.25;
-}
-
-b,
-strong {
-  font-weight: bolder;
-}
-
-a {
-  color: #0d6efd;
-  text-decoration: underline;
-}
-
-/* :where keeps the hover at the specificity of `a`, so any class-level link
-   colour (e.g. Material buttons on anchors) still wins while hovered. */
-a:where(:hover) {
-  color: #0a58ca;
-}
-
-a:not([href]):not([class]),
-a:not([href]):not([class]):hover {
-  color: inherit;
-  text-decoration: none;
+  border-top: 1px solid var(--app-border);
 }
 
 img,
@@ -58,41 +340,8 @@ svg {
   vertical-align: middle;
 }
 
-table {
-  caption-side: bottom;
-  border-collapse: collapse;
-}
-
-th {
-  text-align: inherit;
-  text-align: -webkit-match-parent;
-}
-
-thead,
-tbody,
-tfoot,
-tr,
-td,
-th {
-  border-color: inherit;
-  border-style: solid;
-  border-width: 0;
-}
-
-label {
-  display: inline-block;
-}
-
-button {
-  border-radius: 0;
-}
-
-button:focus:not(:focus-visible) {
-  outline: 0;
-}
-
-input,
 button,
+input,
 select,
 optgroup,
 textarea {
@@ -102,83 +351,18 @@ textarea {
   line-height: inherit;
 }
 
-button,
-select {
-  text-transform: none;
-}
-
-[role='button'] {
-  cursor: pointer;
-}
-
-button,
-[type='button'],
-[type='reset'],
-[type='submit'] {
-  -webkit-appearance: button;
-}
-
-button:not(:disabled),
-[type='button']:not(:disabled),
-[type='reset']:not(:disabled),
-[type='submit']:not(:disabled) {
-  cursor: pointer;
-}
-
-::-moz-focus-inner {
-  padding: 0;
-  border-style: none;
-}
-
-::-webkit-datetime-edit-fields-wrapper,
-::-webkit-datetime-edit-text,
-::-webkit-datetime-edit-minute,
-::-webkit-datetime-edit-hour-field,
-::-webkit-datetime-edit-day-field,
-::-webkit-datetime-edit-month-field,
-::-webkit-datetime-edit-year-field {
-  padding: 0;
-}
-
-::-webkit-inner-spin-button {
-  height: auto;
-}
-
-/* Kept apart from ::file-selector-button: a browser that doesn't know one of
-   the pseudo-elements would drop a combined rule entirely. */
-::-webkit-file-upload-button {
-  font: inherit;
-  -webkit-appearance: button;
-}
-
-::file-selector-button {
-  font: inherit;
-  -webkit-appearance: button;
-}
-
-[hidden] {
-  display: none !important;
-}
-
-html,
-body {
-  height: 100%;
-}
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-}
-
+// Colours now come from tokens. The !important flags still win over mat-card's
+// own styles; Phase 2 replaces them with mat.card-overrides().
 .card-style {
   min-width: 300px !important;
   max-width: 800px !important;
   width: 100% !important;
   margin-bottom: 10px !important;
   padding: 0px 10px !important;
-  border: 1px solid #ccc !important;
+  border: 1px solid var(--app-border) !important;
   border-radius: 8px !important;
-  background-color: #f9f9f9 !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  background-color: var(--app-surface) !important;
+  box-shadow: var(--app-shadow-card) !important;
 }
 
 /* Material sets `text-align: left` on menu items with no [dir=rtl] counterpart,

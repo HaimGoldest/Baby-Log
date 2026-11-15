@@ -1,7 +1,13 @@
-import { ApplicationConfig, LOCALE_ID } from '@angular/core';
+import {
+  ApplicationConfig,
+  LOCALE_ID,
+  inject,
+  provideAppInitializer,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { environment } from '../environments/environment';
+import { ThemeService } from './core/services/theme.service';
 import { provideFirebaseApp, initializeApp, getApp } from '@angular/fire/app';
 import { provideAuth, getAuth, connectAuthEmulator } from '@angular/fire/auth';
 import {
@@ -24,6 +30,11 @@ import {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(appRoutes),
+
+    // Created up front so the cached theme is on <html> before first render.
+    provideAppInitializer(() => {
+      inject(ThemeService);
+    }),
 
     // Material providers
     provideNativeDateAdapter(),
