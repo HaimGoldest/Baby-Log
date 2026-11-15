@@ -1,12 +1,8 @@
-<mat-card class="card-style favorite-card">
+<mat-card appearance="outlined" class="favorite-card">
   <div class="card-header">
-    <img
-      class="event-img"
-      [src]="favorite().category.imagePath"
-      [alt]="favorite().category.id"
-    />
+    <app-category-icon [category]="favorite().category"></app-category-icon>
 
-    <span class="category-title">{{ favorite().category.value }}</span>
+    <h3 class="category-title">{{ favorite().category.value }}</h3>
 
     <div class="order-controls">
       <button
@@ -31,16 +27,6 @@
         <mat-icon>arrow_downward</mat-icon>
       </button>
     </div>
-
-    <button
-      mat-button
-      type="button"
-      class="remove-favorite"
-      (click)="remove.emit()"
-    >
-      <mat-icon>star_border</mat-icon>
-      <span>{{ strings.REMOVE_FAVORITE }}</span>
-    </button>
   </div>
 
   <div class="comments-section">
@@ -62,7 +48,7 @@
         <button
           mat-icon-button
           type="button"
-          class="remove-comment"
+          class="app-danger-action remove-comment"
           [matTooltip]="strings.REMOVE_COMMENT"
           [attr.aria-label]="strings.REMOVE_COMMENT"
           (click)="removeComment.emit(comment.id)"
@@ -73,15 +59,22 @@
     } @empty {
       <p class="no-comments">{{ strings.NO_COMMENTS }}</p>
     }
+  </div>
+
+  <div class="card-footer">
+    <button mat-button type="button" (click)="addComment.emit()">
+      <mat-icon>add</mat-icon>
+      <span>{{ strings.ADD_COMMENT }}</span>
+    </button>
 
     <button
       mat-button
       type="button"
-      class="add-comment"
-      (click)="addComment.emit()"
+      class="app-danger-action"
+      (click)="remove.emit()"
     >
-      <mat-icon>add</mat-icon>
-      <span>{{ strings.ADD_COMMENT }}</span>
+      <mat-icon>star_border</mat-icon>
+      <span>{{ strings.REMOVE_FAVORITE }}</span>
     </button>
   </div>
 </mat-card>

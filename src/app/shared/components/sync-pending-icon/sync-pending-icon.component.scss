@@ -4,7 +4,7 @@
 :host {
   display: inline-flex;
   align-items: center;
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--app-text-muted);
   opacity: 0;
   animation: sync-pending-fade-in 200ms ease-in 1s forwards;
 }

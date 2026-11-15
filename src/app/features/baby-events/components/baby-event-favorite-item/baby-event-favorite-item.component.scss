@@ -1,40 +1,41 @@
+// Surface, border and shadow come from the outlined mat-card tokens, and the
+// action colours from .app-danger-action (both in src/styles.scss).
 .favorite-card {
-  padding: 10px !important;
+  margin-block-end: 12px;
+  padding-block: 12px 4px;
+  padding-inline: 16px 8px;
 }
 
 .card-header {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-}
+  gap: 12px;
 
-.event-img {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  object-fit: cover;
+  app-category-icon {
+    --category-icon-size: 40px;
+  }
 }
 
 .category-title {
-  font-weight: bold;
-  font-size: 1.1rem;
-  color: darkblue;
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  color: var(--app-text-primary);
+  font: var(--mat-sys-title-medium);
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .order-controls {
   display: flex;
-  margin-inline-start: auto;
-}
-
-.remove-favorite {
-  color: darkred !important;
+  flex: none;
 }
 
 .comments-section {
   display: flex;
   flex-direction: column;
-  margin-top: 8px;
+  margin-block-start: 12px;
 }
 
 .comment-row {
@@ -50,17 +51,20 @@
   /* Pulls the button up out of the form field's subscript row, so it sits
      level with the input itself rather than with the whole wrapper. */
   .remove-comment {
-    margin-bottom: 20px;
-    color: darkred !important;
+    margin-block-end: 20px;
   }
 }
 
 .no-comments {
-  margin: 0 0 8px;
-  color: #666;
+  margin: 0 0 4px;
+  color: var(--app-text-muted);
+  font: var(--mat-sys-body-medium);
 }
 
-.add-comment {
-  align-self: flex-start;
-  color: darkgreen !important;
+.card-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px;
+  margin-inline-start: -8px; // optically aligns the text button with the content
 }

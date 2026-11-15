@@ -21,11 +21,13 @@ import {
  * lets the next launch open in the right theme, and the `theme` field on the
  * signed-in user's profile, which is the source of truth across devices.
  *
- * Created by an app initializer, so the cached theme is on <html> before the
- * shell first renders.
+ * An inline script in `src/index.html` applies the cached theme before the
+ * first paint. This service, created by an app initializer, then takes over:
+ * it validates that value and keeps the three copies in sync from then on.
  */
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
+  /** Also read by the pre-paint script in `src/index.html`; keep the two in sync. */
   private static readonly STORAGE_KEY = 'baby-log.theme';
 
   private readonly document = inject(DOCUMENT);

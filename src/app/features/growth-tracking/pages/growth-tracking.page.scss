@@ -1,40 +1,30 @@
+// `main` in the app shell is a flex column with overflow hidden, so the page
+// scrolls itself instead of the document.
+:host {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+// The bottom padding (FAB 56px plus 16px either side) lets the last row scroll
+// clear of the FAB.
 .growth-tracking-page {
-  padding-inline: 12px;
-}
-
-/* Centered column whose max width steps up with the viewport. */
-.growth-tracking-content {
-  margin-top: 10px;
+  width: 100%;
+  max-width: 720px;
   margin-inline: auto;
-  padding-inline: 12px;
-
-  @media (min-width: 576px) {
-    max-width: 540px;
-  }
-
-  @media (min-width: 768px) {
-    max-width: 720px;
-  }
-
-  @media (min-width: 992px) {
-    max-width: 960px;
-  }
-
-  @media (min-width: 1200px) {
-    max-width: 1140px;
-  }
-
-  @media (min-width: 1400px) {
-    max-width: 1320px;
-  }
+  padding-block: 8px 88px;
+  padding-inline: 4px;
 }
 
+// Centred without transforms so it holds in RTL. Above page content but below
+// CDK overlays (z-index 1000), so dialogs and menus cover it. Colours come from
+// the FAB tokens in src/styles.scss.
 .fab {
-  background-color: #4caf50 !important;
-  color: white !important;
   position: fixed;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 99999;
+  inset-block-end: 16px;
+  inset-inline: 0;
+  z-index: 10;
+  margin-inline: auto;
 }

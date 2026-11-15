@@ -9,7 +9,10 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { BabyEventsPanelComponent } from '../components/baby-events-panel/baby-events-panel.component';
 import { BabyEvent, BabyEventCategory } from '../../../models/baby.model';
 import { BabyEventsService } from '../services/baby-events.service';
-import { BabyEventCardComponent } from '../components/baby-event-card/baby-event-card.component';
+import {
+  BABY_EVENT_CARD_ITEM_SIZE,
+  BabyEventCardComponent,
+} from '../components/baby-event-card/baby-event-card.component';
 import BabyEventsStrings from './baby-events.strings';
 import { AlertMessageComponent } from '../../../shared/components/alert-message/alert-message.component';
 
@@ -40,6 +43,7 @@ export class BabyEventsComponent {
   );
 
   public readonly strings = BabyEventsStrings;
+  public readonly eventCardItemSize = BABY_EVENT_CARD_ITEM_SIZE;
   public readonly filterMode = computed(
     () => this.currentFilteredCategory() !== null,
   );

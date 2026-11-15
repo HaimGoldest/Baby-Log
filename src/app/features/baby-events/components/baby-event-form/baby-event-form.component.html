@@ -32,8 +32,7 @@
 <mat-dialog-actions align="end">
   <button mat-button (click)="dialogRef.close()">{{ strings.CANCEL }}</button>
   <button
-    mat-raised-button
-    color="primary"
+    mat-flat-button
     [disabled]="eventForm.invalid"
     (click)="onSubmit()"
   >

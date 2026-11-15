@@ -1,13 +1,18 @@
 import { Component, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 
 export type AlertType = 'success' | 'error' | 'info' | 'warning';
 
+/**
+ * A tonal status card. Inline it sits flat; a container can raise it by setting
+ * `--alert-elevation` (a box-shadow) on this element, as the notification host
+ * does for toasts.
+ */
 @Component({
   selector: 'app-alert-message',
   standalone: true,
-  imports: [CommonModule, MatCardModule],
+  imports: [NgClass, MatCardModule],
   templateUrl: './alert-message.component.html',
   styleUrls: ['./alert-message.component.scss'],
 })

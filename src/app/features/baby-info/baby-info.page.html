@@ -1,65 +1,112 @@
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>{{ strings.BABY_INFO}}</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <div class="info-row">
-      <span class="label">{{ strings.BABY_UID}}</span>
-      <span class="value">
-        {{ baby()?.uid }}
+@if (baby(); as currentBaby) {
+  <div class="baby-info-page">
+    <mat-card appearance="outlined" class="profile-card">
+      <div class="profile">
+        @if (imageUrl(); as url) {
+          <img
+            class="avatar"
+            [src]="url"
+            alt=""
+            (error)="onImageError(url)"
+          />
+        } @else {
+          <span class="avatar avatar-placeholder" aria-hidden="true">
+            <mat-icon>child_care</mat-icon>
+          </span>
+        }
+
+        <div class="identity">
+          <h1 class="baby-name">{{ currentBaby.name }}</h1>
+          @if (age()) {
+            <p class="baby-age">{{ age() }}</p>
+          }
+        </div>
+      </div>
+
+      @if (measurementSummary(); as summary) {
+        <dl class="summary">
+          @for (item of summary; track item.label) {
+            <div class="summary-item">
+              <dt class="summary-label">{{ item.label }}</dt>
+              <dd class="summary-value">
+                @if (item.value !== null) {
+                  {{ item.value }}
+                  <span class="summary-unit">{{ item.unit }}</span>
+                } @else {
+                  -
+                }
+              </dd>
+              @if (item.date) {
+                <dd class="summary-date">
+                  {{ item.date | date: "dd/MM/yy" }}
+                </dd>
+              }
+            </div>
+          }
+        </dl>
+      }
+    </mat-card>
+
+    <mat-card appearance="outlined" class="details-card">
+      <div class="detail-row">
+        <div class="detail-text">
+          <span class="detail-label">{{ strings.BABY_UID }}</span>
+          <span class="detail-value share-code" dir="ltr">
+            {{ currentBaby.uid }}
+          </span>
+          <span class="detail-hint">{{ strings.BABY_UID_HINT }}</span>
+        </div>
         <button
           mat-icon-button
-          color="primary"
-          aria-label="Copy UID"
+          [attr.aria-label]="strings.COPY_UID"
           (click)="copyUIDToClipboard()"
-          >
+        >
           <mat-icon>content_copy</mat-icon>
         </button>
-      </span>
-    </div>
-    <div class="info-row">
-      <span class="label">{{ strings.BABY_NAME}}</span>
-      <span class="value">{{ baby()?.name }}</span>
-    </div>
-    <div class="info-row">
-      <span class="label">{{ strings.BABY_BIRTH_DATE}}</span>
-      <span class="value">{{ baby()?.birthDate | date : "longDate" }}</span>
-    </div>
-    <div class="info-row">
-      <span class="label">{{ strings.BABY_GENDER }}</span>
-      <span class="value"
-        >{{ baby()?.gender === 'Male' ? strings.MALE : strings.FEMALE}}</span
-        >
       </div>
-      <hr />
-      <div class="info-row">
-        <span class="label">{{ strings.BABY_IMAGE}}</span>
-        <span class="value">
-          @if ((babyImageUrl()); as url) {
-            <img [src]="url" alt="Baby Image" class="baby-image" />
-          } @else {
-            <span>{{ strings.NO_IMAGE}}</span>
-          }
-          <input
-            type="file"
-            accept="image/*"
-            (change)="onImageSelected($event)"
-            hidden
-            #fileInput
-            />
-            <button
-              mat-raised-button
-              class="change-image-button"
-              (click)="fileInput.click()"
-              >
-              {{ strings.CHANGE_IMAGE}}
-            </button>
+
+      <div class="detail-row">
+        <div class="detail-text">
+          <span class="detail-label">{{ strings.BABY_BIRTH_DATE }}</span>
+          <span class="detail-value">
+            {{ currentBaby.birthDate | date: "longDate" }}
           </span>
         </div>
-      </mat-card-content>
-      <mat-card-actions align="end">
-        <button mat-raised-button color="warn" (click)="deleteBaby()">
-          {{ strings.DELETE_BABY}}
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-text">
+          <span class="detail-label">{{ strings.BABY_GENDER }}</span>
+          <span class="detail-value">{{ genderLabel() }}</span>
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <div class="detail-text">
+          <span class="detail-label">{{ strings.BABY_IMAGE }}</span>
+        </div>
+        <input
+          #fileInput
+          type="file"
+          accept="image/*"
+          hidden
+          (change)="onImageSelected($event)"
+        />
+        <button mat-stroked-button type="button" (click)="fileInput.click()">
+          <mat-icon>photo_camera</mat-icon>
+          {{ strings.CHANGE_IMAGE }}
         </button>
-      </mat-card-actions>
+      </div>
     </mat-card>
+
+    <button
+      mat-stroked-button
+      type="button"
+      class="app-danger-action delete-button"
+      (click)="deleteBaby()"
+    >
+      <mat-icon>delete</mat-icon>
+      {{ strings.DELETE_BABY }}
+    </button>
+  </div>
+}

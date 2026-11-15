@@ -8,7 +8,6 @@ import {
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { BabyEventFavoriteItemComponent } from '../components/baby-event-favorite-item/baby-event-favorite-item.component';
 import { AppRoute } from '../../../enums/app-route.enum';
@@ -20,6 +19,7 @@ import BABY_EVENT_CATEGORIES_DATA from '../../../core/default-data/baby-event-ca
 import { BabyEventCategory } from '../../../models/baby.model';
 import { BabyEventFavorites } from '../../../models/user.model';
 import { AlertMessageComponent } from '../../../shared/components/alert-message/alert-message.component';
+import { CategoryIconComponent } from '../../../shared/components/category-icon/category-icon.component';
 import { CommentDraft, FavoriteDraft } from './baby-event-preferences.vm';
 
 /**
@@ -44,9 +44,9 @@ function serializeDraft(favorites: FavoriteDraft[]): string {
   imports: [
     AlertMessageComponent,
     BabyEventFavoriteItemComponent,
+    CategoryIconComponent,
     MatButtonModule,
     MatCardModule,
-    MatDividerModule,
     MatIconModule,
   ],
 })

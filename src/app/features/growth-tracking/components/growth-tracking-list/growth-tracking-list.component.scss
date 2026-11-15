@@ -1,5 +1,28 @@
-/* A block formatting context, so the last card's bottom margin stays inside
-   the list rather than collapsing through the page wrappers. */
-.measurements-list {
-  display: flow-root;
+// The column template for the header and every row (rows inherit it):
+// date, the three measurements, then the actions menu.
+.measurements-table {
+  --growth-columns: 6.5rem repeat(3, minmax(0, 1fr)) 40px;
+  overflow: hidden;
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: var(--growth-columns);
+  align-items: end;
+  column-gap: 4px;
+  padding-block: 10px;
+  padding-inline: 12px 4px;
+  background-color: var(--app-surface-subtle);
+  color: var(--app-text-secondary);
+  font: var(--mat-sys-label-medium);
+  text-align: center;
+
+  // The date column lines up with the date pills, which sit at its start.
+  > :first-child {
+    text-align: start;
+  }
+}
+
+app-growth-tracking-list-item {
+  border-block-start: 1px solid var(--app-border);
 }

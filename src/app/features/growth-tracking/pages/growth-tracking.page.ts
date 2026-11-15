@@ -14,6 +14,7 @@ import { BabyMeasurement } from '../../../models/baby.model';
 import { GrowthTrackingListComponent } from '../components/growth-tracking-list/growth-tracking-list.component';
 import { NotificationService } from '../../../core/services/notification.service';
 import NotificationStrings from '../../../shared/strings/notification.strings';
+import GrowthTrackingStrings from './growth-tracking.strings';
 
 @Component({
   selector: 'app-growth-tracking',
@@ -32,6 +33,8 @@ export class GrowthTrackingPage {
   private dialog = inject(MatDialog);
   private notificationService = inject(NotificationService);
   private destroyRef = inject(DestroyRef);
+
+  public readonly strings = GrowthTrackingStrings;
 
   public async openAddMeasurementForm(): Promise<void> {
     const { GrowthTrackingFormComponent } = await import(

@@ -22,7 +22,18 @@ import { OfflineError } from '../../../../core/firebase/fire-store-helper.servic
 import NotificationStrings from '../../../../shared/strings/notification.strings';
 import { BusyOverlayComponent } from '../../../../shared/components/busy-overlay/busy-overlay.component';
 import { SyncPendingIconComponent } from '../../../../shared/components/sync-pending-icon/sync-pending-icon.component';
+import { CategoryIconComponent } from '../../../../shared/components/category-icon/category-icon.component';
 import BabyEventCardStrings from './baby-event-card.strings';
+
+/**
+ * Height of one slot in the events feed: the card plus the gap beneath it.
+ *
+ * The feed's `cdk-virtual-scroll-viewport` positions items by exactly this
+ * value, and the card's host height is bound to it, so it is the single place
+ * to change the slot. The card must never grow with its content: every row in
+ * it is one line or a fixed-size box.
+ */
+export const BABY_EVENT_CARD_ITEM_SIZE = 158;
 
 @Component({
   selector: 'app-baby-event-card',
@@ -30,6 +41,9 @@ import BabyEventCardStrings from './baby-event-card.strings';
   styleUrls: ['./baby-event-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
+  host: {
+    '[style.height.px]': 'itemSize',
+  },
   imports: [
     CommonModule,
     MatCardModule,
@@ -37,6 +51,7 @@ import BabyEventCardStrings from './baby-event-card.strings';
     MatMenuModule,
     MatButtonModule,
     BusyOverlayComponent,
+    CategoryIconComponent,
     SyncPendingIconComponent,
   ],
 })
@@ -48,6 +63,8 @@ export class BabyEventCardComponent {
   private destroyRef = inject(DestroyRef);
 
   public strings = BabyEventCardStrings;
+
+  protected readonly itemSize = BABY_EVENT_CARD_ITEM_SIZE;
 
   public readonly event = input.required<BabyEvent>();
   public readonly filterMode = input.required<boolean>();
@@ -62,6 +79,20 @@ export class BabyEventCardComponent {
   public readonly pendingKind = computed(() =>
     this.babyEventsService.pendingKind(this.event().uid),
   );
+
+  /** Who created and last edited the event, joined onto one line. */
+  public readonly attribution = computed(() => {
+    const { createdBy, lastEditedBy } = this.event();
+
+    if (createdBy === lastEditedBy) {
+      return `${this.strings.CREATED_AND_EDITED_BY}: ${createdBy}`;
+    }
+
+    const created = `${this.strings.CREATED_BY}: ${createdBy}`;
+    return lastEditedBy
+      ? `${created} · ${this.strings.EDITED_BY}: ${lastEditedBy}`
+      : created;
+  });
 
   public async onEdit(event?: MouseEvent): Promise<void> {
     if (event) event.preventDefault();

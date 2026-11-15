@@ -17,6 +17,7 @@ import { SessionStore } from '../../../../../core/stores/session/session.store';
 import { NotificationService } from '../../../../../core/services/notification.service';
 import NotificationStrings from '../../../../../shared/strings/notification.strings';
 import { LongPressDirective } from '../../../../../shared/directives/long-press.directive';
+import { CategoryIconComponent } from '../../../../../shared/components/category-icon/category-icon.component';
 import { BabyEventCategoryView } from '../../../pages/baby-events.vm';
 import BabyEventsPanelItemStrings from './baby-events-panel-item.strings';
 
@@ -27,6 +28,7 @@ import BabyEventsPanelItemStrings from './baby-events-panel-item.strings';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
+    CategoryIconComponent,
     LongPressDirective,
     MatDividerModule,
     MatIconModule,

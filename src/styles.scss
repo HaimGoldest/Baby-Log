@@ -4,17 +4,19 @@
 //   1. Material 3 base theme   emits the --mat-sys-* system tokens, once.
 //   2. Theme palettes          raw --app-* values per <html data-theme>. The
 //                              only place in the app where colour literals
-//                              belong.
+//                              belong (with the category palette map below).
 //   3. Material role mapping   points --mat-sys-* roles at --app-* tokens, so
-//                              switching data-theme re-colours Material too.
-//   4. Transition shims        M2-era behaviour existing templates still rely
-//                              on. Removed as Phase 2 restyles the components.
-//   5. Base and app-wide rules
+//                              switching data-theme re-colours Material too,
+//                              plus the app-wide component looks.
+//   4. Event category colours  [data-category] → --app-cat-bg / --app-cat-fg.
+//   5. Semantic actions        danger / success variants for Material buttons.
+//   6. Base and app-wide rules
 //
 // Adding a theme: add its id to APP_THEMES (src/app/core/theme/app-themes.ts)
 // and a matching `:root[data-theme='<id>']` block to section 2.
 // =============================================================================
 
+@use 'sass:list';
 @use 'sass:map';
 @use '@angular/material' as mat;
 
@@ -29,6 +31,41 @@ $_type-levels: display-large, display-medium, display-small, headline-large,
 $_no-tracking: ();
 @each $level in $_type-levels {
   $_no-tracking: map.set($_no-tracking, #{$level}-tracking, 0);
+}
+
+// Event category palette, keyed by catalogue id
+// (core/default-data/baby-event-categories-data.ts): (background, foreground).
+// Light pairs are pastels with a deep same-hue foreground, shared by every light
+// theme. Dark pairs are the same hue at ~22% over the dark card surface, with a
+// light tint on top, so tiles sit quietly without glare. Every pair clears 5:1.
+// Adding a category: add a row here; anything unlisted falls back to the
+// primary container.
+$_category-palette: (
+  'Fever': (slug: fever, light: (#fbe2e0, #b22e1f), dark: (#423234, #e2958d)),
+  'Notes': (slug: notes, light: (#fbeadf, #9c4f1c), dark: (#423934, #e0a985)),
+  'Poo': (slug: poo, light: (#f3eee7, #815f31), dark: (#423c34, #e0b985)),
+  'Awake': (slug: awake, light: (#fdf5dd, #7e6416), dark: (#424134, #e0c985)),
+  'Snack': (slug: snack, light: (#fafae1, #6c6c13), dark: (#424634, #e0e085)),
+  'Vomit': (slug: vomit, light: (#eef5e5, #4e6f20), dark: (#384634, #bae085)),
+  'food': (slug: food, light: (#e9f2e9, #3c7237), dark: (#2d4634, #8ce085)),
+  'Diaper': (slug: diaper, light: (#e4f6f0, #1d7253), dark: (#2b4642, #85e0bf)),
+  'Vaccine': (slug: vaccine, light: (#e4f5f6, #1e6f76), dark: (#2b444a, #85d9e0)),
+  'Shower': (slug: shower, light: (#e1effa, #1c69a0), dark: (#2b3d4a, #85bae0)),
+  'Medication': (slug: medication, light: (#e3e6f7, #283cbd), dark: (#2b334a, #95a0e4)),
+  'Sleep': (slug: sleep, light: (#eae2f8, #5d22c3), dark: (#33304a, #b295e4)),
+  'BreastPump': (slug: breast-pump, light: (#f2e6f4, #9638a8), dark: (#3e304a, #d48de2)),
+  'Breastfeeding': (slug: breastfeeding, light: (#f7e3f1, #ad2584), dark: (#423043, #e28dc9)),
+  'Bottle': (slug: bottle, light: (#fae1e7, #ba2147), dark: (#423039, #e391a5)),
+);
+
+/// Emits --app-cat-<slug>-bg / -fg for every category, from the given scheme.
+@mixin _category-tokens($scheme) {
+  @each $id, $entry in $_category-palette {
+    $slug: map.get($entry, slug);
+    $pair: map.get($entry, $scheme);
+    --app-cat-#{$slug}-bg: #{list.nth($pair, 1)};
+    --app-cat-#{$slug}-fg: #{list.nth($pair, 2)};
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -64,7 +101,8 @@ html {
 // redefined further down the tree would not reach Material's tokens.
 //
 // `nordic` is also the fallback for a missing or unknown data-theme. The status
-// colours here are shared by every light theme; dark redefines them.
+// and category colours here are shared by every light theme; dark redefines
+// them.
 :root,
 :root[data-theme='nordic'] {
   color-scheme: light;
@@ -78,7 +116,7 @@ html {
   --app-border-strong: #8a857c;
   --app-shadow-card: 0 1px 2px rgb(43 47 45 / 6%), 0 2px 8px rgb(43 47 45 / 6%);
 
-  --app-primary: #5f8d7b;
+  --app-primary: #527a6a;
   --app-on-primary: #ffffff;
   --app-primary-container: #e8f0ec;
   --app-on-primary-container: #1e3b31;
@@ -89,10 +127,22 @@ html {
 
   --app-success: #2f7a4f;
   --app-success-bg: #e5f2ea;
+  --app-info: #1d5c94;
+  --app-info-bg: #e6f0fa;
   --app-warning: #94560a;
   --app-warning-bg: #fbf0dc;
   --app-danger: #b3372f;
   --app-danger-bg: #fbe9e7;
+
+  @include _category-tokens(light);
+
+  // Google's published "Sign in with Google" light variant. Brand-mandated, so
+  // the light themes share it rather than taking their own palette. Roboto is
+  // the brand font; Hebrew falls through to the theme font, which Roboto lacks.
+  --app-google-btn-bg: #ffffff;
+  --app-google-btn-border: #747775;
+  --app-google-btn-text: #1f1f1f;
+  --app-google-btn-font: 'Roboto', var(--app-font-family);
 }
 
 :root[data-theme='mint'] {
@@ -125,7 +175,7 @@ html {
   --app-border-strong: #918780;
   --app-shadow-card: 0 1px 2px rgb(56 44 39 / 6%), 0 2px 8px rgb(56 44 39 / 6%);
 
-  --app-primary: #c86d51;
+  --app-primary: #ac5e46;
   --app-on-primary: #ffffff;
   --app-primary-container: #f9eae4;
   --app-on-primary-container: #5a2515;
@@ -160,18 +210,39 @@ html {
 
   --app-success: #7cc79b;
   --app-success-bg: #1b3225;
+  --app-info: #90c2ee;
+  --app-info-bg: #182b3d;
   --app-warning: #e7b062;
   --app-warning-bg: #382a15;
   --app-danger: #f2a097;
   --app-danger-bg: #3e2220;
+
+  @include _category-tokens(dark);
+
+  // Google's published dark variant of the sign-in button.
+  --app-google-btn-bg: #131314;
+  --app-google-btn-border: #8e918f;
+  --app-google-btn-text: #e3e3e3;
+}
+
+// Derived tokens: computed from whichever palette is active, so no theme block
+// redefines them. Declared on :root, where the palette tokens resolve.
+:root {
+  // Veils a surface while it is busy, keeping its content legible underneath.
+  --app-surface-overlay: color-mix(in srgb, var(--app-surface) 70%, transparent);
+
+  // Hover state layer for custom (non-Material) interactive elements.
+  --app-state-hover: color-mix(in srgb, var(--app-text-primary) 6%, transparent);
+
+  // Upward shadow for bars pinned to the bottom edge of a scroll area.
+  --app-shadow-bar: 0 -2px 8px color-mix(in srgb, var(--mat-sys-shadow) 8%, transparent);
 }
 
 // -----------------------------------------------------------------------------
 // 3. Material role mapping
 // -----------------------------------------------------------------------------
 // Covers every colour role the Material components in use read. Secondary and
-// tertiary share the brand hue until the themes define an accent of their own;
-// `color="accent"` resolves to tertiary.
+// tertiary share the brand hue until the themes define an accent of their own.
 html {
   @include mat.theme-overrides(
     (
@@ -214,97 +285,110 @@ html {
       on-error-container: var(--app-danger),
     )
   );
+
+  // App-wide component looks.
+  // - Cards: `appearance="outlined"` is the app's content card (surface, hairline
+  //   border, soft shadow); the default elevated card has no border and is used
+  //   for tonal surfaces such as alerts.
+  // - The toolbar is a flat surface bar; the FAB carries the brand colour.
+  @include mat.card-overrides(
+    (
+      elevated-container-color: var(--app-surface),
+      elevated-container-elevation: var(--app-shadow-card),
+      elevated-container-shape: var(--mat-sys-corner-large),
+      outlined-container-color: var(--app-surface),
+      outlined-container-elevation: var(--app-shadow-card),
+      outlined-container-shape: var(--mat-sys-corner-large),
+      outlined-outline-color: var(--app-border),
+    )
+  );
+  @include mat.toolbar-overrides(
+    (
+      container-background-color: var(--app-surface),
+      container-text-color: var(--app-text-primary),
+    )
+  );
+  @include mat.fab-overrides(
+    (
+      container-color: var(--app-primary),
+      foreground-color: var(--app-on-primary),
+      state-layer-color: var(--app-on-primary),
+      ripple-color: color-mix(in srgb, var(--app-on-primary) 12%, transparent),
+    )
+  );
 }
 
 // -----------------------------------------------------------------------------
-// 4. Transition shims (remove as Phase 2 restyles each consumer)
+// 4. Event category colours
 // -----------------------------------------------------------------------------
-// The M2-only APIs below read this theme object. With system variables on,
-// everything it emits is var(--mat-sys-*), so it follows the active data-theme.
-$_compat-theme: mat.define-theme(
-  (
-    color: (
-      theme-type: light,
-      primary: $_seed-palette,
-      use-system-variables: true,
-    ),
-    typography: (
-      use-system-variables: true,
-    ),
-    density: (
-      scale: 0,
-    ),
-  )
-);
+// An element with data-category="<catalogue id>" exposes its category's pair as
+// --app-cat-bg / --app-cat-fg, inherited by its descendants. Consumers read them
+// with the primary container as fallback, which covers unknown ids:
+//   background: var(--app-cat-bg, var(--app-primary-container));
+@each $id, $entry in $_category-palette {
+  $slug: map.get($entry, slug);
 
-// `color="primary|accent|warn"` (15 elements), `.mat-elevation-z4` (navbar),
-// and the `.mat-typography` element styles on <body>.
-@include mat.color-variants-backwards-compatibility($_compat-theme);
-@include mat.elevation-classes();
-@include mat.typography-hierarchy($_compat-theme);
-
-// The elevation classes read --mat-app-elevation-shadow-level-N, which only M2
-// themes define, and Material 21's built-in fallback is invalid CSS (a bare
-// `--mat-sys-shadow` with no var()), so without these they render no shadow.
-// M3's six levels are M2's z1/z3/z6/z8/z12 shadows; each z maps to the nearest.
-@function _m3-level-for-z($z) {
-  @if $z == 0 {
-    @return 0;
+  [data-category='#{$id}'] {
+    --app-cat-bg: var(--app-cat-#{$slug}-bg);
+    --app-cat-fg: var(--app-cat-#{$slug}-fg);
   }
-  @if $z <= 2 {
-    @return 1;
-  }
-  @if $z <= 5 {
-    @return 2;
-  }
-  @if $z <= 7 {
-    @return 3;
-  }
-  @if $z <= 11 {
-    @return 4;
-  }
-  @return 5;
-}
-
-html {
-  @for $z from 0 through 24 {
-    --mat-app-elevation-shadow-level-#{$z}: var(--mat-sys-level#{_m3-level-for-z($z)});
-  }
-}
-
-// M3's hierarchy maps h1-h4 onto the display scale (h2 becomes 45px) and body
-// text onto 16px. Pin both to the M2 sizes the templates were built against,
-// which fixed-height elements such as the 150px event card depend on.
-.mat-typography {
-  font: var(--mat-sys-body-medium);
-}
-
-.mat-typography h1 {
-  font: var(--mat-sys-headline-small);
-  margin: 0 0 16px;
-}
-
-.mat-typography h2 {
-  font: var(--mat-sys-title-large);
-  margin: 0 0 16px;
-}
-
-.mat-typography h3 {
-  font: var(--mat-sys-title-medium);
-  margin: 0 0 16px;
-}
-
-.mat-typography h4 {
-  font: var(--mat-sys-body-large);
-  margin: 0 0 16px;
 }
 
 // -----------------------------------------------------------------------------
-// 5. Base and app-wide rules
+// 5. Semantic actions
 // -----------------------------------------------------------------------------
-// The layout-bearing part of the old Bootstrap Reboot. Its colour rules are
-// gone; these stay because component styles assume them (e.g. `.card-style`
-// pairs width: 100% with padding and a border).
+// Add `app-danger-action` or `app-success-action` to a Material text, outlined
+// or filled button, an icon button, or a menu item to colour it by meaning. A
+// filled button becomes tonal (status background, status label), which keeps
+// its contrast in light and dark themes alike.
+@mixin _status-action($status) {
+  $fg: var(--app-#{$status});
+  $bg: var(--app-#{$status}-bg);
+  $ripple: color-mix(in srgb, #{$fg} 12%, transparent);
+
+  @include mat.button-overrides(
+    (
+      text-label-text-color: $fg,
+      text-state-layer-color: $fg,
+      text-ripple-color: $ripple,
+      outlined-label-text-color: $fg,
+      outlined-outline-color: $fg,
+      outlined-state-layer-color: $fg,
+      outlined-ripple-color: $ripple,
+      filled-container-color: $bg,
+      filled-label-text-color: $fg,
+      filled-state-layer-color: $fg,
+      filled-ripple-color: $ripple,
+    )
+  );
+  @include mat.icon-button-overrides(
+    (
+      icon-color: $fg,
+      state-layer-color: $fg,
+      ripple-color: $ripple,
+    )
+  );
+  @include mat.menu-overrides(
+    (
+      item-icon-color: $fg,
+      item-label-text-color: $fg,
+    )
+  );
+}
+
+.app-danger-action {
+  @include _status-action(danger);
+}
+
+.app-success-action {
+  @include _status-action(success);
+}
+
+// -----------------------------------------------------------------------------
+// 6. Base and app-wide rules
+// -----------------------------------------------------------------------------
+// The layout-bearing part of the old Bootstrap Reboot; components assume
+// border-box sizing and inherited form-control fonts.
 *,
 *::before,
 *::after {
@@ -318,7 +402,7 @@ body {
 
 body {
   margin: 0;
-  font-family: var(--app-font-family);
+  font: var(--mat-sys-body-medium);
   color: var(--app-text-primary);
   background-color: var(--app-bg);
   -webkit-text-size-adjust: 100%;
@@ -349,20 +433,6 @@ textarea {
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
-}
-
-// Colours now come from tokens. The !important flags still win over mat-card's
-// own styles; Phase 2 replaces them with mat.card-overrides().
-.card-style {
-  min-width: 300px !important;
-  max-width: 800px !important;
-  width: 100% !important;
-  margin-bottom: 10px !important;
-  padding: 0px 10px !important;
-  border: 1px solid var(--app-border) !important;
-  border-radius: 8px !important;
-  background-color: var(--app-surface) !important;
-  box-shadow: var(--app-shadow-card) !important;
 }
 
 /* Material sets `text-align: left` on menu items with no [dir=rtl] counterpart,

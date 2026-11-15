@@ -1,8 +1,8 @@
 <div class="preferences-page">
-  <h2 class="page-title">{{ strings.HEADER }}</h2>
+  <h1 class="page-title">{{ strings.HEADER }}</h1>
 
   <section class="section">
-    <h3 class="section-title">{{ strings.ACTIVE_SECTION }}</h3>
+    <h2 class="section-title">{{ strings.ACTIVE_SECTION }}</h2>
 
     @for (item of favorites(); track item.category.id) {
       <app-baby-event-favorite-item
@@ -25,10 +25,8 @@
     }
   </section>
 
-  <mat-divider class="section-divider"></mat-divider>
-
   <section class="section">
-    <h3 class="section-title">{{ strings.AVAILABLE_SECTION }}</h3>
+    <h2 class="section-title">{{ strings.AVAILABLE_SECTION }}</h2>
 
     @if (availableCategories().length === 0) {
       <app-alert-message
@@ -37,21 +35,17 @@
         [message]="strings.ALL_ADDED_MESSAGE"
       ></app-alert-message>
     } @else {
-      <mat-card class="card-style available-card">
+      <mat-card appearance="outlined" class="available-card">
         @for (category of availableCategories(); track category.id) {
           <div class="available-row">
-            <img
-              class="event-img"
-              [src]="category.imagePath"
-              [alt]="category.id"
-            />
+            <app-category-icon [category]="category"></app-category-icon>
 
             <span class="category-title">{{ category.value }}</span>
 
             <button
               mat-button
               type="button"
-              class="add-favorite"
+              class="app-success-action"
               (click)="addFavorite(category)"
             >
               <mat-icon>star</mat-icon>
@@ -64,24 +58,22 @@
   </section>
 </div>
 
-<div class="action-buttons">
-  <button
-    mat-raised-button
-    type="button"
-    class="save"
-    [disabled]="!canSave()"
-    (click)="save()"
-  >
-    {{ strings.SAVE }}
-  </button>
-
+<div class="action-bar">
   <button
     mat-button
     type="button"
-    class="cancel"
     [disabled]="!canCancel()"
     (click)="cancel()"
   >
     {{ strings.CANCEL }}
+  </button>
+
+  <button
+    mat-flat-button
+    type="button"
+    [disabled]="!canSave()"
+    (click)="save()"
+  >
+    {{ strings.SAVE }}
   </button>
 </div>

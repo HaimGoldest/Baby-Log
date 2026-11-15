@@ -8,6 +8,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import BabyEventFavoriteItemStrings from './baby-event-favorite-item.strings';
 import { BABY_NOTE_MAX_LENGTH } from '../../../../core/default-data/baby-event-limits';
 import { FavoriteDraft } from '../../pages/baby-event-preferences.vm';
+import { CategoryIconComponent } from '../../../../shared/components/category-icon/category-icon.component';
 
 /**
  * Presentational card for one favorited category. It owns no state and never
@@ -21,6 +22,7 @@ import { FavoriteDraft } from '../../pages/baby-event-preferences.vm';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
+    CategoryIconComponent,
     MatButtonModule,
     MatCardModule,
     MatFormFieldModule,

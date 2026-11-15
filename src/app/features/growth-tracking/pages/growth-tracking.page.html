@@ -1,8 +1,12 @@
 <div class="growth-tracking-page">
-  <div class="growth-tracking-content">
-    <app-growth-tracking-list></app-growth-tracking-list>
-  </div>
-  <button mat-fab class="fab" (click)="openAddMeasurementForm()">
-    <mat-icon>add</mat-icon>
-  </button>
+  <app-growth-tracking-list></app-growth-tracking-list>
 </div>
+
+<button
+  mat-fab
+  class="fab"
+  [attr.aria-label]="strings.ADD_MEASUREMENT"
+  (click)="openAddMeasurementForm()"
+>
+  <mat-icon>add</mat-icon>
+</button>

@@ -5,6 +5,19 @@
     <title>BabyLog</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Applies the cached theme before the first paint, so a dark-theme user
+         never sees the light default flash while the app loads. The key must
+         match ThemeService.STORAGE_KEY. An unknown value matches no
+         [data-theme] block and falls back to the default (nordic) palette;
+         ThemeService validates it once the app boots. -->
+    <script>
+      try {
+        document.documentElement.dataset.theme =
+          localStorage.getItem('baby-log.theme') || 'nordic';
+      } catch {
+        document.documentElement.dataset.theme = 'nordic';
+      }
+    </script>
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -24,7 +37,7 @@
       rel="stylesheet"
     />
   </head>
-  <body class="mat-typography">
+  <body>
     <app-root></app-root>
   </body>
 </html>
