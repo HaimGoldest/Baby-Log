@@ -16,6 +16,14 @@ export interface User {
   categoryColors?: CategoryColorMap;
 }
 
+/**
+ * Everything the preferences page saves, written together in one update.
+ * All required: the page always sends the complete set it is showing.
+ */
+export type UserPreferences = Required<
+  Pick<User, 'theme' | 'eventFavorites' | 'categoryColors'>
+>;
+
 export interface BabyEventFavorites {
   categoryId: string;
   commonComments: string[];

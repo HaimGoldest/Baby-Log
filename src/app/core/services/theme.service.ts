@@ -15,14 +15,20 @@ import {
 } from '../theme/app-themes';
 
 /**
- * Owns the active theme and keeps its three copies in step: the `data-theme`
+ * Owns the theme on screen and keeps it apart from the saved one.
+ *
+ * The saved theme has three copies kept in step here: the `data-theme`
  * attribute on <html> that `styles.scss` keys on, a localStorage cache that
  * lets the next launch open in the right theme, and the `theme` field on the
  * signed-in user's profile, which is the source of truth across devices.
  *
+ * A preview (the preferences page's unsaved choice) changes only `data-theme`:
+ * nothing is cached or written until the page saves it with the rest of the
+ * user's preferences and calls `confirmSaved`.
+ *
  * An inline script in `src/index.html` applies the cached theme before the
  * first paint. This service, created by an app initializer, then takes over:
- * it validates that value and keeps the three copies in sync from then on.
+ * it validates that value and keeps the copies in sync from then on.
  */
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
@@ -32,8 +38,16 @@ export class ThemeService {
   private readonly document = inject(DOCUMENT);
   private readonly sessionStore = inject(SessionStore);
 
-  private readonly _theme = signal<AppThemeId>(this.readCachedTheme());
-  public readonly theme = this._theme.asReadonly();
+  private readonly _savedTheme = signal<AppThemeId>(this.readCachedTheme());
+  private readonly _previewTheme = signal<AppThemeId | null>(null);
+
+  /** The user's stored theme: the profile's when signed in, else the cache. */
+  public readonly savedTheme = this._savedTheme.asReadonly();
+
+  /** The theme on screen: the preview while there is one, else the saved theme. */
+  public readonly theme = computed(
+    () => this._previewTheme() ?? this._savedTheme(),
+  );
 
   // Narrowed so the profile effect re-runs when the user or their theme
   // changes, not on every snapshot of the user document.
@@ -45,7 +59,7 @@ export class ThemeService {
   constructor() {
     // Applied here rather than from an effect: effects first run during change
     // detection, after the shell has already rendered once.
-    this.applyToDocument(this._theme());
+    this.render();
 
     effect(() => {
       const uid = this.uid();
@@ -59,35 +73,48 @@ export class ThemeService {
   }
 
   /**
-   * Switches to the given theme at once (signal, <html data-theme> and the
-   * localStorage cache) and saves it to the signed-in user's profile. Choosing
-   * the theme that is already active does nothing.
+   * Shows a theme on screen without saving it, until `confirmSaved` or
+   * `cancelPreview`. Previewing the saved theme simply ends the preview.
    */
-  public setTheme(theme: AppThemeId): void {
-    if (theme === this._theme()) return;
+  public preview(theme: AppThemeId): void {
+    this._previewTheme.set(theme === this._savedTheme() ? null : theme);
+    this.render();
+  }
 
-    this.apply(theme);
-    if (this.uid()) this.persist(theme);
+  /** Ends any preview, returning the screen to the saved theme. */
+  public cancelPreview(): void {
+    if (this._previewTheme() === null) return;
+
+    this._previewTheme.set(null);
+    this.render();
+  }
+
+  /**
+   * Records a theme that is now stored on the user's profile: it becomes the
+   * saved theme, is cached for the next launch, and a preview of it ends. A
+   * preview of a different theme stays on screen, so a profile change from
+   * another device does not discard a choice the user has not saved yet.
+   */
+  public confirmSaved(theme: AppThemeId): void {
+    this._savedTheme.set(theme);
+    if (this._previewTheme() === theme) this._previewTheme.set(null);
+
+    this.writeCache(theme);
+    this.render();
   }
 
   private adoptProfileTheme(stored: unknown): void {
     if (isAppThemeId(stored)) {
-      this.apply(stored);
+      this.confirmSaved(stored);
       return;
     }
 
-    this.apply(DEFAULT_APP_THEME);
+    this.confirmSaved(DEFAULT_APP_THEME);
 
     // Only a missing field is backfilled. A value this build does not
     // recognise was most likely written by a newer one, and overwriting it
     // would discard that choice on every device.
     if (stored === undefined) this.persist(DEFAULT_APP_THEME);
-  }
-
-  private apply(theme: AppThemeId): void {
-    this._theme.set(theme);
-    this.applyToDocument(theme);
-    this.writeCache(theme);
   }
 
   private persist(theme: AppThemeId): void {
@@ -98,8 +125,8 @@ export class ThemeService {
     });
   }
 
-  private applyToDocument(theme: AppThemeId): void {
-    this.document.documentElement.dataset['theme'] = theme;
+  private render(): void {
+    this.document.documentElement.dataset['theme'] = this.theme();
   }
 
   private readCachedTheme(): AppThemeId {

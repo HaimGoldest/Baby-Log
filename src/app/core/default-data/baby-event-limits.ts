@@ -13,4 +13,4 @@
  * Counted in UTF-16 code units, matching the native `maxlength` attribute and
  * `Validators.maxLength`, so an emoji costs two.
  */
-export const BABY_NOTE_MAX_LENGTH = 85;
+export const BABY_NOTE_MAX_LENGTH = 80;

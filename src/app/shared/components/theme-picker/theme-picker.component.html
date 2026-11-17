@@ -1,6 +1,6 @@
 <div class="theme-grid" role="radiogroup" [attr.aria-label]="strings.GROUP_LABEL">
   @for (theme of themes; track theme.id) {
-    @let isActive = theme.id === activeTheme();
+    @let isActive = theme.id === selected();
 
     <label class="theme-option" [class.is-active]="isActive">
       <input

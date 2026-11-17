@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  OnDestroy,
   computed,
   inject,
   signal,
@@ -15,7 +16,7 @@ import BabyEventsPreferencesStrings from './baby-event-preferences.strings';
 import { SessionStore } from '../../../core/stores/session/session.store';
 import { NotificationService } from '../../../core/services/notification.service';
 import { ThemeService } from '../../../core/services/theme.service';
-import { APP_THEMES } from '../../../core/theme/app-themes';
+import { APP_THEMES, AppThemeId } from '../../../core/theme/app-themes';
 import NotificationStrings from '../../../shared/strings/notification.strings';
 import BABY_EVENT_CATEGORIES_DATA from '../../../core/default-data/baby-event-categories-data';
 import { BabyEventCategory } from '../../../models/baby.model';
@@ -32,16 +33,18 @@ import {
 import { CommentDraft, FavoriteDraft } from './baby-event-preferences.vm';
 
 /**
- * Comparable projection of a draft: category order, comment text and custom
- * colours, which is exactly what gets persisted. Comment ids are local and
- * deliberately excluded, and colours are sorted by category id so the order
- * they were picked in does not count as a change.
+ * Comparable projection of a draft: theme, category order, comment text and
+ * custom colours, which is exactly what gets persisted. Comment ids are local
+ * and deliberately excluded, and colours are sorted by category id so the
+ * order they were picked in does not count as a change.
  */
 function serializeDraft(
+  theme: AppThemeId,
   favorites: FavoriteDraft[],
   colors: CategoryColorMap,
 ): string {
   return JSON.stringify({
+    theme,
     favorites: favorites.map((item) => [
       item.category.id,
       item.comments.map((comment) => comment.text),
@@ -66,7 +69,7 @@ function serializeDraft(
     ThemePickerComponent,
   ],
 })
-export class BabyEventsPreferencesPage {
+export class BabyEventsPreferencesPage implements OnDestroy {
   private sessionStore = inject(SessionStore);
   private router = inject(Router);
   private notificationService = inject(NotificationService);
@@ -75,6 +78,10 @@ export class BabyEventsPreferencesPage {
   /** Purely local and monotonic: only ever used as an `@for` key. */
   private nextCommentId = 0;
 
+  /** Previewed on screen as soon as it changes; stored only on save. */
+  private readonly themeDraft = signal<AppThemeId>(
+    this.themeService.savedTheme(),
+  );
   private readonly draft = signal<FavoriteDraft[]>([]);
 
   /**
@@ -87,30 +94,26 @@ export class BabyEventsPreferencesPage {
 
   public readonly strings = BabyEventsPreferencesStrings;
   public readonly favorites = this.draft.asReadonly();
+  public readonly selectedTheme = this.themeDraft.asReadonly();
 
   /**
    * Compared against the snapshot taken when the draft was seeded, so an edit
-   * that is typed and then undone correctly disables saving again.
+   * that is made and then undone (a theme picked and picked back, a note
+   * typed and deleted) hides the Save bar again.
    */
-  public readonly isDirty = computed(
-    () => serializeDraft(this.draft(), this.colorDraft()) !== this.baseline(),
+  public readonly hasUnsavedChanges = computed(
+    () =>
+      serializeDraft(this.themeDraft(), this.draft(), this.colorDraft()) !==
+      this.baseline(),
   );
 
   /**
    * At least one favorite is mandatory: with none, the events panel is empty
-   * and no event can be created, so saving that state is never allowed.
+   * and no event can be created, so saving that state is never allowed, even
+   * when only the theme changed.
    */
   public readonly canSave = computed(
-    () => this.isDirty() && this.draft().length > 0,
-  );
-
-  /**
-   * Persisted favorites, not the draft: with none saved, the events page
-   * bounces straight back here through the route guard, so cancelling would
-   * appear to do nothing. Disabled instead of silently looping.
-   */
-  public readonly canCancel = computed(
-    () => this.sessionStore.eventFavorites().length > 0,
+    () => this.hasUnsavedChanges() && this.draft().length > 0,
   );
 
   public readonly availableCategories = computed(() =>
@@ -120,11 +123,10 @@ export class BabyEventsPreferencesPage {
     ),
   );
 
-  /** The active theme's name, shown on the collapsed theme panel. */
+  /** The chosen theme's name, saved or not, shown on the theme panel. */
   public readonly themeLabel = computed(
     () =>
-      APP_THEMES.find((theme) => theme.id === this.themeService.theme())
-        ?.label ?? '',
+      APP_THEMES.find((theme) => theme.id === this.themeDraft())?.label ?? '',
   );
 
   /** The events panel's summary, counting the draft so it follows edits. */
@@ -144,6 +146,21 @@ export class BabyEventsPreferencesPage {
 
   constructor() {
     this.seedDraft();
+  }
+
+  /**
+   * Leaving without saving drops the preview, so an unconfirmed theme never
+   * follows the user to another page. After a save there is no preview left,
+   * and this does nothing.
+   */
+  public ngOnDestroy(): void {
+    this.themeService.cancelPreview();
+  }
+
+  /** Shows the theme at once; it is stored only when the page is saved. */
+  public selectTheme(theme: AppThemeId): void {
+    this.themeDraft.set(theme);
+    this.themeService.preview(theme);
   }
 
   public moveUp(index: number): void {
@@ -197,6 +214,14 @@ export class BabyEventsPreferencesPage {
   public async save(): Promise<void> {
     if (!this.canSave()) return;
 
+    const theme = this.themeDraft();
+    // What is being saved, taken now so an edit made while the write is in
+    // flight still counts as unsaved afterwards.
+    const savedSnapshot = serializeDraft(
+      theme,
+      this.draft(),
+      this.colorDraft(),
+    );
     const favorites: BabyEventFavorites[] = this.draft().map((item) => ({
       categoryId: item.category.id,
       // Blanks are dropped here rather than while typing: emptying the field
@@ -207,20 +232,33 @@ export class BabyEventsPreferencesPage {
     }));
 
     try {
-      await this.sessionStore.updatePreferences(favorites, this.colorDraft());
+      await this.sessionStore.updatePreferences({
+        theme,
+        eventFavorites: favorites,
+        categoryColors: this.colorDraft(),
+      });
+      // Confirmed before navigating, so the theme is cached and the preview
+      // has ended by the time ngOnDestroy runs.
+      this.themeService.confirmSaved(theme);
+      this.baseline.set(savedSnapshot);
       this.navigateEventsPage();
     } catch {
+      // A rejected write rolls the watched profile back, which can end the
+      // preview. The draft still holds the choice, so it goes back on screen.
+      this.themeService.preview(theme);
       this.notificationService.error(
         NotificationStrings.SAVE_PREFERENCES_FAILED,
       );
     }
   }
 
+  /**
+   * Discards every unsaved change, including the theme preview, and stays on
+   * the page; the Save bar then disappears.
+   */
   public cancel(): void {
-    if (!this.canCancel()) return;
-
     this.seedDraft();
-    this.navigateEventsPage();
+    this.themeService.cancelPreview();
   }
 
   /**
@@ -241,10 +279,12 @@ export class BabyEventsPreferencesPage {
       }))
       .filter((item) => !!item.category);
     const colors = this.sessionStore.categoryColors();
+    const theme = this.themeService.savedTheme();
 
+    this.themeDraft.set(theme);
     this.draft.set(draft);
     this.colorDraft.set(colors);
-    this.baseline.set(serializeDraft(draft, colors));
+    this.baseline.set(serializeDraft(theme, draft, colors));
   }
 
   private swap(from: number, to: number): void {

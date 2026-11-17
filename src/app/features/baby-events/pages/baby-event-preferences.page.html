@@ -17,7 +17,7 @@
        src/styles.scss, section 7. Edits stay in this page's draft whether a
        panel is open or not, so the Save bar is unaffected by collapsing. -->
   <div class="app-preferences-panels">
-    <!-- The theme applies and saves on tap, independently of the Save bar. -->
+    <!-- A chosen theme is previewed at once and saved with everything else. -->
     <mat-expansion-panel class="app-preferences-panel">
       <mat-expansion-panel-header class="app-preferences-panel-header">
         <mat-panel-title class="panel-title">
@@ -29,7 +29,10 @@
         </mat-panel-description>
       </mat-expansion-panel-header>
 
-      <app-theme-picker></app-theme-picker>
+      <app-theme-picker
+        [selected]="selectedTheme()"
+        (selectedChange)="selectTheme($event)"
+      ></app-theme-picker>
     </mat-expansion-panel>
 
     <mat-expansion-panel
@@ -124,22 +127,21 @@
   </div>
 </div>
 
-<div class="action-bar">
-  <button
-    mat-button
-    type="button"
-    [disabled]="!canCancel()"
-    (click)="cancel()"
-  >
-    {{ strings.CANCEL }}
-  </button>
+<!-- Only while there is something to save or discard, so the page opens
+     clean. Save stays disabled while no category is active. -->
+@if (hasUnsavedChanges()) {
+  <div class="action-bar">
+    <button mat-button type="button" (click)="cancel()">
+      {{ strings.CANCEL }}
+    </button>
 
-  <button
-    mat-flat-button
-    type="button"
-    [disabled]="!canSave()"
-    (click)="save()"
-  >
-    {{ strings.SAVE }}
-  </button>
-</div>
+    <button
+      mat-flat-button
+      type="button"
+      [disabled]="!canSave()"
+      (click)="save()"
+    >
+      {{ strings.SAVE }}
+    </button>
+  </div>
+}

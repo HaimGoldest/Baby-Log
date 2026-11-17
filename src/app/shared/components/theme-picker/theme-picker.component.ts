@@ -1,12 +1,18 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { ThemeService } from '../../../core/services/theme.service';
 import { APP_THEMES, AppThemeId } from '../../../core/theme/app-themes';
 import ThemePickerStrings from './theme-picker.strings';
 
 /**
- * Lists every theme as a tile with a swatch preview; choosing one applies and
- * saves it at once.
+ * Lists every theme as a tile with a swatch preview. Presentational: it shows
+ * `selected` and emits a new choice; the caller decides whether to preview,
+ * save or discard it (the preferences page previews it at once and saves it
+ * with the rest of the preferences).
  *
  * Built on native radio inputs (visually hidden inside each tile), so arrow
  * keys move between themes and assistive tech announces a single-choice group.
@@ -20,13 +26,13 @@ import ThemePickerStrings from './theme-picker.strings';
   styleUrl: './theme-picker.component.scss',
 })
 export class ThemePickerComponent {
-  private readonly themeService = inject(ThemeService);
+  public readonly selected = input.required<AppThemeId>();
+  public readonly selectedChange = output<AppThemeId>();
 
   public readonly themes = APP_THEMES;
-  public readonly activeTheme = this.themeService.theme;
   public readonly strings = ThemePickerStrings;
 
   public select(theme: AppThemeId): void {
-    this.themeService.setTheme(theme);
+    this.selectedChange.emit(theme);
   }
 }
