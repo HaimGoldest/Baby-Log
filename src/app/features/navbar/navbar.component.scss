@@ -74,6 +74,12 @@
   text-overflow: ellipsis;
 }
 
+// Directional icons (e.g. logout's exit arrow) point toward the end of the
+// line, so they flip with the document direction.
+.mirror-in-rtl:dir(rtl) {
+  transform: scaleX(-1);
+}
+
 .menu-item-active {
   --mat-menu-item-label-text-color: var(--app-on-primary-container);
   --mat-menu-item-icon-color: var(--app-on-primary-container);

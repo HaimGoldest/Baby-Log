@@ -53,7 +53,8 @@
       [routerLinkActiveOptions]="{ exact: true }"
       [disabled]="!userHaveBabies()"
     >
-      {{ strings.BABY_EVENTS }}
+      <mat-icon>event_note</mat-icon>
+      <span>{{ strings.BABY_EVENTS }}</span>
     </button>
     <button
       mat-menu-item
@@ -62,7 +63,8 @@
       [routerLinkActiveOptions]="{ exact: true }"
       [disabled]="!userHaveBabies()"
     >
-      {{ strings.PREFERENCES }}
+      <mat-icon>tune</mat-icon>
+      <span>{{ strings.PREFERENCES }}</span>
     </button>
 
     <mat-divider></mat-divider>
@@ -74,7 +76,8 @@
       [routerLinkActiveOptions]="{ exact: true }"
       [disabled]="!userHaveBabies()"
     >
-      {{ strings.GROWTH_TRACKING }}
+      <mat-icon>show_chart</mat-icon>
+      <span>{{ strings.GROWTH_TRACKING }}</span>
     </button>
 
     <mat-divider></mat-divider>
@@ -86,7 +89,8 @@
       [routerLinkActiveOptions]="{ exact: true }"
       [disabled]="!userHaveBabies()"
     >
-      {{ strings.BABY_INFO }}
+      <mat-icon>child_care</mat-icon>
+      <span>{{ strings.BABY_INFO }}</span>
     </button>
     <button
       mat-menu-item
@@ -95,7 +99,8 @@
       [routerLinkActiveOptions]="{ exact: true }"
       [disabled]="userHaveBabies()"
     >
-      {{ strings.ADD_BABY }}
+      <mat-icon>add_circle_outline</mat-icon>
+      <span>{{ strings.ADD_BABY }}</span>
     </button>
 
     <mat-divider></mat-divider>
@@ -105,6 +110,9 @@
       <mat-icon>palette</mat-icon>
       <span>{{ strings.CYCLE_THEME }}</span>
     </button>
-    <button mat-menu-item (click)="logout()">{{ strings.LOGOUT }}</button>
+    <button mat-menu-item (click)="logout()">
+      <mat-icon class="mirror-in-rtl">logout</mat-icon>
+      <span>{{ strings.LOGOUT }}</span>
+    </button>
   </mat-menu>
 }
