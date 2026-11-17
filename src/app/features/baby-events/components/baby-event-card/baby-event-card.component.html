@@ -65,9 +65,11 @@
   </div>
 
   @if (babyEvent.comment) {
+    <!-- The no-break space ties the label to the note: with an ordinary space,
+         a single unbroken word would wrap below the label as a whole and the
+         two-line clamp would leave it just one line. -->
     <p class="note">
-      <span class="note-label">{{ strings.COMMENT }}:</span>
-      {{ babyEvent.comment }}
+      <span class="note-label">{{ strings.COMMENT }}:</span>&nbsp;{{ babyEvent.comment }}
     </p>
   }
 
