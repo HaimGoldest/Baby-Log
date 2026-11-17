@@ -12,6 +12,7 @@
 //   4. Event category colours  [data-category-color] → --app-cat-bg / -fg.
 //   5. Semantic actions        danger / success variants for Material buttons.
 //   6. Base and app-wide rules
+//   7. Preferences panels      the settings page's expansion-panel cards.
 //
 // Adding a theme: add it to APP_THEMES (src/app/core/theme/app-themes.ts), add
 // its key colours to $_theme-key-colors, and give it a matching
@@ -490,8 +491,8 @@ html {
 // -----------------------------------------------------------------------------
 // 6. Base and app-wide rules
 // -----------------------------------------------------------------------------
-// The layout-bearing part of the old Bootstrap Reboot; components assume
-// border-box sizing and inherited form-control fonts.
+// A minimal reset: components assume border-box sizing and inherited
+// form-control fonts.
 *,
 *::before,
 *::after {
@@ -544,7 +545,7 @@ textarea {
   text-align: start;
 }
 
-/* Notes in the events panel's long-press menu run to BABY_NOTE_MAX_LENGTH (62),
+/* Notes in the events panel's long-press menu run to BABY_NOTE_MAX_LENGTH (80),
    which needs two to three lines inside Material's 280px panel cap. The panel
    renders in a CDK overlay outside the component, so these live here and are
    scoped by the menu's panelClass. */
@@ -577,4 +578,78 @@ textarea {
    this only lowers its viewport-based cap. Scoped by the menu's panelClass. */
 .category-color-menu.mat-mdc-menu-panel {
   max-height: min(320px, calc(100vh - 48px));
+}
+
+// -----------------------------------------------------------------------------
+// 7. Preferences panels
+// -----------------------------------------------------------------------------
+// BabyEventsPreferencesPage groups its settings in mat-expansion-panels. A
+// top-level panel (.app-preferences-panel inside .app-preferences-panels)
+// looks like the app's outlined content card: surface, hairline border, soft
+// shadow, large corner. Sub-panels (.app-preferences-subpanel inside
+// .app-preferences-subpanels) are flat sections of their parent, divided by
+// a hairline. The top-level panels deliberately sit in a plain container, not
+// a mat-accordion, which would square the corners between stacked panels.
+.app-preferences-panels {
+  @include mat.expansion-overrides(
+    (
+      container-background-color: var(--app-surface),
+      container-text-color: var(--app-text-primary),
+      container-shape: var(--mat-sys-corner-large),
+      container-elevation-shadow: var(--app-shadow-card),
+      header-text-color: var(--app-text-primary),
+      header-description-color: var(--app-text-secondary),
+      header-indicator-color: var(--app-text-secondary),
+      header-collapsed-state-height: 56px,
+      header-expanded-state-height: 56px,
+    )
+  );
+}
+
+.app-preferences-panel {
+  border: 1px solid var(--app-border);
+}
+
+.app-preferences-subpanels {
+  @include mat.expansion-overrides(
+    (
+      container-background-color: var(--app-surface),
+      container-shape: 0,
+      container-elevation-shadow: none,
+      header-text-font: var(--mat-sys-title-small-font),
+      header-text-size: var(--mat-sys-title-small-size),
+      header-text-weight: var(--mat-sys-title-small-weight),
+      header-text-line-height: var(--mat-sys-title-small-line-height),
+      header-collapsed-state-height: 48px,
+      header-expanded-state-height: 48px,
+    )
+  );
+}
+
+.app-preferences-subpanel + .app-preferences-subpanel {
+  border-block-start: 1px solid var(--app-border);
+}
+
+// Gutters. Material pads headers and bodies by 24px, which leaves the cards
+// inside a sub-panel too narrow on a 360px phone. The headers are elements of
+// the page's own template; the body is Material's, with no token for its
+// padding, so its class is targeted here, scoped to these panels (as the menu
+// panels are in section 6). The sub-panel header's 4px plus the parent
+// body's 12px lines its text up with the top-level header's 16px; its end
+// side keeps 8px, which Material's chevron (-8px margins) needs to stay
+// inside the header.
+.app-preferences-panels .app-preferences-panel-header {
+  padding-inline: 16px;
+}
+
+.app-preferences-panels .app-preferences-subpanel-header {
+  padding-inline: 4px 8px;
+}
+
+.app-preferences-panel .mat-expansion-panel-body {
+  padding: 0 12px 12px;
+}
+
+.app-preferences-subpanel .mat-expansion-panel-body {
+  padding: 4px 0 8px;
 }

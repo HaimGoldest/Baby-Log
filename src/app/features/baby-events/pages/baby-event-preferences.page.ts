@@ -7,13 +7,15 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { BabyEventFavoriteItemComponent } from '../components/baby-event-favorite-item/baby-event-favorite-item.component';
 import { AppRoute } from '../../../enums/app-route.enum';
 import BabyEventsPreferencesStrings from './baby-event-preferences.strings';
 import { SessionStore } from '../../../core/stores/session/session.store';
 import { NotificationService } from '../../../core/services/notification.service';
+import { ThemeService } from '../../../core/services/theme.service';
+import { APP_THEMES } from '../../../core/theme/app-themes';
 import NotificationStrings from '../../../shared/strings/notification.strings';
 import BABY_EVENT_CATEGORIES_DATA from '../../../core/default-data/baby-event-categories-data';
 import { BabyEventCategory } from '../../../models/baby.model';
@@ -59,7 +61,7 @@ function serializeDraft(
     BabyEventFavoriteItemComponent,
     CategoryIconComponent,
     MatButtonModule,
-    MatCardModule,
+    MatExpansionModule,
     MatIconModule,
     ThemePickerComponent,
   ],
@@ -68,6 +70,7 @@ export class BabyEventsPreferencesPage {
   private sessionStore = inject(SessionStore);
   private router = inject(Router);
   private notificationService = inject(NotificationService);
+  private themeService = inject(ThemeService);
 
   /** Purely local and monotonic: only ever used as an `@for` key. */
   private nextCommentId = 0;
@@ -116,6 +119,28 @@ export class BabyEventsPreferencesPage {
         !this.draft().some((item) => item.category.id === category.id),
     ),
   );
+
+  /** The active theme's name, shown on the collapsed theme panel. */
+  public readonly themeLabel = computed(
+    () =>
+      APP_THEMES.find((theme) => theme.id === this.themeService.theme())
+        ?.label ?? '',
+  );
+
+  /** The events panel's summary, counting the draft so it follows edits. */
+  public readonly activeSummary = computed(
+    () => `${this.draft().length} ${this.strings.ACTIVE_SUMMARY}`,
+  );
+
+  /**
+   * Panels open collapsed, except for a user with no saved favorites: the
+   * route guard sends them here to pick some, so the events panel and its
+   * available list open straight away. Read once, deliberately: a binding
+   * that followed the draft would snap the panels shut as categories are
+   * added.
+   */
+  protected readonly openEventsOnEntry =
+    this.sessionStore.eventFavorites().length === 0;
 
   constructor() {
     this.seedDraft();

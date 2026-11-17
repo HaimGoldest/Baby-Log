@@ -66,15 +66,10 @@
       <mat-icon>show_chart</mat-icon>
       <span>{{ strings.GROWTH_TRACKING }}</span>
     </button>
-    <button
-      mat-menu-item
-      [routerLink]="['/', babyEventPreferencesPage]"
-      routerLinkActive="menu-item-active"
-      [routerLinkActiveOptions]="{ exact: true }"
-      [disabled]="!userHaveBabies()"
-    >
-      <mat-icon>tune</mat-icon>
-      <span>{{ strings.PREFERENCES }}</span>
+    <!-- Placeholder for an upcoming feature: listed, but not yet available. -->
+    <button mat-menu-item disabled>
+      <mat-icon>emoji_events</mat-icon>
+      <span>{{ strings.MILESTONES }}</span>
     </button>
     <button
       mat-menu-item
@@ -95,6 +90,19 @@
     >
       <mat-icon>add_circle_outline</mat-icon>
       <span>{{ strings.ADD_BABY }}</span>
+    </button>
+
+    <mat-divider></mat-divider>
+
+    <button
+      mat-menu-item
+      [routerLink]="['/', babyEventPreferencesPage]"
+      routerLinkActive="menu-item-active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [disabled]="!userHaveBabies()"
+    >
+      <mat-icon>tune</mat-icon>
+      <span>{{ strings.PREFERENCES }}</span>
     </button>
 
     <mat-divider></mat-divider>

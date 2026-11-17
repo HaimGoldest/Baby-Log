@@ -2,6 +2,7 @@ export default class NavbarStrings {
   public static readonly MENU = 'תפריט ראשי';
   public static readonly BABY_EVENTS = 'יומן אירועים';
   public static readonly GROWTH_TRACKING = 'מעקב גדילה';
+  public static readonly MILESTONES = 'אבני דרך';
   public static readonly PREFERENCES = 'העדפות משתמש';
   public static readonly ADD_BABY = 'הוספת תינוק';
   public static readonly BABY_INFO = 'פרטי תינוק';
