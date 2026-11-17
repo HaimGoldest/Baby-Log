@@ -7,9 +7,18 @@
   >
     <div class="table-header" role="row">
       <span role="columnheader">{{ strings.DATE }}</span>
-      <span role="columnheader">{{ strings.WEIGHT }}</span>
-      <span role="columnheader">{{ strings.HEIGHT }}</span>
-      <span role="columnheader">{{ strings.HEAD }}</span>
+      <span class="metric-header" role="columnheader">
+        <span class="metric-name">{{ strings.WEIGHT }}</span>
+        <span class="metric-unit">{{ strings.UNIT_KG }}</span>
+      </span>
+      <span class="metric-header" role="columnheader">
+        <span class="metric-name">{{ strings.HEIGHT }}</span>
+        <span class="metric-unit">{{ strings.UNIT_CM }}</span>
+      </span>
+      <span class="metric-header" role="columnheader">
+        <span class="metric-name">{{ strings.HEAD }}</span>
+        <span class="metric-unit">{{ strings.UNIT_CM }}</span>
+      </span>
       <span role="columnheader" [attr.aria-label]="strings.ACTIONS"></span>
     </div>
 

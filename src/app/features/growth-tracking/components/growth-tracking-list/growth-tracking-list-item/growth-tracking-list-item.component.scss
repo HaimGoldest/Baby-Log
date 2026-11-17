@@ -8,12 +8,14 @@
   column-gap: 4px;
   min-height: 52px;
   padding-block: 4px;
-  padding-inline: 12px 4px;
+  padding-inline: 8px 4px; // matches the header row
 }
 
+// Centred, like the header above it.
 .date-cell {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 4px;
   min-width: 0;
 }
