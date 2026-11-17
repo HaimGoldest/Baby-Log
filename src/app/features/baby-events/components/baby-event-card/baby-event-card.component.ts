@@ -23,6 +23,10 @@ import NotificationStrings from '../../../../shared/strings/notification.strings
 import { BusyOverlayComponent } from '../../../../shared/components/busy-overlay/busy-overlay.component';
 import { SyncPendingIconComponent } from '../../../../shared/components/sync-pending-icon/sync-pending-icon.component';
 import { CategoryIconComponent } from '../../../../shared/components/category-icon/category-icon.component';
+import {
+  CategoryColorId,
+  resolveCategoryColor,
+} from '../../../../core/theme/category-colors';
 import BabyEventCardStrings from './baby-event-card.strings';
 
 /**
@@ -78,6 +82,14 @@ export class BabyEventCardComponent {
    */
   public readonly pendingKind = computed(() =>
     this.babyEventsService.pendingKind(this.event().uid),
+  );
+
+  /** The pill's colour, matching the category icon beside it. */
+  public readonly categoryColor = computed<CategoryColorId>(() =>
+    resolveCategoryColor(
+      this.sessionStore.categoryColors(),
+      this.event().category.id,
+    ),
   );
 
   /** Who created and last edited the event, joined onto one line. */

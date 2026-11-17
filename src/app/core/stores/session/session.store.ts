@@ -14,6 +14,7 @@ import { User as FirebaseUser } from 'firebase/auth';
 import { BabyEventFavorites, User } from '../../../models/user.model';
 import { Baby } from '../../../models/baby.model';
 import { AppThemeId } from '../../theme/app-themes';
+import { CategoryColorMap } from '../../theme/category-colors';
 import { reconcileUser } from '../../user/user-reconciler';
 import { AppService } from '../../services/app.service';
 import { AuthService } from '../../services/auth.service';
@@ -35,6 +36,10 @@ export const SessionStore = signalStore(
     isLoggedIn: computed(() => !!user()),
     userHaveBabies: computed(() => (user()?.babiesUids.length ?? 0) > 0),
     eventFavorites: computed(() => user()?.eventFavorites ?? []),
+    /** Sparse: read a category's colour with `resolveCategoryColor`. */
+    categoryColors: computed<CategoryColorMap>(
+      () => user()?.categoryColors ?? {},
+    ),
   })),
   withMethods((store) => {
     const watchUser = rxMethod<string | null>(
@@ -139,33 +144,45 @@ export const SessionStore = signalStore(
       },
 
       /**
-       * Updates the list of event favorites for the currently signed-in user.
-       * @param favorites The updated list of event favorites for the user.
+       * Saves the preferences page for the currently signed-in user: the
+       * favorite categories and the custom category colours, in one write.
+       * @param eventFavorites The updated list of event favorites.
+       * @param categoryColors The complete map of custom colours. It replaces
+       *   the stored map, so a category left out returns to the default.
        * @returns A promise that resolves when the update is complete.
        */
-      async updateEventFavorites(
-        favorites: BabyEventFavorites[],
+      async updatePreferences(
+        eventFavorites: BabyEventFavorites[],
+        categoryColors: CategoryColorMap,
       ): Promise<void> {
         const user = store.user();
         if (!user) {
-          throw new Error('No user is signed in, cannot save event favorites.');
+          throw new Error('No user is signed in, cannot save preferences.');
         }
 
         await store._userService.update(user.uid, {
-          eventFavorites: favorites,
+          eventFavorites,
+          categoryColors,
         });
 
         // Patched locally after the write, not before: the watcher only
         // re-emits on a server round trip, so the panel would otherwise keep
-        // rendering the previous order, while a failed write must not leave
-        // the local state claiming a success that never happened.
-        patchState(store, { user: { ...user, eventFavorites: favorites } });
+        // rendering the previous order and colours, while a failed write must
+        // not leave the local state claiming a success that never happened.
+        // Built from the user as it is now, so a change that landed during
+        // the write (a theme switch, say) is not reverted.
+        const current = store.user();
+        if (current) {
+          patchState(store, {
+            user: { ...current, eventFavorites, categoryColors },
+          });
+        }
       },
 
       /**
        * Saves the theme to the signed-in user's profile.
        *
-       * Unlike `updateEventFavorites`, state is not patched afterwards:
+       * Unlike `updatePreferences`, state is not patched afterwards:
        * ThemeService has already applied the theme, and the watcher delivers
        * the change locally as soon as it is written. A patch made when this
        * resolves would be built from the user as it was when the call started,

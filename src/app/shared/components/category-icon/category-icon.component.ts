@@ -1,13 +1,24 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+} from '@angular/core';
 import { BabyEventCategory } from '../../../models/baby.model';
+import { SessionStore } from '../../../core/stores/session/session.store';
+import {
+  CategoryColorId,
+  resolveCategoryColor,
+} from '../../../core/theme/category-colors';
 
 /**
- * An event category's icon on its pastel tile.
+ * An event category's icon on its coloured tile.
  *
- * The host carries `data-category`, which picks the category's colours from
- * the palette in `src/styles.scss` (falling back to the primary container for
- * unknown ids) and exposes them to the host's own styles. Size it from the
- * parent with `--category-icon-size` (default 48px).
+ * The tile takes the colour the signed-in user chose for the category, or the
+ * theme default when there is none: the host carries `data-category-color`,
+ * which `src/styles.scss` turns into `--app-cat-bg` / `--app-cat-fg`. Size it
+ * from the parent with `--category-icon-size` (default 48px).
  *
  * The icon is decorative: callers show the category name next to it.
  */
@@ -18,9 +29,26 @@ import { BabyEventCategory } from '../../../models/baby.model';
   templateUrl: './category-icon.component.html',
   styleUrl: './category-icon.component.scss',
   host: {
-    '[attr.data-category]': 'category().id',
+    '[attr.data-category-color]': 'color()',
   },
 })
 export class CategoryIconComponent {
+  private readonly sessionStore = inject(SessionStore);
+
   public readonly category = input.required<BabyEventCategory>();
+
+  /**
+   * Shown instead of the saved colour, such as an unsaved choice previewed on
+   * the preferences page.
+   */
+  public readonly colorOverride = input<CategoryColorId>();
+
+  protected readonly color = computed<CategoryColorId>(
+    () =>
+      this.colorOverride() ??
+      resolveCategoryColor(
+        this.sessionStore.categoryColors(),
+        this.category().id,
+      ),
+  );
 }

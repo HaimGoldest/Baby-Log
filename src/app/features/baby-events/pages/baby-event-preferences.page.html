@@ -15,8 +15,10 @@
     @for (item of favorites(); track item.category.id) {
       <app-baby-event-favorite-item
         [favorite]="item"
+        [color]="colorOf(item.category.id)"
         [isFirst]="$first"
         [isLast]="$last"
+        (colorChange)="setColor(item.category.id, $event)"
         (moveUp)="moveUp($index)"
         (moveDown)="moveDown($index)"
         (remove)="removeFavorite($index)"
@@ -46,7 +48,10 @@
       <mat-card appearance="outlined" class="available-card">
         @for (category of availableCategories(); track category.id) {
           <div class="available-row">
-            <app-category-icon [category]="category"></app-category-icon>
+            <app-category-icon
+              [category]="category"
+              [colorOverride]="colorOf(category.id)"
+            ></app-category-icon>
 
             <span class="category-title">{{ category.value }}</span>
 

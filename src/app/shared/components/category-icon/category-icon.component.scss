@@ -1,5 +1,6 @@
 // A rounded square whose corner radius scales with its size, so tiles read the
-// same at every size they are used at.
+// same at every size they are used at. Its colour comes from the host's
+// data-category-color (see section 4 of src/styles.scss).
 :host {
   display: inline-grid;
   flex: none;

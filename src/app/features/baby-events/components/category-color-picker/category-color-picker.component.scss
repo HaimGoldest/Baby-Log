@@ -1,0 +1,57 @@
+@use '@angular/material' as mat;
+
+:host {
+  display: block;
+}
+
+.button-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+// The menu's content is declared in this template, so these rules reach it
+// inside the overlay. The panel's height cap is global (styles.scss), since
+// the panel itself is created by Material.
+.option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.option-label {
+  flex: 1;
+  min-width: 0;
+}
+
+// Material spaces menu-item icons as if they led the row; this one trails it,
+// so that spacing is dropped (the row's gap already separates it).
+.check {
+  @include mat.menu-overrides(
+    (
+      item-icon-color: var(--app-primary),
+      item-spacing: 0,
+    )
+  );
+}
+
+// The colour's background and accent, split on the diagonal like the theme
+// picker's swatches. The hairline keeps a pale background visible on a white
+// surface.
+.swatch {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--app-border-strong);
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    var(--app-cat-bg) 50%,
+    var(--app-cat-accent) 50%
+  );
+}
+
+.swatch-small {
+  width: 20px;
+  height: 20px;
+}

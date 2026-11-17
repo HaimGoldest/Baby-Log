@@ -21,19 +21,31 @@ import { BabyEventFavorites } from '../../../models/user.model';
 import { AlertMessageComponent } from '../../../shared/components/alert-message/alert-message.component';
 import { CategoryIconComponent } from '../../../shared/components/category-icon/category-icon.component';
 import { ThemePickerComponent } from '../../../shared/components/theme-picker/theme-picker.component';
+import {
+  CategoryColorId,
+  CategoryColorMap,
+  resolveCategoryColor,
+  withCategoryColor,
+} from '../../../core/theme/category-colors';
 import { CommentDraft, FavoriteDraft } from './baby-event-preferences.vm';
 
 /**
- * Comparable projection of a draft: category order plus comment text, which is
- * exactly what gets persisted. Comment ids are local and deliberately excluded.
+ * Comparable projection of a draft: category order, comment text and custom
+ * colours, which is exactly what gets persisted. Comment ids are local and
+ * deliberately excluded, and colours are sorted by category id so the order
+ * they were picked in does not count as a change.
  */
-function serializeDraft(favorites: FavoriteDraft[]): string {
-  return JSON.stringify(
-    favorites.map((item) => [
+function serializeDraft(
+  favorites: FavoriteDraft[],
+  colors: CategoryColorMap,
+): string {
+  return JSON.stringify({
+    favorites: favorites.map((item) => [
       item.category.id,
       item.comments.map((comment) => comment.text),
     ]),
-  );
+    colors: Object.entries(colors).sort(([a], [b]) => a.localeCompare(b)),
+  });
 }
 
 @Component({
@@ -61,6 +73,13 @@ export class BabyEventsPreferencesPage {
   private nextCommentId = 0;
 
   private readonly draft = signal<FavoriteDraft[]>([]);
+
+  /**
+   * Keyed by category, not held on each favorite: a colour outlives removing
+   * the category from the favorites, since its past events in the feed keep
+   * showing it.
+   */
+  private readonly colorDraft = signal<CategoryColorMap>({});
   private readonly baseline = signal<string>('');
 
   public readonly strings = BabyEventsPreferencesStrings;
@@ -71,7 +90,7 @@ export class BabyEventsPreferencesPage {
    * that is typed and then undone correctly disables saving again.
    */
   public readonly isDirty = computed(
-    () => serializeDraft(this.draft()) !== this.baseline(),
+    () => serializeDraft(this.draft(), this.colorDraft()) !== this.baseline(),
   );
 
   /**
@@ -118,6 +137,17 @@ export class BabyEventsPreferencesPage {
     this.draft.update((items) => [...items, { category, comments: [] }]);
   }
 
+  /** The category's colour in the draft, for the previews on this page. */
+  public colorOf(categoryId: string): CategoryColorId {
+    return resolveCategoryColor(this.colorDraft(), categoryId);
+  }
+
+  public setColor(categoryId: string, color: CategoryColorId): void {
+    this.colorDraft.update((colors) =>
+      withCategoryColor(colors, categoryId, color),
+    );
+  }
+
   public addComment(index: number): void {
     this.updateComments(index, (comments) => [
       ...comments,
@@ -152,7 +182,7 @@ export class BabyEventsPreferencesPage {
     }));
 
     try {
-      await this.sessionStore.updateEventFavorites(favorites);
+      await this.sessionStore.updatePreferences(favorites, this.colorDraft());
       this.navigateEventsPage();
     } catch {
       this.notificationService.error(
@@ -185,9 +215,11 @@ export class BabyEventsPreferencesPage {
         })),
       }))
       .filter((item) => !!item.category);
+    const colors = this.sessionStore.categoryColors();
 
     this.draft.set(draft);
-    this.baseline.set(serializeDraft(draft));
+    this.colorDraft.set(colors);
+    this.baseline.set(serializeDraft(draft, colors));
   }
 
   private swap(from: number, to: number): void {

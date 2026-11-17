@@ -4,11 +4,12 @@
 //   1. Material 3 base theme   emits the --mat-sys-* system tokens, once.
 //   2. Theme palettes          raw --app-* values per <html data-theme>. The
 //                              only place in the app where colour literals
-//                              belong (with the category palette map below).
+//                              belong (with the category colour palette map
+//                              below).
 //   3. Material role mapping   points --mat-sys-* roles at --app-* tokens, so
 //                              switching data-theme re-colours Material too,
 //                              plus the app-wide component looks.
-//   4. Event category colours  [data-category] → --app-cat-bg / --app-cat-fg.
+//   4. Event category colours  [data-category-color] → --app-cat-bg / -fg.
 //   5. Semantic actions        danger / success variants for Material buttons.
 //   6. Base and app-wide rules
 //
@@ -51,38 +52,48 @@ $_theme-key-colors: (
   @return map.get($_theme-key-colors, $theme, $role);
 }
 
-// Event category palette, keyed by catalogue id
-// (core/default-data/baby-event-categories-data.ts): (background, foreground).
-// Light pairs are pastels with a deep same-hue foreground, shared by every light
-// theme. Dark pairs are the same hue at ~22% over the dark card surface, with a
-// light tint on top, so tiles sit quietly without glare. Every pair clears 5:1.
-// Adding a category: add a row here; anything unlisted falls back to the
-// primary container.
-$_category-palette: (
-  'Fever': (slug: fever, light: (#fbe2e0, #b22e1f), dark: (#423234, #e2958d)),
-  'Notes': (slug: notes, light: (#fbeadf, #9c4f1c), dark: (#423934, #e0a985)),
-  'Poo': (slug: poo, light: (#f3eee7, #815f31), dark: (#423c34, #e0b985)),
-  'Awake': (slug: awake, light: (#fdf5dd, #7e6416), dark: (#424134, #e0c985)),
-  'Snack': (slug: snack, light: (#fafae1, #6c6c13), dark: (#424634, #e0e085)),
-  'Vomit': (slug: vomit, light: (#eef5e5, #4e6f20), dark: (#384634, #bae085)),
-  'food': (slug: food, light: (#e9f2e9, #3c7237), dark: (#2d4634, #8ce085)),
-  'Diaper': (slug: diaper, light: (#e4f6f0, #1d7253), dark: (#2b4642, #85e0bf)),
-  'Vaccine': (slug: vaccine, light: (#e4f5f6, #1e6f76), dark: (#2b444a, #85d9e0)),
-  'Shower': (slug: shower, light: (#e1effa, #1c69a0), dark: (#2b3d4a, #85bae0)),
-  'Medication': (slug: medication, light: (#e3e6f7, #283cbd), dark: (#2b334a, #95a0e4)),
-  'Sleep': (slug: sleep, light: (#eae2f8, #5d22c3), dark: (#33304a, #b295e4)),
-  'BreastPump': (slug: breast-pump, light: (#f2e6f4, #9638a8), dark: (#3e304a, #d48de2)),
-  'Breastfeeding': (slug: breastfeeding, light: (#f7e3f1, #ad2584), dark: (#423043, #e28dc9)),
-  'Bottle': (slug: bottle, light: (#fae1e7, #ba2147), dark: (#423039, #e391a5)),
+// The custom colours a user can give an event category, keyed by
+// CATEGORY_COLOR_PALETTE id (src/app/core/theme/category-colors.ts), as
+// (background, foreground). A category without one uses the theme default
+// (section 4), so these are opt-in accents rather than a colour per category.
+//
+// Twenty hues spread around the OKLCH wheel. Light pairs are soft tints with a
+// deep same-hue foreground, shared by every light theme; dark pairs are a
+// muted same-hue tile under a soft tint, so nothing glares at night. Every
+// pair clears 5.3:1. Tiles come in three lightness tiers, alternated between
+// hue neighbours (coral sits between the deeper red and the lighter orange),
+// so adjacent colours differ in lightness as well as hue.
+// Adding a colour: add a row here and an entry to the registry.
+$_category-color-palette: (
+  'yellow': (light: (#ffe79d, #715b00), dark: (#43370d, #d1b560)),
+  'lemon': (light: (#f3f4b1, #676404), dark: (#43421e, #c9c871)),
+  'amber': (light: (#ffd7aa, #7a4d04), dark: (#412a0c, #d9a05a)),
+  'orange': (light: (#ffeade, #9e4903), dark: (#583725, #feaf83)),
+  'coral': (light: (#fee0d9, #a43520), dark: (#512d25, #f79e8b)),
+  'red': (light: (#fed2d2, #9f2c3b), dark: (#482425, #ed9295)),
+  'rose': (light: (#ffdee6, #92425b), dark: (#4a2f36, #e1a4b3)),
+  'pink': (light: (#fee7f3, #9e3b79), dark: (#553447, #f8a7d4)),
+  'orchid': (light: (#ffdaff, #8a3b8d), dark: (#472e47, #dea0df)),
+  'lavender': (light: (#f0ebfe, #714cae), dark: (#443a5a, #ccb6fe)),
+  'purple': (light: (#edd4fb, #783a94), dark: (#3a2743, #c799df)),
+  'indigo': (light: (#d4ddff, #424dac), dark: (#272d4c, #97a7f2)),
+  'blue': (light: (#dae9fe, #145cb0), dark: (#243954, #88bafd)),
+  'sky': (light: (#ddf2ff, #026991), dark: (#1f4559, #75ceff)),
+  'cyan': (light: (#b1f6ff, #056972), dark: (#074046, #4dcad8)),
+  'teal': (light: (#bee9e3, #07645d), dark: (#153633, #76bab1)),
+  'mint': (light: (#c2ffdf, #05724d), dark: (#224937, #7ad7ab)),
+  'emerald': (light: (#c0edc1, #036819), dark: (#1d371e, #7dbd7f)),
+  'lime': (light: (#daf3b1, #4d6703), dark: (#313d1c, #a6c273)),
+  'sand': (light: (#f3e6d6, #6f593e), dark: (#3d3730, #cab398)),
 );
 
-/// Emits --app-cat-<slug>-bg / -fg for every category, from the given scheme.
-@mixin _category-tokens($scheme) {
-  @each $id, $entry in $_category-palette {
-    $slug: map.get($entry, slug);
+/// Emits --app-cat-palette-<id>-bg / -fg for every palette colour, from the
+/// given scheme.
+@mixin _category-palette-tokens($scheme) {
+  @each $id, $entry in $_category-color-palette {
     $pair: map.get($entry, $scheme);
-    --app-cat-#{$slug}-bg: #{list.nth($pair, 1)};
-    --app-cat-#{$slug}-fg: #{list.nth($pair, 2)};
+    --app-cat-palette-#{$id}-bg: #{list.nth($pair, 1)};
+    --app-cat-palette-#{$id}-fg: #{list.nth($pair, 2)};
   }
 }
 
@@ -119,8 +130,8 @@ html {
 // redefined further down the tree would not reach Material's tokens.
 //
 // `nordic` is also the fallback for a missing or unknown data-theme. The status
-// and category colours here are shared by every light theme; dark redefines
-// them.
+// and category palette colours here are shared by every light theme; dark
+// redefines them.
 :root,
 :root[data-theme='nordic'] {
   color-scheme: light;
@@ -152,7 +163,7 @@ html {
   --app-danger: #b3372f;
   --app-danger-bg: #fbe9e7;
 
-  @include _category-tokens(light);
+  @include _category-palette-tokens(light);
 
   // Google's published "Sign in with Google" light variant. Brand-mandated, so
   // the light themes share it rather than taking their own palette. Roboto is
@@ -277,7 +288,7 @@ html {
   --app-danger: #f2a097;
   --app-danger-bg: #3e2220;
 
-  @include _category-tokens(dark);
+  @include _category-palette-tokens(dark);
 
   // Google's published dark variant of the sign-in button.
   --app-google-btn-bg: #131314;
@@ -296,6 +307,11 @@ html {
 
   // Upward shadow for bars pinned to the bottom edge of a scroll area.
   --app-shadow-bar: 0 -2px 8px color-mix(in srgb, var(--mat-sys-shadow) 8%, transparent);
+
+  // The category colour `default`: the theme's own container pair, so
+  // uncustomised categories follow whichever theme is active.
+  --app-cat-palette-default-bg: var(--app-primary-container);
+  --app-cat-palette-default-fg: var(--app-on-primary-container);
 }
 
 // Theme swatches: every theme's key colours, defined whichever theme is active,
@@ -399,16 +415,25 @@ html {
 // -----------------------------------------------------------------------------
 // 4. Event category colours
 // -----------------------------------------------------------------------------
-// An element with data-category="<catalogue id>" exposes its category's pair as
-// --app-cat-bg / --app-cat-fg, inherited by its descendants. Consumers read them
+// An element with data-category-color="<CATEGORY_COLOR_PALETTE id>" exposes
+// that colour as --app-cat-bg / --app-cat-fg (text on the background, 5:1 or
+// more), inherited by its descendants. --app-cat-accent is the hue that
+// identifies the colour in a preview swatch: the foreground for a palette
+// colour, the theme primary for `default`. CategoryIconComponent and the event
+// card resolve the id from the user's saved colours; consumers read the tokens
 // with the primary container as fallback, which covers unknown ids:
 //   background: var(--app-cat-bg, var(--app-primary-container));
-@each $id, $entry in $_category-palette {
-  $slug: map.get($entry, slug);
+[data-category-color='default'] {
+  --app-cat-bg: var(--app-cat-palette-default-bg);
+  --app-cat-fg: var(--app-cat-palette-default-fg);
+  --app-cat-accent: var(--app-primary);
+}
 
-  [data-category='#{$id}'] {
-    --app-cat-bg: var(--app-cat-#{$slug}-bg);
-    --app-cat-fg: var(--app-cat-#{$slug}-fg);
+@each $id, $entry in $_category-color-palette {
+  [data-category-color='#{$id}'] {
+    --app-cat-bg: var(--app-cat-palette-#{$id}-bg);
+    --app-cat-fg: var(--app-cat-palette-#{$id}-fg);
+    --app-cat-accent: var(--app-cat-palette-#{$id}-fg);
   }
 }
 
@@ -544,4 +569,12 @@ textarea {
      hidden`. Breaking anywhere collapses min-content and removes the overflow. */
   overflow-wrap: anywhere;
   word-break: break-word; /* fallback for older WebKit */
+}
+
+/* The category colour menu (CategoryColorPickerComponent) lists 21 colours.
+   Capped at a comfortable window on a phone, where it scrolls, instead of
+   running the full height of the screen. Material's panel already scrolls;
+   this only lowers its viewport-based cap. Scoped by the menu's panelClass. */
+.category-color-menu.mat-mdc-menu-panel {
+  max-height: min(320px, calc(100vh - 48px));
 }

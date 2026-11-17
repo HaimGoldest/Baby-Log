@@ -1,6 +1,9 @@
 <mat-card appearance="outlined" class="favorite-card">
   <div class="card-header">
-    <app-category-icon [category]="favorite().category"></app-category-icon>
+    <app-category-icon
+      [category]="favorite().category"
+      [colorOverride]="color()"
+    ></app-category-icon>
 
     <h3 class="category-title">{{ favorite().category.value }}</h3>
 
@@ -28,6 +31,12 @@
       </button>
     </div>
   </div>
+
+  <app-category-color-picker
+    class="color-picker"
+    [selected]="color()"
+    (selectedChange)="colorChange.emit($event)"
+  ></app-category-color-picker>
 
   <div class="comments-section">
     @for (comment of favorite().comments; track comment.id) {

@@ -13,7 +13,7 @@
     <app-category-icon [category]="babyEvent.category"></app-category-icon>
 
     <div class="headline">
-      <h4 class="category-pill" [attr.data-category]="babyEvent.category.id">
+      <h4 class="category-pill" [attr.data-category-color]="categoryColor()">
         {{ babyEvent.category.value }}
       </h4>
       <span class="timestamp">

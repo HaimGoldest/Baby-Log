@@ -1,0 +1,48 @@
+<button
+  mat-stroked-button
+  type="button"
+  [matMenuTriggerFor]="colorMenu"
+  (menuOpened)="onMenuOpened()"
+>
+  <span class="button-content">
+    <span
+      class="swatch swatch-small"
+      [attr.data-category-color]="selectedColor().id"
+      aria-hidden="true"
+    ></span>
+    <span>{{ buttonLabel() }}</span>
+  </span>
+  <mat-icon iconPositionEnd>expand_more</mat-icon>
+</button>
+
+<mat-menu
+  #colorMenu="matMenu"
+  class="category-color-menu"
+  [aria-label]="strings.CHOOSE_COLOR"
+>
+  @for (color of colors; track color.id) {
+    @let isSelected = color.id === selected();
+
+    <button
+      mat-menu-item
+      type="button"
+      role="menuitemradio"
+      [attr.aria-checked]="isSelected"
+      (click)="select(color.id)"
+    >
+      <!-- One wrapper, so the check stays at the end of the row instead of
+           being projected into the item's leading icon slot. -->
+      <span class="option">
+        <span
+          class="swatch"
+          [attr.data-category-color]="color.id"
+          aria-hidden="true"
+        ></span>
+        <span class="option-label">{{ color.label }}</span>
+        @if (isSelected) {
+          <mat-icon class="check">check</mat-icon>
+        }
+      </span>
+    </button>
+  }
+</mat-menu>
