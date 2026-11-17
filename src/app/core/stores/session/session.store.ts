@@ -11,8 +11,10 @@ import {
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { concatMap, from, of, pipe, switchMap, tap } from 'rxjs';
 import { User as FirebaseUser } from 'firebase/auth';
-import { BabyEventFavorites, User } from '../../../models/user.model';
+import { User, UserPreferences } from '../../../models/user.model';
 import { Baby } from '../../../models/baby.model';
+import { AppThemeId } from '../../theme/app-themes';
+import { CategoryColorMap } from '../../theme/category-colors';
 import { reconcileUser } from '../../user/user-reconciler';
 import { AppService } from '../../services/app.service';
 import { AuthService } from '../../services/auth.service';
@@ -34,6 +36,10 @@ export const SessionStore = signalStore(
     isLoggedIn: computed(() => !!user()),
     userHaveBabies: computed(() => (user()?.babiesUids.length ?? 0) > 0),
     eventFavorites: computed(() => user()?.eventFavorites ?? []),
+    /** Sparse: read a category's colour with `resolveCategoryColor`. */
+    categoryColors: computed<CategoryColorMap>(
+      () => user()?.categoryColors ?? {},
+    ),
   })),
   withMethods((store) => {
     const watchUser = rxMethod<string | null>(
@@ -138,27 +144,56 @@ export const SessionStore = signalStore(
       },
 
       /**
-       * Updates the list of event favorites for the currently signed-in user.
-       * @param favorites The updated list of event favorites for the user.
+       * Saves the preferences page for the currently signed-in user: theme,
+       * favorite categories (with their notes) and custom category colours,
+       * in one Firestore update, so they are stored together or not at all.
+       *
+       * Theme caching is ThemeService's: the caller confirms the theme there
+       * once this resolves.
+       * @param preferences The complete set to store. `categoryColors`
+       *   replaces the stored map, so a category left out returns to the
+       *   default.
        * @returns A promise that resolves when the update is complete.
        */
-      async updateEventFavorites(
-        favorites: BabyEventFavorites[],
-      ): Promise<void> {
+      async updatePreferences(preferences: UserPreferences): Promise<void> {
         const user = store.user();
         if (!user) {
-          throw new Error('No user is signed in, cannot save event favorites.');
+          throw new Error('No user is signed in, cannot save preferences.');
         }
 
-        await store._userService.update(user.uid, {
-          eventFavorites: favorites,
-        });
+        await store._userService.update(user.uid, preferences);
 
         // Patched locally after the write, not before: the watcher only
         // re-emits on a server round trip, so the panel would otherwise keep
-        // rendering the previous order, while a failed write must not leave
-        // the local state claiming a success that never happened.
-        patchState(store, { user: { ...user, eventFavorites: favorites } });
+        // rendering the previous order and colours, while a failed write must
+        // not leave the local state claiming a success that never happened.
+        // Built from the user as it is now, so a change that landed during
+        // the write is not reverted.
+        const current = store.user();
+        if (current) {
+          patchState(store, { user: { ...current, ...preferences } });
+        }
+      },
+
+      /**
+       * Saves just the theme to the signed-in user's profile. ThemeService
+       * uses it to backfill a profile that has none; the preferences page
+       * saves the theme through `updatePreferences` instead.
+       *
+       * State is not patched afterwards: the watcher delivers the change
+       * locally as soon as it is written. A patch made when this resolves
+       * would be built from the user as it was when the call started, so a
+       * change made while the write was in flight (offline, it resolves only
+       * on reconnect) would briefly be reverted.
+       * @param theme The theme to store on the user's profile.
+       */
+      async updateTheme(theme: AppThemeId): Promise<void> {
+        const user = store.user();
+        if (!user) {
+          throw new Error('No user is signed in, cannot save the theme.');
+        }
+
+        await store._userService.update(user.uid, { theme });
       },
 
       /**

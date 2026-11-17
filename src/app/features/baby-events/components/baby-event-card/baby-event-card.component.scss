@@ -1,79 +1,105 @@
-.card-style {
-  height: 150px !important;
+// The host fills one virtual-scroll slot exactly: its height is bound to
+// BABY_EVENT_CARD_ITEM_SIZE and includes this bottom padding, which is the gap
+// between cards. Surface, border, shadow and corner radius come from the
+// app-wide outlined mat-card tokens in src/styles.scss.
+//
+// `contain: inline-size` stops the card's content from counting towards its
+// width. The virtual-scroll content wrapper sizes itself to its widest item,
+// so without it a long unbreakable line (a note, a long name in the
+// attribution) widened every card and scrolled the feed sideways.
+:host {
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+  max-width: 100%;
+  padding-block-end: 8px;
+  contain: inline-size;
+}
 
-  .main-section {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
+// min-width: 0 lets the card shrink to its slot: as a flex item it would
+// otherwise never be narrower than its longest unbreakable line.
+.event-card {
+  width: 100%;
+  min-width: 0;
+  max-width: 800px;
+  height: 100%;
+  overflow: hidden;
+  padding-block: 12px 10px;
+  padding-inline: 16px 8px; // the menu button at the end brings its own padding
+}
 
-    .card-title {
-      font-weight: bold;
-      margin: 0;
-      text-align: center;
-      align-self: center;
-    }
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  min-height: 48px;
+}
 
-    .event-img {
-      width: 45px;
-      height: 45px;
-      margin-inline-start: 5px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
+.headline {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+}
 
-    .time-info {
-      margin-inline-start: 15px;
-      font-size: 0.875rem;
+.category-pill {
+  max-width: 100%;
+  margin: 0;
+  padding: 2px 10px;
+  overflow: hidden;
+  border-radius: var(--mat-sys-corner-full);
+  background-color: var(--app-cat-bg, var(--app-primary-container));
+  color: var(--app-cat-fg, var(--app-on-primary-container));
+  font: var(--mat-sys-label-large);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 
-      .time-text {
-        color: darkblue;
-        font-weight: bold;
-      }
-    }
+.timestamp {
+  color: var(--app-text-secondary);
+  font: var(--mat-sys-body-medium);
+  white-space: nowrap;
+}
 
-    .sync-icon {
-      margin-inline-start: 6px;
-    }
+.sync-icon,
+.menu-button {
+  flex: none;
+}
 
-    .menu-button {
-      margin-inline-start: auto;
-    }
-  }
+// Up to two lines, then an ellipsis. `anywhere` breaks an unbroken string
+// (a pasted link, "ssss…") mid-word instead of letting it run past the card.
+// flex: none keeps the clamped box whole: two lines always fit the slot (see
+// BABY_EVENT_CARD_ITEM_SIZE), so it never needs to shrink.
+.note {
+  display: -webkit-box;
+  flex: none;
+  min-width: 0;
+  max-width: 100%;
+  margin: 12px 0 0;
+  overflow: hidden;
+  color: var(--app-text-primary);
+  font: var(--mat-sys-body-medium);
+  overflow-wrap: anywhere;
+  word-break: break-word; // fallback for WebKit without `anywhere`
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
 
-  .mat-card-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
+.note-label {
+  color: var(--app-text-secondary);
+  font-weight: 500;
+}
 
-  .comment-section {
-    flex: 1;
-    margin-bottom: 10px;
-    text-align: start;
-
-    p {
-      white-space: normal;
-      word-break: break-word;
-      overflow-wrap: break-word;
-    }
-  }
-
-  .users-section {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    .creation {
-      color: darkgreen;
-    }
-
-    .editing {
-      color: darkmagenta;
-    }
-
-    .same-user {
-      color: brown;
-    }
-  }
+// Pinned to the bottom of the card (mat-card is a flex column).
+.attribution {
+  margin: 0;
+  margin-block-start: auto;
+  overflow: hidden;
+  color: var(--app-text-muted);
+  font: var(--mat-sys-body-small);
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

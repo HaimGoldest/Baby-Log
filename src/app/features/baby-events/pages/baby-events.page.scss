@@ -5,12 +5,8 @@
   min-height: 0;
 }
 
+// Each card sizes itself to its slot (see BABY_EVENT_CARD_ITEM_SIZE).
 .event-list-viewport {
   flex: 1;
   min-height: 0;
-
-  app-baby-event-card {
-    display: flex;
-    justify-content: center;
-  }
 }

@@ -8,11 +8,15 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import BabyEventFavoriteItemStrings from './baby-event-favorite-item.strings';
 import { BABY_NOTE_MAX_LENGTH } from '../../../../core/default-data/baby-event-limits';
 import { FavoriteDraft } from '../../pages/baby-event-preferences.vm';
+import { CategoryIconComponent } from '../../../../shared/components/category-icon/category-icon.component';
+import { CategoryColorId } from '../../../../core/theme/category-colors';
+import { CategoryColorPickerComponent } from '../category-color-picker/category-color-picker.component';
 
 /**
  * Presentational card for one favorited category. It owns no state and never
  * touches its input: every edit is emitted upwards, and the preferences page
- * applies it to the draft it owns.
+ * applies it to the draft it owns. `color` is the draft colour, so the icon
+ * previews a choice before it is saved.
  */
 @Component({
   selector: 'app-baby-event-favorite-item',
@@ -21,6 +25,8 @@ import { FavoriteDraft } from '../../pages/baby-event-preferences.vm';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
+    CategoryColorPickerComponent,
+    CategoryIconComponent,
     MatButtonModule,
     MatCardModule,
     MatFormFieldModule,
@@ -33,7 +39,9 @@ export class BabyEventFavoriteItemComponent {
   public readonly favorite = input.required<FavoriteDraft>();
   public readonly isFirst = input.required<boolean>();
   public readonly isLast = input.required<boolean>();
+  public readonly color = input.required<CategoryColorId>();
 
+  public colorChange = output<CategoryColorId>();
   public moveUp = output<void>();
   public moveDown = output<void>();
   public remove = output<void>();

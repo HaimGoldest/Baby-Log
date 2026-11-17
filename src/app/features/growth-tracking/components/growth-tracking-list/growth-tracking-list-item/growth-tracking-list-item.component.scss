@@ -1,42 +1,36 @@
-.mat-card-content {
+// One table row. Its columns come from --growth-columns, defined once on the
+// table in GrowthTrackingListComponent so they line up with the header.
+:host {
+  position: relative; // anchors the busy overlay
+  display: grid;
+  grid-template-columns: var(--growth-columns);
+  align-items: center;
+  column-gap: 4px;
+  min-height: 52px;
+  padding-block: 4px;
+  padding-inline: 8px 4px; // matches the header row
+}
+
+// Centred, like the header above it.
+.date-cell {
   display: flex;
   align-items: center;
-  width: 100%;
+  justify-content: center;
+  gap: 4px;
+  min-width: 0;
+}
 
-  .date {
-    flex: 0 0 auto;
-    font-size: 1rem;
-    color: darkblue;
-    font-weight: bold;
-  }
+.date-pill {
+  padding: 2px 10px;
+  border-radius: var(--mat-sys-corner-full);
+  background-color: var(--app-primary-container);
+  color: var(--app-on-primary-container);
+  font: var(--mat-sys-label-large);
+  white-space: nowrap;
+}
 
-  .sync-icon {
-    flex: 0 0 auto;
-    margin-inline-start: 6px;
-  }
-
-  .measurements-container {
-    flex: 1 1 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-
-    > .measurement {
-      text-align: center;
-    }
-
-    .measurement-title {
-      font-weight: bold;
-      font-size: 1rem;
-    }
-
-    .measurement-value {
-      font-size: 1rem;
-    }
-  }
-
-  .menu-button {
-    flex: 0 0 auto;
-  }
+.value {
+  color: var(--app-text-primary);
+  font: var(--mat-sys-body-large);
+  text-align: center;
 }

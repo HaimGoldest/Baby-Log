@@ -10,7 +10,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { BabyMeasurementsService } from '../../../services/baby-measurements.service';
@@ -22,13 +21,17 @@ import { BusyOverlayComponent } from '../../../../../shared/components/busy-over
 import { SyncPendingIconComponent } from '../../../../../shared/components/sync-pending-icon/sync-pending-icon.component';
 import GrowthTrackingListItemStrings from './growth-tracking-list-item.strings';
 
+/** One row of the measurements table rendered by GrowthTrackingListComponent. */
 @Component({
   selector: 'app-growth-tracking-list-item',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
+  host: {
+    role: 'row',
+    '[attr.aria-busy]': "pendingKind() === 'saving'",
+  },
   imports: [
     CommonModule,
-    MatCardModule,
     MatIconModule,
     MatMenuModule,
     MatButtonModule,

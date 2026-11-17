@@ -12,7 +12,10 @@
 >
 </app-alert-message>
 } @else {
-<cdk-virtual-scroll-viewport itemSize="158" class="event-list-viewport">
+<cdk-virtual-scroll-viewport
+  [itemSize]="eventCardItemSize"
+  class="event-list-viewport"
+>
   <app-baby-event-card
     *cdkVirtualFor="let event of displayedEvents(); trackBy: trackByUid"
     [event]="event"

@@ -8,6 +8,8 @@ export default class AddBabyStrings {
   public static readonly MALE = 'זכר';
   public static readonly FEMALE = 'נקבה';
   public static readonly BABY_IMAGE = 'תמונת התינוק';
+  public static readonly CHOOSE_IMAGE = 'בחירת תמונה';
+  public static readonly REPLACE_IMAGE = 'החלפת תמונה';
 
   public static readonly ENTER_BABY_UID = 'הכנס קוד תינוק';
   public static readonly BABY_UID_INFO =

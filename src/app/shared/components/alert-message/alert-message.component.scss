@@ -1,34 +1,44 @@
-.alert-card {
-  margin: 16px auto;
-  padding: 16px;
+:host {
+  display: block;
   max-width: 600px;
-  border-radius: 8px;
-  color: #fff;
+  margin: 16px auto;
 }
 
-.alert-card.info {
-  background-color: #2196f3;
-}
+// The status pair drives the card through Material's own card tokens.
+.alert-card {
+  --mat-card-elevated-container-color: var(--alert-bg);
+  --mat-card-elevated-container-elevation: var(--alert-elevation, none);
+  padding: 14px 16px;
+  color: var(--app-text-primary);
 
-.alert-card.success {
-  background-color: #4caf50;
-}
+  &.info {
+    --alert-fg: var(--app-info);
+    --alert-bg: var(--app-info-bg);
+  }
 
-.alert-card.error {
-  background-color: #f44336;
-}
+  &.success {
+    --alert-fg: var(--app-success);
+    --alert-bg: var(--app-success-bg);
+  }
 
-/* Deep orange rather than the lighter amber: the card prints white text, and
-   #ff9800 does not carry it at an accessible contrast. */
-.alert-card.warning {
-  background-color: #e65100;
+  &.warning {
+    --alert-fg: var(--app-warning);
+    --alert-bg: var(--app-warning-bg);
+  }
+
+  &.error {
+    --alert-fg: var(--app-danger);
+    --alert-bg: var(--app-danger-bg);
+  }
 }
 
 .alert-title {
-  margin: 0 0 8px 0;
-  font-weight: bold;
+  margin: 0 0 4px;
+  color: var(--alert-fg);
+  font: var(--mat-sys-title-small);
 }
 
 .alert-message {
   margin: 0;
+  font: var(--mat-sys-body-medium);
 }

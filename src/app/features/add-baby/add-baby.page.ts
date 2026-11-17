@@ -13,6 +13,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core'; // required by MatDatepicker
 import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 
 import { AppService } from '../../core/services/app.service';
 import { BabiesStore } from '../../core/stores/babies/babies.store';
@@ -31,6 +33,8 @@ import AddBabyStrings from './add-baby.strings';
     MatNativeDateModule,
     MatRadioModule,
     MatButtonModule,
+    MatCardModule,
+    MatIconModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-add-baby',

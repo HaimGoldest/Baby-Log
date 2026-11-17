@@ -1,18 +1,25 @@
-<!-- The press lives on the wrapper, not the button: the button is a circle,
-     and hit testing honours border-radius, so a right-click near the edge of
-     the icon (or on its margin) lands here and would otherwise reach the
-     browser's own context menu. -->
-<div class="panel-item" appLongPress (longPress)="openMenu()">
+<!-- The press lives on the wrapper, not the button: the button has rounded
+     corners, and hit testing honours border-radius, so a right-click in a
+     corner (or in the gap around the item) lands here and would otherwise
+     reach the browser's own context menu. -->
+<div
+  class="panel-item"
+  [class.is-filtered]="isFiltered()"
+  appLongPress
+  (longPress)="openMenu()"
+>
   <button
     type="button"
-    class="img-btn"
+    class="tile-button"
     (click)="addBabyEvent('')"
-    [attr.aria-label]="babyEventCategory().category.value"
     aria-haspopup="menu"
-    [style.background-image]="
-      'url(' + babyEventCategory().category.imagePath + ')'
-    "
-  ></button>
+  >
+    <app-category-icon
+      class="tile"
+      [category]="babyEventCategory().category"
+    ></app-category-icon>
+    <span class="tile-label">{{ babyEventCategory().category.value }}</span>
+  </button>
 
   <span
     class="menu-anchor"
@@ -33,7 +40,7 @@
     }
 
     <button mat-menu-item type="button" (click)="filterEvent()">
-      <mat-icon color="accent">{{ filterIcon() }}</mat-icon>
+      <mat-icon>{{ filterIcon() }}</mat-icon>
       <span>{{ filterLabel() }}</span>
     </button>
   </mat-menu>

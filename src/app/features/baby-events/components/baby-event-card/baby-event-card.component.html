@@ -1,88 +1,79 @@
 @let pending = pendingKind();
+@let babyEvent = event();
 
+<!-- Fixed height: every row below is a single line, a fixed-size box, or (the
+     note) clamped to two lines, so no content can grow the card past its
+     virtual-scroll slot. -->
 <mat-card
-  class="card-style"
+  appearance="outlined"
+  class="event-card"
   [attr.aria-busy]="pending === 'saving'"
   (contextmenu)="onEdit($event)"
 >
-  <div class="mat-card-content">
-    <div class="main-section">
-      <h4 class="card-title">{{ event().category.value }}</h4>
-      <img
-        mat-card-image
-        src="{{ event().category.imagePath }}"
-        alt="{{ event().category.id }}"
-        class="event-img"
-      />
-      <span class="time-info">
-        <mat-card-subtitle class="time-text">
-          {{ event().time | date: "dd/MM/yy" }} -
-          {{ event().time | date: "HH:mm" }}
-        </mat-card-subtitle>
-      </span>
-      @if (pending === 'syncing') {
-        <app-sync-pending-icon class="sync-icon"></app-sync-pending-icon>
-      }
-      <button
-        mat-icon-button
-        [matMenuTriggerFor]="menu"
-        [disabled]="pending === 'saving'"
-        aria-label="Icon-button with a menu"
-        class="menu-button"
-      >
-        <mat-icon>more_vert</mat-icon>
-      </button>
+  <div class="card-header">
+    <app-category-icon [category]="babyEvent.category"></app-category-icon>
 
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item [disabled]="pending !== null" (click)="onEdit()">
-          <mat-icon color="primary">edit</mat-icon>
-          <span>{{ strings.EDIT }}</span>
-        </button>
-        @if (filterMode()) {
-          <button mat-menu-item (click)="onUnfilter()">
-            <mat-icon color="accent">filter_none</mat-icon>
-            <span>{{ strings.UNFILTER }}</span>
-          </button>
-        } @else {
-          <button mat-menu-item (click)="onFilter()">
-            <mat-icon color="accent">filter</mat-icon>
-            <span>{{ strings.FILTER }}</span>
-          </button>
-        }
-        <button
-          mat-menu-item
-          [disabled]="pending !== null"
-          (click)="onDelete()"
-        >
-          <mat-icon color="warn">delete</mat-icon>
-          <span>{{ strings.DELETE }}</span>
-        </button>
-      </mat-menu>
+    <div class="headline">
+      <h4 class="category-pill" [attr.data-category-color]="categoryColor()">
+        {{ babyEvent.category.value }}
+      </h4>
+      <span class="timestamp">
+        {{ babyEvent.time | date: "HH:mm" }} ·
+        {{ babyEvent.time | date: "dd/MM/yy" }}
+      </span>
     </div>
 
-    @if (event().comment) {
-      <div class="comment-section">
-        <p>
-          <strong>{{ strings.COMMENT }}:</strong> {{ event().comment }}
-        </p>
-      </div>
+    @if (pending === 'syncing') {
+      <app-sync-pending-icon class="sync-icon"></app-sync-pending-icon>
     }
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="menu"
+      [disabled]="pending === 'saving'"
+      [attr.aria-label]="strings.ACTIONS"
+      class="menu-button"
+    >
+      <mat-icon>more_vert</mat-icon>
+    </button>
+
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item [disabled]="pending !== null" (click)="onEdit()">
+        <mat-icon>edit</mat-icon>
+        <span>{{ strings.EDIT }}</span>
+      </button>
+      @if (filterMode()) {
+        <button mat-menu-item (click)="onUnfilter()">
+          <mat-icon>filter_none</mat-icon>
+          <span>{{ strings.UNFILTER }}</span>
+        </button>
+      } @else {
+        <button mat-menu-item (click)="onFilter()">
+          <mat-icon>filter</mat-icon>
+          <span>{{ strings.FILTER }}</span>
+        </button>
+      }
+      <button
+        mat-menu-item
+        class="app-danger-action"
+        [disabled]="pending !== null"
+        (click)="onDelete()"
+      >
+        <mat-icon>delete</mat-icon>
+        <span>{{ strings.DELETE }}</span>
+      </button>
+    </mat-menu>
   </div>
 
-  <div class="users-section">
-    @if (event().createdBy === event().lastEditedBy) {
-      <p class="same-user">
-        {{ `${strings.CREATED_AND_EDITED_BY}: ${event().createdBy}` }}
-      </p>
-    } @else {
-      <p class="creation">{{ `${strings.CREATED_BY}: ${event().createdBy}` }}</p>
-      @if (event().lastEditedBy) {
-        <p class="editing">
-          {{ `${strings.EDITED_BY}: ${event().lastEditedBy}` }}
-        </p>
-      }
-    }
-  </div>
+  @if (babyEvent.comment) {
+    <!-- The no-break space ties the label to the note: with an ordinary space,
+         a single unbroken word would wrap below the label as a whole and the
+         two-line clamp would leave it just one line. -->
+    <p class="note">
+      <span class="note-label">{{ strings.COMMENT }}:</span>&nbsp;{{ babyEvent.comment }}
+    </p>
+  }
+
+  <p class="attribution">{{ attribution() }}</p>
 
   @if (pending === 'saving') {
     <app-busy-overlay></app-busy-overlay>

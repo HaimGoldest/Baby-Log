@@ -5,7 +5,29 @@
     <title>BabyLog</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Applies the cached theme before the first paint, so a dark-theme user
+         never sees the light default flash while the app loads. The key must
+         match ThemeService.STORAGE_KEY. An unknown value matches no
+         [data-theme] block and falls back to the default (nordic) palette;
+         ThemeService validates it once the app boots. -->
+    <script>
+      try {
+        document.documentElement.dataset.theme =
+          localStorage.getItem('baby-log.theme') || 'nordic';
+      } catch {
+        document.documentElement.dataset.theme = 'nordic';
+      }
+    </script>
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Hebrew-capable theme fonts (one per theme, see --app-font-family in
+         styles.scss). Browsers only download the family the active theme uses. -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;700&family=Heebo:wght@400;500;700&family=Rubik:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Roboto is kept for the Google sign-in button, whose branding requires it. -->
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap"
       rel="stylesheet"
@@ -15,7 +37,7 @@
       rel="stylesheet"
     />
   </head>
-  <body class="mat-typography">
+  <body>
     <app-root></app-root>
   </body>
 </html>

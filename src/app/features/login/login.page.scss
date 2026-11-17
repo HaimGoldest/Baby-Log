@@ -1,58 +1,114 @@
+// `main` in the app shell is a flex column with overflow hidden, so the page
+// fills it and scrolls itself on short (e.g. landscape) viewports.
+:host {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
 .login {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex: 1;
   align-items: center;
-  background-color: silver;
+  justify-content: center;
+  padding: 24px 16px;
+  background-color: var(--app-bg);
+}
+
+.login-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
-  height: 100vh;
+  max-width: 360px;
+  padding: 32px 24px;
+  border: 1px solid var(--app-border);
+  border-radius: var(--mat-sys-corner-extra-large);
+  background-color: var(--app-surface);
+  box-shadow: var(--app-shadow-card);
+  text-align: center;
 }
 
-h1 {
-  color: darkblue;
-  font-weight: bold;
-  font-size: 2.5rem;
-  margin-top: -56px;
-  margin-bottom: 16px;
+.logo-badge {
+  display: grid;
+  place-items: center;
+  width: 88px;
+  height: 88px;
+  margin-block-end: 16px;
+  border-radius: 50%;
+  background-color: var(--app-primary-container);
 }
 
-.app-logo {
-  width: 80px;
-  height: 80px;
-  margin-bottom: 16px;
+.logo {
+  width: 56px;
+  height: 56px;
 }
 
-h2 {
-  color: darkblue;
-  font-weight: bold;
-  font-size: 1.5rem;
-  margin-bottom: 5px;
+.app-name {
+  margin: 0 0 4px;
+  color: var(--app-primary);
+  font: var(--mat-sys-title-medium);
 }
 
+.title {
+  margin: 0 0 8px;
+  color: var(--app-text-primary);
+  font: var(--mat-sys-headline-small);
+  font-weight: 700;
+}
+
+.subtitle {
+  margin: 0 0 28px;
+  color: var(--app-text-secondary);
+  font: var(--mat-sys-body-large);
+}
+
+// Google's sign-in button spec: brand colours and font from the --app-google-*
+// tokens (light and dark variants), symmetric padding with centred content so
+// it balances the same way in RTL and LTR.
 .google-sign-in-btn {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 24px 10px 12px;
-  background: #fff;
-  border: 1px solid #dadce0;
-  border-radius: 4px;
-  cursor: pointer;
-  font-family: "Roboto", sans-serif;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding-block: 10px;
+  padding-inline: 12px;
+  border: 1px solid var(--app-google-btn-border);
+  border-radius: var(--mat-sys-corner-full);
+  background-color: var(--app-google-btn-bg);
+  color: var(--app-google-btn-text);
+  font-family: var(--app-google-btn-font);
   font-size: 14px;
   font-weight: 500;
-  color: #3c4043;
+  line-height: 20px;
+  cursor: pointer;
   transition:
-    background 0.2s,
+    background-color 0.2s,
     box-shadow 0.2s;
 
   &:hover {
-    background: #f7f8f8;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    background-color: color-mix(
+      in srgb,
+      var(--app-google-btn-text) 8%,
+      var(--app-google-btn-bg)
+    );
+    box-shadow: var(--app-shadow-card);
   }
 
   &:active {
-    background: #e8e8e8;
+    background-color: color-mix(
+      in srgb,
+      var(--app-google-btn-text) 12%,
+      var(--app-google-btn-bg)
+    );
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--app-primary);
+    outline-offset: 2px;
   }
 
   .google-icon {
@@ -69,7 +125,7 @@ h2 {
 }
 
 .error-message {
-  color: red;
-  font-size: 0.9rem;
-  margin-top: 16px;
+  margin: 16px 0 0;
+  color: var(--app-danger);
+  font: var(--mat-sys-body-medium);
 }

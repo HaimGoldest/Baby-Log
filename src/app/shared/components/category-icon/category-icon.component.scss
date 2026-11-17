@@ -1,0 +1,18 @@
+// A rounded square whose corner radius scales with its size, so tiles read the
+// same at every size they are used at. Its colour comes from the host's
+// data-category-color (see section 4 of src/styles.scss).
+:host {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: var(--category-icon-size, 48px);
+  height: var(--category-icon-size, 48px);
+  border-radius: 30%;
+  background-color: var(--app-cat-bg, var(--app-primary-container));
+}
+
+.icon {
+  width: 62%;
+  height: 62%;
+  object-fit: contain;
+}

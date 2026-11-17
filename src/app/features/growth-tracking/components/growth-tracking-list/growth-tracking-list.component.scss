@@ -1,5 +1,43 @@
-/* A block formatting context, so the last card's bottom margin stays inside
-   the list rather than collapsing through the page wrappers. */
-.measurements-list {
-  display: flow-root;
+// The column template for the header and every row (rows inherit it):
+// date, the three measurements, then the actions menu. The date column fits a
+// centred date pill; the rest is shared by the measurements, which leaves
+// about 56px each on a 360px screen, room for "היקף ראש" on one line.
+.measurements-table {
+  --growth-columns: 6rem repeat(3, minmax(0, 1fr)) 40px;
+  overflow: hidden;
+}
+
+// Every header is centred over its column's values, and vertically centred
+// against the two-line measurement headers.
+.table-header {
+  display: grid;
+  grid-template-columns: var(--growth-columns);
+  align-items: center;
+  column-gap: 4px;
+  padding-block: 8px;
+  padding-inline: 8px 4px;
+  background-color: var(--app-surface-subtle);
+  color: var(--app-text-primary);
+  font: var(--mat-sys-label-medium);
+  text-align: center;
+}
+
+// Name on the first line, unit on the second, so all three share one height.
+.metric-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.metric-name {
+  white-space: nowrap;
+}
+
+.metric-unit {
+  color: var(--app-text-secondary);
+  font: var(--mat-sys-label-small);
+}
+
+app-growth-tracking-list-item {
+  border-block-start: 1px solid var(--app-border);
 }

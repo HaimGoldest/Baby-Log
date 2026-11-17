@@ -1,99 +1,105 @@
-<div class="add-baby-container">
-  <h2 class="page-title">
-    {{ isNewBabyMode() ? strings.ADD_NEW_BABY : strings.ADD_EXISTING_BABY }}
-  </h2>
+<div class="add-baby-page">
+  <mat-card appearance="outlined" class="form-card">
+    <h1 class="page-title">
+      {{ isNewBabyMode() ? strings.ADD_NEW_BABY : strings.ADD_EXISTING_BABY }}
+    </h1>
 
-  <form
-    #authForm="ngForm"
-    (ngSubmit)="onSubmit(authForm)"
-    (input)="clearErrorMessage()"
-    class="add-baby-form"
+    <form
+      #authForm="ngForm"
+      class="add-baby-form"
+      (ngSubmit)="onSubmit(authForm)"
+      (input)="clearErrorMessage()"
     >
-    @if (isNewBabyMode()) {
-      <!-- Name -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>{{ strings.BABY_NAME }}</mat-label>
-        <input matInput id="name" name="name" ngModel required />
-      </mat-form-field>
-      <!-- Birth Date -->
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>{{ strings.BABY_BIRTH_DATE }}</mat-label>
-        <input
-          matInput
-          [matDatepicker]="picker"
-          id="birthDate"
-          name="birthDate"
-          ngModel
-          required
-          (click)="picker.open()"
+      @if (isNewBabyMode()) {
+        <mat-form-field appearance="outline">
+          <mat-label>{{ strings.BABY_NAME }}</mat-label>
+          <input matInput id="name" name="name" ngModel required />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ strings.BABY_BIRTH_DATE }}</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            id="birthDate"
+            name="birthDate"
+            ngModel
+            required
+            (click)="picker.open()"
           />
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
-        <!-- Gender  -->
-        <div class="gender-container">
-          <mat-label class="label">{{ strings.BABY_GENDER }}:</mat-label>
+
+        <div class="field-group">
+          <span class="field-label" id="gender-label">
+            {{ strings.BABY_GENDER }}
+          </span>
           <mat-radio-group
             class="gender-options"
             name="gender"
-            color="primary"
+            aria-labelledby="gender-label"
             ngModel
             required
-            >
+          >
             <mat-radio-button value="Male">{{ strings.MALE }}</mat-radio-button>
-            <mat-radio-button value="Female"
-              >{{ strings.FEMALE }}</mat-radio-button
-              >
-            </mat-radio-group>
-          </div>
-          <!-- Image Upload + Preview -->
-          <div class="image-upload-container">
-            <mat-label class="label">{{ strings.BABY_IMAGE }}:</mat-label>
+            <mat-radio-button value="Female">
+              {{ strings.FEMALE }}
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <div class="field-group">
+          <span class="field-label">{{ strings.BABY_IMAGE }}</span>
+          <div class="image-picker">
+            @if (imagePreview(); as preview) {
+              <img class="image-preview" [src]="preview" alt="" />
+            } @else {
+              <span class="image-preview image-placeholder" aria-hidden="true">
+                <mat-icon>child_care</mat-icon>
+              </span>
+            }
             <input
+              #fileInput
               type="file"
               accept="image/*"
+              hidden
               (change)="onImageSelected($event)"
-              />
-              @if (imagePreview(); as preview) {
-                <div class="image-preview">
-                  <img [src]="preview" alt="Selected Image" />
-                </div>
-              }
-            </div>
-          } @else {
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>{{ strings.ENTER_BABY_UID }}</mat-label>
-              <input matInput id="uid" name="uid" ngModel required />
-            </mat-form-field>
-            <p>{{ strings.BABY_UID_INFO }}</p>
-          }
-
-          <!-- Existing Baby Mode -->
-
-          <!-- Action Buttons -->
-          <div class="button-row">
+            />
             <button
-              mat-raised-button
-              color="primary"
-              type="submit"
-              [disabled]="!authForm.valid"
-              >
-              {{ strings.ADD_BABY }}
-            </button>
-            <button
-              mat-button
+              mat-stroked-button
               type="button"
-              class="change_mode_button"
-              (click)="onSwitchMode()"
-              >
-              {{ isNewBabyMode() ? strings.ADD_TO_EXISTING_BABY :
-              strings.ADD_TO_NEW_BABY }}
+              (click)="fileInput.click()"
+            >
+              <mat-icon>add_a_photo</mat-icon>
+              {{ imagePreview() ? strings.REPLACE_IMAGE : strings.CHOOSE_IMAGE }}
             </button>
           </div>
-        </form>
+        </div>
+      } @else {
+        <mat-form-field appearance="outline">
+          <mat-label>{{ strings.ENTER_BABY_UID }}</mat-label>
+          <input matInput id="uid" name="uid" ngModel required />
+        </mat-form-field>
+        <p class="hint">{{ strings.BABY_UID_INFO }}</p>
+      }
 
-        <!-- Error Message -->
-        @if (errorMessage(); as message) {
-          <div class="error-message" role="alert">{{ message }}</div>
-        }
+      <div class="button-row">
+        <button mat-flat-button type="submit" [disabled]="!authForm.valid">
+          {{ strings.ADD_BABY }}
+        </button>
+        <button mat-button type="button" (click)="onSwitchMode()">
+          {{
+            isNewBabyMode()
+              ? strings.ADD_TO_EXISTING_BABY
+              : strings.ADD_TO_NEW_BABY
+          }}
+        </button>
       </div>
+    </form>
+
+    @if (errorMessage(); as message) {
+      <p class="error-message" role="alert">{{ message }}</p>
+    }
+  </mat-card>
+</div>

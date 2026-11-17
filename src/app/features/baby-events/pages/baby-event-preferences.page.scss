@@ -9,83 +9,126 @@
 }
 
 .preferences-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-sizing: border-box;
   width: 100%;
   max-width: 800px;
-  margin: 0 auto;
-  padding: 8px 8px 88px; /* bottom padding clears the fixed action bar */
+  margin-inline: auto;
+  padding: 8px 4px 16px;
 }
 
 .page-title {
   margin: 0 0 16px;
-  color: darkblue;
-  font-weight: bold;
+  color: var(--app-text-primary);
+  font: var(--mat-sys-title-large);
+  font-weight: 700;
   text-align: center;
 }
 
-.section {
-  width: 100%;
+.no-favorites-alert {
+  display: block;
+  margin-block-end: 12px;
 }
 
-.section-title {
-  margin: 0 0 8px;
-  color: darkblue;
-  font-weight: bold;
-  font-size: 1.1rem;
+// The panels' surfaces, borders, gutters and header heights are set in
+// src/styles.scss (section 7); this file only lays out what goes in them.
+.app-preferences-panels {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.section-divider {
-  width: 100%;
-  margin: 16px 0;
+// Material splits a header 1:2 between title and description; here the
+// title takes what it needs and the summary sits at the end.
+.panel-title {
+  flex: 1 1 auto;
+  gap: 12px;
+  min-width: 0;
 }
 
-.available-card {
-  padding: 4px 10px !important;
+.panel-title-text {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.panel-icon {
+  flex: none;
+  color: var(--app-primary);
+}
+
+.panel-summary {
+  flex: none;
+  justify-content: flex-end;
+}
+
+.summary-pill {
+  padding: 2px 10px;
+  border-radius: var(--mat-sys-corner-full);
+  background-color: var(--app-primary-container);
+  color: var(--app-on-primary-container);
+  font: var(--mat-sys-label-medium);
+  white-space: nowrap;
+}
+
+.count-badge {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  min-width: 24px;
+  height: 20px;
+  padding-inline: 6px;
+  border-radius: var(--mat-sys-corner-full);
+  background-color: var(--app-surface-subtle);
+  color: var(--app-text-secondary);
+  font: var(--mat-sys-label-medium);
+}
+
+.empty-hint {
+  margin: 0;
+  padding-block: 4px 8px;
+  color: var(--app-text-muted);
+  font: var(--mat-sys-body-medium);
 }
 
 .available-row {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 6px 0;
+  padding-block: 8px;
 
-  & + .available-row {
-    border-top: 1px solid #e0e0e0;
+  & + & {
+    border-block-start: 1px solid var(--app-border);
   }
 
-  .event-img {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-
-  .category-title {
-    font-weight: bold;
-    font-size: 1.1rem;
-    color: darkblue;
-  }
-
-  .add-favorite {
-    margin-inline-start: auto;
-    color: darkgreen !important;
+  app-category-icon {
+    --category-icon-size: 40px;
   }
 }
 
-.action-buttons {
-  position: fixed;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 16px;
-  z-index: 1000;
+.category-title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--app-text-primary);
+  font: var(--mat-sys-title-small);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 
-  .save:not([disabled]) {
-    background-color: #4caf50 !important;
-    color: white !important;
-  }
+/* Sticks to the bottom of the scrolling page while there is more to scroll,
+   and sits after the content otherwise. Opaque, so card text never shows
+   through it. `margin-block-start: auto` keeps it at the bottom of a short
+   page. */
+.action-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-block-start: auto;
+  padding: 12px 16px;
+  border-block-start: 1px solid var(--app-border);
+  background-color: var(--app-surface);
+  box-shadow: var(--app-shadow-bar);
 }

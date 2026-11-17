@@ -1,56 +1,526 @@
-/* You can add global styles to this file, and also import other style files */
+// =============================================================================
+// Baby-Log design system: the global styling entry point.
+//
+//   1. Material 3 base theme   emits the --mat-sys-* system tokens, once.
+//   2. Theme palettes          raw --app-* values per <html data-theme>. The
+//                              only place in the app where colour literals
+//                              belong (with the category colour palette map
+//                              below).
+//   3. Material role mapping   points --mat-sys-* roles at --app-* tokens, so
+//                              switching data-theme re-colours Material too,
+//                              plus the app-wide component looks.
+//   4. Event category colours  [data-category-color] → --app-cat-bg / -fg.
+//   5. Semantic actions        danger / success variants for Material buttons.
+//   6. Base and app-wide rules
+//   7. Preferences panels      the settings page's expansion-panel cards.
+//
+// Adding a theme: add it to APP_THEMES (src/app/core/theme/app-themes.ts), add
+// its key colours to $_theme-key-colors, and give it a matching
+// `:root[data-theme='<id>']` block in section 2.
+// =============================================================================
 
-/* Base reset: the Bootstrap 5 Reboot rules that matched elements this app (or
-   Angular Material) renders, kept when Bootstrap was removed so element
-   defaults don't shift. Reboot's heading, paragraph and body-font rules are
-   left out, as `.mat-typography` on <body> already overrides them. */
+@use 'sass:list';
+@use 'sass:map';
+@use '@angular/material' as mat;
+
+// Seeds only the roles section 3 leaves alone (on-error, the -fixed roles,
+// scrim, shadow). Every theme's brand hue comes from its --app-* tokens.
+$_seed-palette: mat.$spring-green-palette;
+
+// Hebrew is set without letter-spacing; M3's tracking values assume Latin.
+$_type-levels: display-large, display-medium, display-small, headline-large,
+  headline-medium, headline-small, title-large, title-medium, title-small,
+  body-large, body-medium, body-small, label-large, label-medium, label-small;
+$_no-tracking: ();
+@each $level in $_type-levels {
+  $_no-tracking: map.set($_no-tracking, #{$level}-tracking, 0);
+}
+
+// Each theme's page background and primary: the two colours that identify it.
+// The theme blocks in section 2 read them from here, and so do the picker
+// swatches (--app-swatch-<id>-*), so a swatch cannot drift from its theme.
+// Keys are APP_THEMES ids.
+$_theme-key-colors: (
+  nordic: (bg: #faf8f5, primary: #527a6a),
+  mint: (bg: #f4f7f9, primary: #2a7b88),
+  terracotta: (bg: #fdf9f6, primary: #ac5e46),
+  boy: (bg: #f3f7fb, primary: #3b6e9c),
+  girl: (bg: #fcf5f7, primary: #a64d69),
+  dark: (bg: #121619, primary: #7eb5a0),
+);
+
+@function _key-color($theme, $role) {
+  @return map.get($_theme-key-colors, $theme, $role);
+}
+
+// The custom colours a user can give an event category, keyed by
+// CATEGORY_COLOR_PALETTE id (src/app/core/theme/category-colors.ts), as
+// (background, foreground). A category without one uses the theme default
+// (section 4), so these are opt-in accents rather than a colour per category.
+//
+// Twenty hues spread around the OKLCH wheel. Light pairs are soft tints with a
+// deep same-hue foreground, shared by every light theme; dark pairs are a
+// muted same-hue tile under a soft tint, so nothing glares at night. Every
+// pair clears 5.3:1. Tiles come in three lightness tiers, alternated between
+// hue neighbours (coral sits between the deeper red and the lighter orange),
+// so adjacent colours differ in lightness as well as hue.
+// Adding a colour: add a row here and an entry to the registry.
+$_category-color-palette: (
+  'yellow': (light: (#ffe79d, #715b00), dark: (#43370d, #d1b560)),
+  'lemon': (light: (#f3f4b1, #676404), dark: (#43421e, #c9c871)),
+  'amber': (light: (#ffd7aa, #7a4d04), dark: (#412a0c, #d9a05a)),
+  'orange': (light: (#ffeade, #9e4903), dark: (#583725, #feaf83)),
+  'coral': (light: (#fee0d9, #a43520), dark: (#512d25, #f79e8b)),
+  'red': (light: (#fed2d2, #9f2c3b), dark: (#482425, #ed9295)),
+  'rose': (light: (#ffdee6, #92425b), dark: (#4a2f36, #e1a4b3)),
+  'pink': (light: (#fee7f3, #9e3b79), dark: (#553447, #f8a7d4)),
+  'orchid': (light: (#ffdaff, #8a3b8d), dark: (#472e47, #dea0df)),
+  'lavender': (light: (#f0ebfe, #714cae), dark: (#443a5a, #ccb6fe)),
+  'purple': (light: (#edd4fb, #783a94), dark: (#3a2743, #c799df)),
+  'indigo': (light: (#d4ddff, #424dac), dark: (#272d4c, #97a7f2)),
+  'blue': (light: (#dae9fe, #145cb0), dark: (#243954, #88bafd)),
+  'sky': (light: (#ddf2ff, #026991), dark: (#1f4559, #75ceff)),
+  'cyan': (light: (#b1f6ff, #056972), dark: (#074046, #4dcad8)),
+  'teal': (light: (#bee9e3, #07645d), dark: (#153633, #76bab1)),
+  'mint': (light: (#c2ffdf, #05724d), dark: (#224937, #7ad7ab)),
+  'emerald': (light: (#c0edc1, #036819), dark: (#1d371e, #7dbd7f)),
+  'lime': (light: (#daf3b1, #4d6703), dark: (#313d1c, #a6c273)),
+  'sand': (light: (#f3e6d6, #6f593e), dark: (#3d3730, #cab398)),
+);
+
+/// Emits --app-cat-palette-<id>-bg / -fg for every palette colour, from the
+/// given scheme.
+@mixin _category-palette-tokens($scheme) {
+  @each $id, $entry in $_category-color-palette {
+    $pair: map.get($entry, $scheme);
+    --app-cat-palette-#{$id}-bg: #{list.nth($pair, 1)};
+    --app-cat-palette-#{$id}-fg: #{list.nth($pair, 2)};
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 1. Material 3 base theme
+// -----------------------------------------------------------------------------
+// `color-scheme` theme type emits every colour as light-dark(), so a theme only
+// has to set the CSS `color-scheme` property to flip whatever section 3 does
+// not map.
+html {
+  @include mat.theme(
+    (
+      color: (
+        primary: $_seed-palette,
+        theme-type: color-scheme,
+      ),
+      typography: (
+        plain-family: var(--app-font-family),
+        brand-family: var(--app-font-family),
+        regular-weight: 400,
+        medium-weight: 500,
+        bold-weight: 700,
+      ),
+      density: 0,
+    ),
+    $_no-tracking
+  );
+}
+
+// -----------------------------------------------------------------------------
+// 2. Theme palettes
+// -----------------------------------------------------------------------------
+// Set these on :root only. Section 3 resolves them on <html>, so a value
+// redefined further down the tree would not reach Material's tokens.
+//
+// `nordic` is also the fallback for a missing or unknown data-theme. The status
+// and category palette colours here are shared by every light theme; dark
+// redefines them.
+:root,
+:root[data-theme='nordic'] {
+  color-scheme: light;
+
+  --app-font-family: 'Heebo', sans-serif;
+
+  --app-bg: #{_key-color(nordic, bg)};
+  --app-surface: #ffffff;
+  --app-surface-subtle: #f2efea;
+  --app-border: #e5e0d8;
+  --app-border-strong: #8a857c;
+  --app-shadow-card: 0 1px 2px rgb(43 47 45 / 6%), 0 2px 8px rgb(43 47 45 / 6%);
+
+  --app-primary: #{_key-color(nordic, primary)};
+  --app-on-primary: #ffffff;
+  --app-primary-container: #e8f0ec;
+  --app-on-primary-container: #1e3b31;
+
+  --app-text-primary: #2b2f2d;
+  --app-text-secondary: #535955;
+  --app-text-muted: #686d69;
+
+  --app-success: #2f7a4f;
+  --app-success-bg: #e5f2ea;
+  --app-info: #1d5c94;
+  --app-info-bg: #e6f0fa;
+  --app-warning: #94560a;
+  --app-warning-bg: #fbf0dc;
+  --app-danger: #b3372f;
+  --app-danger-bg: #fbe9e7;
+
+  @include _category-palette-tokens(light);
+
+  // Google's published "Sign in with Google" light variant. Brand-mandated, so
+  // the light themes share it rather than taking their own palette. Roboto is
+  // the brand font; Hebrew falls through to the theme font, which Roboto lacks.
+  --app-google-btn-bg: #ffffff;
+  --app-google-btn-border: #747775;
+  --app-google-btn-text: #1f1f1f;
+  --app-google-btn-font: 'Roboto', var(--app-font-family);
+}
+
+:root[data-theme='mint'] {
+  --app-font-family: 'Rubik', sans-serif;
+
+  --app-bg: #{_key-color(mint, bg)};
+  --app-surface: #ffffff;
+  --app-surface-subtle: #eaf0f3;
+  --app-border: #dbe3e8;
+  --app-border-strong: #808d96;
+  --app-shadow-card: 0 1px 2px rgb(31 42 48 / 6%), 0 2px 8px rgb(31 42 48 / 6%);
+
+  --app-primary: #{_key-color(mint, primary)};
+  --app-on-primary: #ffffff;
+  --app-primary-container: #e0f0f2;
+  --app-on-primary-container: #0d3940;
+
+  --app-text-primary: #1f2a30;
+  --app-text-secondary: #4a5961;
+  --app-text-muted: #5e6c74;
+}
+
+:root[data-theme='terracotta'] {
+  --app-font-family: 'Assistant', sans-serif;
+
+  --app-bg: #{_key-color(terracotta, bg)};
+  --app-surface: #ffffff;
+  --app-surface-subtle: #f6eee8;
+  --app-border: #ebe0d8;
+  --app-border-strong: #918780;
+  --app-shadow-card: 0 1px 2px rgb(56 44 39 / 6%), 0 2px 8px rgb(56 44 39 / 6%);
+
+  --app-primary: #{_key-color(terracotta, primary)};
+  --app-on-primary: #ffffff;
+  --app-primary-container: #f9eae4;
+  --app-on-primary-container: #5a2515;
+
+  --app-text-primary: #382c27;
+  --app-text-secondary: #5f524b;
+  --app-text-muted: #74665f;
+}
+
+// Baby boy: powder sky with a dusty sky-blue primary.
+:root[data-theme='boy'] {
+  --app-font-family: 'Heebo', sans-serif;
+
+  --app-bg: #{_key-color(boy, bg)};
+  --app-surface: #ffffff;
+  --app-surface-subtle: #e9f0f6;
+  --app-border: #d9e3ed;
+  --app-border-strong: #7b8b9b;
+  --app-shadow-card: 0 1px 2px rgb(30 42 54 / 6%), 0 2px 8px rgb(30 42 54 / 6%);
+
+  --app-primary: #{_key-color(boy, primary)};
+  --app-on-primary: #ffffff;
+  --app-primary-container: #e1edf7;
+  --app-on-primary-container: #12324f;
+
+  --app-text-primary: #1e2a36;
+  --app-text-secondary: #4a5866;
+  --app-text-muted: #5d6b79;
+}
+
+// Baby girl: soft blush with a dusty-rose primary.
+:root[data-theme='girl'] {
+  --app-font-family: 'Heebo', sans-serif;
+
+  --app-bg: #{_key-color(girl, bg)};
+  --app-surface: #ffffff;
+  --app-surface-subtle: #f5eaee;
+  --app-border: #eedde3;
+  --app-border-strong: #968389;
+  --app-shadow-card: 0 1px 2px rgb(53 42 46 / 6%), 0 2px 8px rgb(53 42 46 / 6%);
+
+  --app-primary: #{_key-color(girl, primary)};
+  --app-on-primary: #ffffff;
+  --app-primary-container: #f7e3e9;
+  --app-on-primary-container: #4f1a2c;
+
+  --app-text-primary: #352a2e;
+  --app-text-secondary: #5e4f55;
+  --app-text-muted: #74646a;
+}
+
+// Low-glare night mode: no pure white anywhere, and a primary light enough to
+// carry dark text.
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --app-font-family: 'Heebo', sans-serif;
+
+  --app-bg: #{_key-color(dark, bg)};
+  --app-surface: #1e2429;
+  --app-surface-subtle: #262d33;
+  --app-border: #313940;
+  --app-border-strong: #768089;
+  --app-shadow-card: 0 1px 2px rgb(0 0 0 / 40%), 0 2px 8px rgb(0 0 0 / 30%);
+
+  --app-primary: #{_key-color(dark, primary)};
+  --app-on-primary: #0d2a20;
+  --app-primary-container: #25332e;
+  --app-on-primary-container: #cbe5da;
+
+  --app-text-primary: #e8ecef;
+  --app-text-secondary: #b3bcc3;
+  --app-text-muted: #929ca4;
+
+  --app-success: #7cc79b;
+  --app-success-bg: #1b3225;
+  --app-info: #90c2ee;
+  --app-info-bg: #182b3d;
+  --app-warning: #e7b062;
+  --app-warning-bg: #382a15;
+  --app-danger: #f2a097;
+  --app-danger-bg: #3e2220;
+
+  @include _category-palette-tokens(dark);
+
+  // Google's published dark variant of the sign-in button.
+  --app-google-btn-bg: #131314;
+  --app-google-btn-border: #8e918f;
+  --app-google-btn-text: #e3e3e3;
+}
+
+// Derived tokens: computed from whichever palette is active, so no theme block
+// redefines them. Declared on :root, where the palette tokens resolve.
+:root {
+  // Veils a surface while it is busy, keeping its content legible underneath.
+  --app-surface-overlay: color-mix(in srgb, var(--app-surface) 70%, transparent);
+
+  // Hover state layer for custom (non-Material) interactive elements.
+  --app-state-hover: color-mix(in srgb, var(--app-text-primary) 6%, transparent);
+
+  // Upward shadow for bars pinned to the bottom edge of a scroll area.
+  --app-shadow-bar: 0 -2px 8px color-mix(in srgb, var(--mat-sys-shadow) 8%, transparent);
+
+  // The category colour `default`: the theme's own container pair, so
+  // uncustomised categories follow whichever theme is active.
+  --app-cat-palette-default-bg: var(--app-primary-container);
+  --app-cat-palette-default-fg: var(--app-on-primary-container);
+}
+
+// Theme swatches: every theme's key colours, defined whichever theme is active,
+// for previews such as the theme picker. An element with
+// data-theme-swatch="<id>" exposes its theme's pair as --app-swatch-bg /
+// --app-swatch-primary.
+:root {
+  @each $theme, $colors in $_theme-key-colors {
+    --app-swatch-#{$theme}-bg: #{map.get($colors, bg)};
+    --app-swatch-#{$theme}-primary: #{map.get($colors, primary)};
+  }
+}
+
+@each $theme, $colors in $_theme-key-colors {
+  [data-theme-swatch='#{$theme}'] {
+    --app-swatch-bg: var(--app-swatch-#{$theme}-bg);
+    --app-swatch-primary: var(--app-swatch-#{$theme}-primary);
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 3. Material role mapping
+// -----------------------------------------------------------------------------
+// Covers every colour role the Material components in use read. Secondary and
+// tertiary share the brand hue until the themes define an accent of their own.
+html {
+  @include mat.theme-overrides(
+    (
+      primary: var(--app-primary),
+      on-primary: var(--app-on-primary),
+      primary-container: var(--app-primary-container),
+      on-primary-container: var(--app-on-primary-container),
+      secondary: var(--app-primary),
+      on-secondary: var(--app-on-primary),
+      secondary-container: var(--app-primary-container),
+      on-secondary-container: var(--app-on-primary-container),
+      tertiary: var(--app-primary),
+      on-tertiary: var(--app-on-primary),
+      tertiary-container: var(--app-primary-container),
+      on-tertiary-container: var(--app-on-primary-container),
+      surface-tint: var(--app-primary),
+      inverse-primary: var(--app-primary-container),
+
+      // The page sits on `surface`; cards, menus and dialogs on the containers.
+      background: var(--app-bg),
+      on-background: var(--app-text-primary),
+      surface: var(--app-bg),
+      surface-dim: var(--app-surface-subtle),
+      surface-bright: var(--app-surface),
+      surface-container-lowest: var(--app-surface),
+      surface-container-low: var(--app-surface),
+      surface-container: var(--app-surface),
+      surface-container-high: var(--app-surface),
+      surface-container-highest: var(--app-surface-subtle),
+      surface-variant: var(--app-surface-subtle),
+      on-surface: var(--app-text-primary),
+      on-surface-variant: var(--app-text-secondary),
+      inverse-surface: var(--app-text-primary),
+      inverse-on-surface: var(--app-surface),
+      outline: var(--app-border-strong),
+      outline-variant: var(--app-border),
+
+      error: var(--app-danger),
+      error-container: var(--app-danger-bg),
+      on-error-container: var(--app-danger),
+    )
+  );
+
+  // App-wide component looks.
+  // - Cards: `appearance="outlined"` is the app's content card (surface, hairline
+  //   border, soft shadow); the default elevated card has no border and is used
+  //   for tonal surfaces such as alerts.
+  // - The toolbar is a flat surface bar; the FAB carries the brand colour.
+  @include mat.card-overrides(
+    (
+      elevated-container-color: var(--app-surface),
+      elevated-container-elevation: var(--app-shadow-card),
+      elevated-container-shape: var(--mat-sys-corner-large),
+      outlined-container-color: var(--app-surface),
+      outlined-container-elevation: var(--app-shadow-card),
+      outlined-container-shape: var(--mat-sys-corner-large),
+      outlined-outline-color: var(--app-border),
+    )
+  );
+  @include mat.toolbar-overrides(
+    (
+      container-background-color: var(--app-surface),
+      container-text-color: var(--app-text-primary),
+    )
+  );
+  @include mat.fab-overrides(
+    (
+      container-color: var(--app-primary),
+      foreground-color: var(--app-on-primary),
+      state-layer-color: var(--app-on-primary),
+      ripple-color: color-mix(in srgb, var(--app-on-primary) 12%, transparent),
+    )
+  );
+}
+
+// -----------------------------------------------------------------------------
+// 4. Event category colours
+// -----------------------------------------------------------------------------
+// An element with data-category-color="<CATEGORY_COLOR_PALETTE id>" exposes
+// that colour as --app-cat-bg / --app-cat-fg (text on the background, 5:1 or
+// more), inherited by its descendants. --app-cat-accent is the hue that
+// identifies the colour in a preview swatch: the foreground for a palette
+// colour, the theme primary for `default`. CategoryIconComponent and the event
+// card resolve the id from the user's saved colours; consumers read the tokens
+// with the primary container as fallback, which covers unknown ids:
+//   background: var(--app-cat-bg, var(--app-primary-container));
+[data-category-color='default'] {
+  --app-cat-bg: var(--app-cat-palette-default-bg);
+  --app-cat-fg: var(--app-cat-palette-default-fg);
+  --app-cat-accent: var(--app-primary);
+}
+
+@each $id, $entry in $_category-color-palette {
+  [data-category-color='#{$id}'] {
+    --app-cat-bg: var(--app-cat-palette-#{$id}-bg);
+    --app-cat-fg: var(--app-cat-palette-#{$id}-fg);
+    --app-cat-accent: var(--app-cat-palette-#{$id}-fg);
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 5. Semantic actions
+// -----------------------------------------------------------------------------
+// Add `app-danger-action` or `app-success-action` to a Material text, outlined
+// or filled button, an icon button, or a menu item to colour it by meaning. A
+// filled button becomes tonal (status background, status label), which keeps
+// its contrast in light and dark themes alike.
+@mixin _status-action($status) {
+  $fg: var(--app-#{$status});
+  $bg: var(--app-#{$status}-bg);
+  $ripple: color-mix(in srgb, #{$fg} 12%, transparent);
+
+  @include mat.button-overrides(
+    (
+      text-label-text-color: $fg,
+      text-state-layer-color: $fg,
+      text-ripple-color: $ripple,
+      outlined-label-text-color: $fg,
+      outlined-outline-color: $fg,
+      outlined-state-layer-color: $fg,
+      outlined-ripple-color: $ripple,
+      filled-container-color: $bg,
+      filled-label-text-color: $fg,
+      filled-state-layer-color: $fg,
+      filled-ripple-color: $ripple,
+    )
+  );
+  @include mat.icon-button-overrides(
+    (
+      icon-color: $fg,
+      state-layer-color: $fg,
+      ripple-color: $ripple,
+    )
+  );
+  @include mat.menu-overrides(
+    (
+      item-icon-color: $fg,
+      item-label-text-color: $fg,
+    )
+  );
+}
+
+.app-danger-action {
+  @include _status-action(danger);
+}
+
+.app-success-action {
+  @include _status-action(success);
+}
+
+// -----------------------------------------------------------------------------
+// 6. Base and app-wide rules
+// -----------------------------------------------------------------------------
+// A minimal reset: components assume border-box sizing and inherited
+// form-control fonts.
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  :root {
-    scroll-behavior: smooth;
-  }
+html,
+body {
+  height: 100%;
 }
 
 body {
-  color: #212529;
-  background-color: #fff;
+  margin: 0;
+  font: var(--mat-sys-body-medium);
+  color: var(--app-text-primary);
+  background-color: var(--app-bg);
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
 }
 
+a {
+  color: var(--app-primary);
+}
+
 hr {
   margin: 1rem 0;
-  color: inherit;
   border: 0;
-  border-top: 1px solid;
-  opacity: 0.25;
-}
-
-b,
-strong {
-  font-weight: bolder;
-}
-
-a {
-  color: #0d6efd;
-  text-decoration: underline;
-}
-
-/* :where keeps the hover at the specificity of `a`, so any class-level link
-   colour (e.g. Material buttons on anchors) still wins while hovered. */
-a:where(:hover) {
-  color: #0a58ca;
-}
-
-a:not([href]):not([class]),
-a:not([href]):not([class]):hover {
-  color: inherit;
-  text-decoration: none;
+  border-top: 1px solid var(--app-border);
 }
 
 img,
@@ -58,41 +528,8 @@ svg {
   vertical-align: middle;
 }
 
-table {
-  caption-side: bottom;
-  border-collapse: collapse;
-}
-
-th {
-  text-align: inherit;
-  text-align: -webkit-match-parent;
-}
-
-thead,
-tbody,
-tfoot,
-tr,
-td,
-th {
-  border-color: inherit;
-  border-style: solid;
-  border-width: 0;
-}
-
-label {
-  display: inline-block;
-}
-
-button {
-  border-radius: 0;
-}
-
-button:focus:not(:focus-visible) {
-  outline: 0;
-}
-
-input,
 button,
+input,
 select,
 optgroup,
 textarea {
@@ -102,92 +539,13 @@ textarea {
   line-height: inherit;
 }
 
-button,
-select {
-  text-transform: none;
-}
-
-[role='button'] {
-  cursor: pointer;
-}
-
-button,
-[type='button'],
-[type='reset'],
-[type='submit'] {
-  -webkit-appearance: button;
-}
-
-button:not(:disabled),
-[type='button']:not(:disabled),
-[type='reset']:not(:disabled),
-[type='submit']:not(:disabled) {
-  cursor: pointer;
-}
-
-::-moz-focus-inner {
-  padding: 0;
-  border-style: none;
-}
-
-::-webkit-datetime-edit-fields-wrapper,
-::-webkit-datetime-edit-text,
-::-webkit-datetime-edit-minute,
-::-webkit-datetime-edit-hour-field,
-::-webkit-datetime-edit-day-field,
-::-webkit-datetime-edit-month-field,
-::-webkit-datetime-edit-year-field {
-  padding: 0;
-}
-
-::-webkit-inner-spin-button {
-  height: auto;
-}
-
-/* Kept apart from ::file-selector-button: a browser that doesn't know one of
-   the pseudo-elements would drop a combined rule entirely. */
-::-webkit-file-upload-button {
-  font: inherit;
-  -webkit-appearance: button;
-}
-
-::file-selector-button {
-  font: inherit;
-  -webkit-appearance: button;
-}
-
-[hidden] {
-  display: none !important;
-}
-
-html,
-body {
-  height: 100%;
-}
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-}
-
-.card-style {
-  min-width: 300px !important;
-  max-width: 800px !important;
-  width: 100% !important;
-  margin-bottom: 10px !important;
-  padding: 0px 10px !important;
-  border: 1px solid #ccc !important;
-  border-radius: 8px !important;
-  background-color: #f9f9f9 !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
-}
-
 /* Material sets `text-align: left` on menu items with no [dir=rtl] counterpart,
    which left-aligns Hebrew labels inside their full-width text span. */
 .mat-mdc-menu-item {
   text-align: start;
 }
 
-/* Notes in the events panel's long-press menu run to BABY_NOTE_MAX_LENGTH (62),
+/* Notes in the events panel's long-press menu run to BABY_NOTE_MAX_LENGTH (80),
    which needs two to three lines inside Material's 280px panel cap. The panel
    renders in a CDK overlay outside the component, so these live here and are
    scoped by the menu's panelClass. */
@@ -212,4 +570,86 @@ body {
      hidden`. Breaking anywhere collapses min-content and removes the overflow. */
   overflow-wrap: anywhere;
   word-break: break-word; /* fallback for older WebKit */
+}
+
+/* The category colour menu (CategoryColorPickerComponent) lists 21 colours.
+   Capped at a comfortable window on a phone, where it scrolls, instead of
+   running the full height of the screen. Material's panel already scrolls;
+   this only lowers its viewport-based cap. Scoped by the menu's panelClass. */
+.category-color-menu.mat-mdc-menu-panel {
+  max-height: min(320px, calc(100vh - 48px));
+}
+
+// -----------------------------------------------------------------------------
+// 7. Preferences panels
+// -----------------------------------------------------------------------------
+// BabyEventsPreferencesPage groups its settings in mat-expansion-panels. A
+// top-level panel (.app-preferences-panel inside .app-preferences-panels)
+// looks like the app's outlined content card: surface, hairline border, soft
+// shadow, large corner. Sub-panels (.app-preferences-subpanel inside
+// .app-preferences-subpanels) are flat sections of their parent, divided by
+// a hairline. The top-level panels deliberately sit in a plain container, not
+// a mat-accordion, which would square the corners between stacked panels.
+.app-preferences-panels {
+  @include mat.expansion-overrides(
+    (
+      container-background-color: var(--app-surface),
+      container-text-color: var(--app-text-primary),
+      container-shape: var(--mat-sys-corner-large),
+      container-elevation-shadow: var(--app-shadow-card),
+      header-text-color: var(--app-text-primary),
+      header-description-color: var(--app-text-secondary),
+      header-indicator-color: var(--app-text-secondary),
+      header-collapsed-state-height: 56px,
+      header-expanded-state-height: 56px,
+    )
+  );
+}
+
+.app-preferences-panel {
+  border: 1px solid var(--app-border);
+}
+
+.app-preferences-subpanels {
+  @include mat.expansion-overrides(
+    (
+      container-background-color: var(--app-surface),
+      container-shape: 0,
+      container-elevation-shadow: none,
+      header-text-font: var(--mat-sys-title-small-font),
+      header-text-size: var(--mat-sys-title-small-size),
+      header-text-weight: var(--mat-sys-title-small-weight),
+      header-text-line-height: var(--mat-sys-title-small-line-height),
+      header-collapsed-state-height: 48px,
+      header-expanded-state-height: 48px,
+    )
+  );
+}
+
+.app-preferences-subpanel + .app-preferences-subpanel {
+  border-block-start: 1px solid var(--app-border);
+}
+
+// Gutters. Material pads headers and bodies by 24px, which leaves the cards
+// inside a sub-panel too narrow on a 360px phone. The headers are elements of
+// the page's own template; the body is Material's, with no token for its
+// padding, so its class is targeted here, scoped to these panels (as the menu
+// panels are in section 6). The sub-panel header's 4px plus the parent
+// body's 12px lines its text up with the top-level header's 16px; its end
+// side keeps 8px, which Material's chevron (-8px margins) needs to stay
+// inside the header.
+.app-preferences-panels .app-preferences-panel-header {
+  padding-inline: 16px;
+}
+
+.app-preferences-panels .app-preferences-subpanel-header {
+  padding-inline: 4px 8px;
+}
+
+.app-preferences-panel .mat-expansion-panel-body {
+  padding: 0 12px 12px;
+}
+
+.app-preferences-subpanel .mat-expansion-panel-body {
+  padding: 4px 0 8px;
 }

@@ -1,53 +1,167 @@
-mat-card {
-  max-width: 350px;
-  margin: 10px auto;
-}
-
-mat-card-header {
+// `main` in the app shell is a flex column with overflow hidden, so the page
+// scrolls itself instead of the document.
+:host {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: blue;
-  color: white;
-  height: 40px;
-  padding: 0;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
 }
 
-mat-card-title {
-  margin: 0;
-  text-align: center;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.info-row {
+.baby-info-page {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  margin: 16px;
-  direction: inherit;
+  gap: 16px;
+  width: 100%;
+  max-width: 600px;
+  margin-inline: auto;
+  padding-block: 8px 24px;
 }
 
-.label {
-  font-weight: bold;
+// Profile header ---------------------------------------------------------------
+
+.profile-card {
+  overflow: hidden;
 }
 
-.value {
+.profile {
   display: flex;
   align-items: center;
+  gap: 16px;
+  padding: 20px;
 }
 
-.baby-image {
-  max-width: 100px;
-  max-height: 100px;
+.avatar {
+  flex: none;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-.change-image-button {
-  font-size: 0.8rem;
-  padding: 4px 8px;
-  margin-inline-start: 10px;
-  min-width: auto;
-  color: blue;
+.avatar-placeholder {
+  display: grid;
+  place-items: center;
+  background-color: var(--app-primary-container);
+  color: var(--app-on-primary-container);
+
+  mat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+  }
+}
+
+.identity {
+  min-width: 0;
+}
+
+.baby-name {
+  margin: 0;
+  overflow: hidden;
+  color: var(--app-text-primary);
+  font: var(--mat-sys-headline-small);
+  font-weight: 700;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.baby-age {
+  margin: 4px 0 0;
+  color: var(--app-text-secondary);
+  font: var(--mat-sys-body-large);
+}
+
+// Latest-measurements strip: three equal columns with hairline separators.
+.summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  border-block-start: 1px solid var(--app-border);
+  background-color: var(--app-surface-subtle);
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 12px 4px;
+  text-align: center;
+
+  & + & {
+    border-inline-start: 1px solid var(--app-border);
+  }
+}
+
+.summary-label {
+  color: var(--app-text-secondary);
+  font: var(--mat-sys-label-medium);
+}
+
+.summary-value {
+  margin: 0;
+  color: var(--app-text-primary);
+  font: var(--mat-sys-title-large);
+  font-weight: 500;
+}
+
+.summary-unit {
+  color: var(--app-text-secondary);
+  font: var(--mat-sys-label-medium);
+}
+
+.summary-date {
+  margin: 0;
+  color: var(--app-text-muted);
+  font: var(--mat-sys-body-small);
+}
+
+// Detail rows -----------------------------------------------------------------
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 64px;
+  padding-block: 10px;
+  padding-inline: 16px 8px;
+
+  & + & {
+    border-block-start: 1px solid var(--app-border);
+  }
+}
+
+.detail-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.detail-label {
+  color: var(--app-text-secondary);
+  font: var(--mat-sys-label-medium);
+}
+
+.detail-value {
+  color: var(--app-text-primary);
+  font: var(--mat-sys-body-large);
+}
+
+// The code is copied as-is, so let a tap select all of it.
+.share-code {
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+.detail-hint {
+  color: var(--app-text-muted);
+  font: var(--mat-sys-body-small);
+}
+
+// Colours come from .app-danger-action (src/styles.scss).
+.delete-button {
+  align-self: stretch;
 }

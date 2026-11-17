@@ -25,9 +25,11 @@
   animation: notification-enter 150ms ease-out;
 }
 
-.notification-item ::ng-deep .alert-card {
+/* Toasts float over the page: no outer margin, and a raised shadow through the
+   alert's own --alert-elevation hook. */
+.notification-item app-alert-message {
+  --alert-elevation: var(--mat-sys-level3);
   margin: 0;
-  box-shadow: 0 2px 8px rgb(0 0 0 / 25%);
 }
 
 @keyframes notification-enter {

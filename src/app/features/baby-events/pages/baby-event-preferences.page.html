@@ -1,87 +1,147 @@
 <div class="preferences-page">
-  <h2 class="page-title">{{ strings.HEADER }}</h2>
+  <h1 class="page-title">{{ strings.HEADER }}</h1>
 
-  <section class="section">
-    <h3 class="section-title">{{ strings.ACTIVE_SECTION }}</h3>
+  <!-- Page-level, not inside a panel: with no favorites nothing can be saved,
+       and the panels below may be collapsed. -->
+  @if (favorites().length === 0) {
+    <app-alert-message
+      class="no-favorites-alert"
+      type="warning"
+      [title]="strings.NO_FAVORITES_TITLE"
+      [message]="strings.NO_FAVORITES_MESSAGE"
+    ></app-alert-message>
+  }
 
-    @for (item of favorites(); track item.category.id) {
-      <app-baby-event-favorite-item
-        [favorite]="item"
-        [isFirst]="$first"
-        [isLast]="$last"
-        (moveUp)="moveUp($index)"
-        (moveDown)="moveDown($index)"
-        (remove)="removeFavorite($index)"
-        (addComment)="addComment($index)"
-        (editComment)="editComment($index, $event)"
-        (removeComment)="removeComment($index, $event)"
-      ></app-baby-event-favorite-item>
-    } @empty {
-      <app-alert-message
-        type="warning"
-        [title]="strings.NO_FAVORITES_TITLE"
-        [message]="strings.NO_FAVORITES_MESSAGE"
-      ></app-alert-message>
-    }
-  </section>
+  <!-- One card per settings area, collapsed on entry. A new area (such as
+       milestones) is one more top-level panel here. Panel looks live in
+       src/styles.scss, section 7. Edits stay in this page's draft whether a
+       panel is open or not, so the Save bar is unaffected by collapsing. -->
+  <div class="app-preferences-panels">
+    <!-- A chosen theme is previewed at once and saved with everything else. -->
+    <mat-expansion-panel class="app-preferences-panel">
+      <mat-expansion-panel-header class="app-preferences-panel-header">
+        <mat-panel-title class="panel-title">
+          <mat-icon class="panel-icon">palette</mat-icon>
+          <span class="panel-title-text">{{ strings.THEME_SECTION }}</span>
+        </mat-panel-title>
+        <mat-panel-description class="panel-summary">
+          <span class="summary-pill">{{ themeLabel() }}</span>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
 
-  <mat-divider class="section-divider"></mat-divider>
+      <app-theme-picker
+        [selected]="selectedTheme()"
+        (selectedChange)="selectTheme($event)"
+      ></app-theme-picker>
+    </mat-expansion-panel>
 
-  <section class="section">
-    <h3 class="section-title">{{ strings.AVAILABLE_SECTION }}</h3>
+    <mat-expansion-panel
+      class="app-preferences-panel"
+      [expanded]="openEventsOnEntry"
+    >
+      <mat-expansion-panel-header class="app-preferences-panel-header">
+        <mat-panel-title class="panel-title">
+          <mat-icon class="panel-icon">event_note</mat-icon>
+          <span class="panel-title-text">{{ strings.EVENTS_SECTION }}</span>
+        </mat-panel-title>
+        <mat-panel-description class="panel-summary">
+          <span class="summary-pill">{{ activeSummary() }}</span>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
 
-    @if (availableCategories().length === 0) {
-      <app-alert-message
-        type="info"
-        [title]="strings.ALL_ADDED_TITLE"
-        [message]="strings.ALL_ADDED_MESSAGE"
-      ></app-alert-message>
-    } @else {
-      <mat-card class="card-style available-card">
-        @for (category of availableCategories(); track category.id) {
-          <div class="available-row">
-            <img
-              class="event-img"
-              [src]="category.imagePath"
-              [alt]="category.id"
-            />
+      <!-- Independent: either list opens on its own, however long the other. -->
+      <mat-accordion class="app-preferences-subpanels" multi displayMode="flat">
+        <mat-expansion-panel class="app-preferences-subpanel">
+          <mat-expansion-panel-header class="app-preferences-subpanel-header">
+            <mat-panel-title class="panel-title">
+              <span class="panel-title-text">{{ strings.ACTIVE_SECTION }}</span>
+              <span class="count-badge">{{ favorites().length }}</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
 
-            <span class="category-title">{{ category.value }}</span>
+          @for (item of favorites(); track item.category.id) {
+            <app-baby-event-favorite-item
+              [favorite]="item"
+              [color]="colorOf(item.category.id)"
+              [isFirst]="$first"
+              [isLast]="$last"
+              (colorChange)="setColor(item.category.id, $event)"
+              (moveUp)="moveUp($index)"
+              (moveDown)="moveDown($index)"
+              (remove)="removeFavorite($index)"
+              (addComment)="addComment($index)"
+              (editComment)="editComment($index, $event)"
+              (removeComment)="removeComment($index, $event)"
+            ></app-baby-event-favorite-item>
+          } @empty {
+            <p class="empty-hint">{{ strings.NO_ACTIVE_HINT }}</p>
+          }
+        </mat-expansion-panel>
 
-            <button
-              mat-button
-              type="button"
-              class="add-favorite"
-              (click)="addFavorite(category)"
-            >
-              <mat-icon>star</mat-icon>
-              <span>{{ strings.ADD_FAVORITE }}</span>
-            </button>
-          </div>
-        }
-      </mat-card>
-    }
-  </section>
+        <mat-expansion-panel
+          class="app-preferences-subpanel"
+          [expanded]="openEventsOnEntry"
+        >
+          <mat-expansion-panel-header class="app-preferences-subpanel-header">
+            <mat-panel-title class="panel-title">
+              <span class="panel-title-text">{{
+                strings.AVAILABLE_SECTION
+              }}</span>
+              <span class="count-badge">{{
+                availableCategories().length
+              }}</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          @if (availableCategories().length === 0) {
+            <app-alert-message
+              type="info"
+              [title]="strings.ALL_ADDED_TITLE"
+              [message]="strings.ALL_ADDED_MESSAGE"
+            ></app-alert-message>
+          } @else {
+            @for (category of availableCategories(); track category.id) {
+              <div class="available-row">
+                <app-category-icon
+                  [category]="category"
+                  [colorOverride]="colorOf(category.id)"
+                ></app-category-icon>
+
+                <span class="category-title">{{ category.value }}</span>
+
+                <button
+                  mat-button
+                  type="button"
+                  class="app-success-action"
+                  (click)="addFavorite(category)"
+                >
+                  <mat-icon>star</mat-icon>
+                  <span>{{ strings.ADD_FAVORITE }}</span>
+                </button>
+              </div>
+            }
+          }
+        </mat-expansion-panel>
+      </mat-accordion>
+    </mat-expansion-panel>
+  </div>
 </div>
 
-<div class="action-buttons">
-  <button
-    mat-raised-button
-    type="button"
-    class="save"
-    [disabled]="!canSave()"
-    (click)="save()"
-  >
-    {{ strings.SAVE }}
-  </button>
+<!-- Only while there is something to save or discard, so the page opens
+     clean. Save stays disabled while no category is active. -->
+@if (hasUnsavedChanges()) {
+  <div class="action-bar">
+    <button mat-button type="button" (click)="cancel()">
+      {{ strings.CANCEL }}
+    </button>
 
-  <button
-    mat-button
-    type="button"
-    class="cancel"
-    [disabled]="!canCancel()"
-    (click)="cancel()"
-  >
-    {{ strings.CANCEL }}
-  </button>
-</div>
+    <button
+      mat-flat-button
+      type="button"
+      [disabled]="!canSave()"
+      (click)="save()"
+    >
+      {{ strings.SAVE }}
+    </button>
+  </div>
+}
