@@ -20,6 +20,7 @@ import { BabyEventCategory } from '../../../models/baby.model';
 import { BabyEventFavorites } from '../../../models/user.model';
 import { AlertMessageComponent } from '../../../shared/components/alert-message/alert-message.component';
 import { CategoryIconComponent } from '../../../shared/components/category-icon/category-icon.component';
+import { ThemePickerComponent } from '../../../shared/components/theme-picker/theme-picker.component';
 import { CommentDraft, FavoriteDraft } from './baby-event-preferences.vm';
 
 /**
@@ -48,6 +49,7 @@ function serializeDraft(favorites: FavoriteDraft[]): string {
     MatButtonModule,
     MatCardModule,
     MatIconModule,
+    ThemePickerComponent,
   ],
 })
 export class BabyEventsPreferencesPage {

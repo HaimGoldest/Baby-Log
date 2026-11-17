@@ -1,0 +1,25 @@
+<div class="theme-grid" role="radiogroup" [attr.aria-label]="strings.GROUP_LABEL">
+  @for (theme of themes; track theme.id) {
+    @let isActive = theme.id === activeTheme();
+
+    <label class="theme-option" [class.is-active]="isActive">
+      <input
+        class="theme-radio"
+        type="radio"
+        name="app-theme"
+        [value]="theme.id"
+        [checked]="isActive"
+        (change)="select(theme.id)"
+      />
+      <span
+        class="swatch"
+        [attr.data-theme-swatch]="theme.id"
+        aria-hidden="true"
+      ></span>
+      <span class="theme-label">{{ theme.label }}</span>
+      @if (isActive) {
+        <mat-icon class="check">check_circle</mat-icon>
+      }
+    </label>
+  }
+</div>

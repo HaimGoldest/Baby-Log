@@ -9,7 +9,6 @@ import {
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SessionStore } from '../../core/stores/session/session.store';
 import { BabiesStore } from '../../core/stores/babies/babies.store';
-import { ThemeService } from '../../core/services/theme.service';
 import { AppRoute } from '../../enums/app-route.enum';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -37,7 +36,6 @@ import NavbarStrings from './navbar.strings';
 export class NavbarComponent {
   private sessionStore = inject(SessionStore);
   private babiesStore = inject(BabiesStore);
-  private themeService = inject(ThemeService);
 
   /** Image URLs that failed to load; their avatars fall back to an icon. */
   private readonly brokenImageUrls = signal<ReadonlySet<string>>(new Set());
@@ -62,10 +60,6 @@ export class NavbarComponent {
   public readonly babyInfoPage = AppRoute.BabyInfo;
 
   public readonly strings = NavbarStrings;
-
-  public cycleTheme(): void {
-    this.themeService.cycleTheme();
-  }
 
   public logout(): void {
     this.sessionStore.signOut();

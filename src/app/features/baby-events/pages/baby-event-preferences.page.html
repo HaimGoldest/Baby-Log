@@ -1,6 +1,14 @@
 <div class="preferences-page">
   <h1 class="page-title">{{ strings.HEADER }}</h1>
 
+  <!-- Applied and saved on tap, independently of the favorites Save bar. -->
+  <section class="section">
+    <h2 class="section-title">{{ strings.THEME_SECTION }}</h2>
+    <mat-card appearance="outlined" class="theme-card">
+      <app-theme-picker></app-theme-picker>
+    </mat-card>
+  </section>
+
   <section class="section">
     <h2 class="section-title">{{ strings.ACTIVE_SECTION }}</h2>
 

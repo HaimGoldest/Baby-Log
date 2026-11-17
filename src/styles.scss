@@ -12,8 +12,9 @@
 //   5. Semantic actions        danger / success variants for Material buttons.
 //   6. Base and app-wide rules
 //
-// Adding a theme: add its id to APP_THEMES (src/app/core/theme/app-themes.ts)
-// and a matching `:root[data-theme='<id>']` block to section 2.
+// Adding a theme: add it to APP_THEMES (src/app/core/theme/app-themes.ts), add
+// its key colours to $_theme-key-colors, and give it a matching
+// `:root[data-theme='<id>']` block in section 2.
 // =============================================================================
 
 @use 'sass:list';
@@ -31,6 +32,23 @@ $_type-levels: display-large, display-medium, display-small, headline-large,
 $_no-tracking: ();
 @each $level in $_type-levels {
   $_no-tracking: map.set($_no-tracking, #{$level}-tracking, 0);
+}
+
+// Each theme's page background and primary: the two colours that identify it.
+// The theme blocks in section 2 read them from here, and so do the picker
+// swatches (--app-swatch-<id>-*), so a swatch cannot drift from its theme.
+// Keys are APP_THEMES ids.
+$_theme-key-colors: (
+  nordic: (bg: #faf8f5, primary: #527a6a),
+  mint: (bg: #f4f7f9, primary: #2a7b88),
+  terracotta: (bg: #fdf9f6, primary: #ac5e46),
+  boy: (bg: #f3f7fb, primary: #3b6e9c),
+  girl: (bg: #fcf5f7, primary: #a64d69),
+  dark: (bg: #121619, primary: #7eb5a0),
+);
+
+@function _key-color($theme, $role) {
+  @return map.get($_theme-key-colors, $theme, $role);
 }
 
 // Event category palette, keyed by catalogue id
@@ -109,14 +127,14 @@ html {
 
   --app-font-family: 'Heebo', sans-serif;
 
-  --app-bg: #faf8f5;
+  --app-bg: #{_key-color(nordic, bg)};
   --app-surface: #ffffff;
   --app-surface-subtle: #f2efea;
   --app-border: #e5e0d8;
   --app-border-strong: #8a857c;
   --app-shadow-card: 0 1px 2px rgb(43 47 45 / 6%), 0 2px 8px rgb(43 47 45 / 6%);
 
-  --app-primary: #527a6a;
+  --app-primary: #{_key-color(nordic, primary)};
   --app-on-primary: #ffffff;
   --app-primary-container: #e8f0ec;
   --app-on-primary-container: #1e3b31;
@@ -148,14 +166,14 @@ html {
 :root[data-theme='mint'] {
   --app-font-family: 'Rubik', sans-serif;
 
-  --app-bg: #f4f7f9;
+  --app-bg: #{_key-color(mint, bg)};
   --app-surface: #ffffff;
   --app-surface-subtle: #eaf0f3;
   --app-border: #dbe3e8;
   --app-border-strong: #808d96;
   --app-shadow-card: 0 1px 2px rgb(31 42 48 / 6%), 0 2px 8px rgb(31 42 48 / 6%);
 
-  --app-primary: #2a7b88;
+  --app-primary: #{_key-color(mint, primary)};
   --app-on-primary: #ffffff;
   --app-primary-container: #e0f0f2;
   --app-on-primary-container: #0d3940;
@@ -168,14 +186,14 @@ html {
 :root[data-theme='terracotta'] {
   --app-font-family: 'Assistant', sans-serif;
 
-  --app-bg: #fdf9f6;
+  --app-bg: #{_key-color(terracotta, bg)};
   --app-surface: #ffffff;
   --app-surface-subtle: #f6eee8;
   --app-border: #ebe0d8;
   --app-border-strong: #918780;
   --app-shadow-card: 0 1px 2px rgb(56 44 39 / 6%), 0 2px 8px rgb(56 44 39 / 6%);
 
-  --app-primary: #ac5e46;
+  --app-primary: #{_key-color(terracotta, primary)};
   --app-on-primary: #ffffff;
   --app-primary-container: #f9eae4;
   --app-on-primary-container: #5a2515;
@@ -185,6 +203,48 @@ html {
   --app-text-muted: #74665f;
 }
 
+// Baby boy: powder sky with a dusty sky-blue primary.
+:root[data-theme='boy'] {
+  --app-font-family: 'Heebo', sans-serif;
+
+  --app-bg: #{_key-color(boy, bg)};
+  --app-surface: #ffffff;
+  --app-surface-subtle: #e9f0f6;
+  --app-border: #d9e3ed;
+  --app-border-strong: #7b8b9b;
+  --app-shadow-card: 0 1px 2px rgb(30 42 54 / 6%), 0 2px 8px rgb(30 42 54 / 6%);
+
+  --app-primary: #{_key-color(boy, primary)};
+  --app-on-primary: #ffffff;
+  --app-primary-container: #e1edf7;
+  --app-on-primary-container: #12324f;
+
+  --app-text-primary: #1e2a36;
+  --app-text-secondary: #4a5866;
+  --app-text-muted: #5d6b79;
+}
+
+// Baby girl: soft blush with a dusty-rose primary.
+:root[data-theme='girl'] {
+  --app-font-family: 'Heebo', sans-serif;
+
+  --app-bg: #{_key-color(girl, bg)};
+  --app-surface: #ffffff;
+  --app-surface-subtle: #f5eaee;
+  --app-border: #eedde3;
+  --app-border-strong: #968389;
+  --app-shadow-card: 0 1px 2px rgb(53 42 46 / 6%), 0 2px 8px rgb(53 42 46 / 6%);
+
+  --app-primary: #{_key-color(girl, primary)};
+  --app-on-primary: #ffffff;
+  --app-primary-container: #f7e3e9;
+  --app-on-primary-container: #4f1a2c;
+
+  --app-text-primary: #352a2e;
+  --app-text-secondary: #5e4f55;
+  --app-text-muted: #74646a;
+}
+
 // Low-glare night mode: no pure white anywhere, and a primary light enough to
 // carry dark text.
 :root[data-theme='dark'] {
@@ -192,14 +252,14 @@ html {
 
   --app-font-family: 'Heebo', sans-serif;
 
-  --app-bg: #121619;
+  --app-bg: #{_key-color(dark, bg)};
   --app-surface: #1e2429;
   --app-surface-subtle: #262d33;
   --app-border: #313940;
   --app-border-strong: #768089;
   --app-shadow-card: 0 1px 2px rgb(0 0 0 / 40%), 0 2px 8px rgb(0 0 0 / 30%);
 
-  --app-primary: #7eb5a0;
+  --app-primary: #{_key-color(dark, primary)};
   --app-on-primary: #0d2a20;
   --app-primary-container: #25332e;
   --app-on-primary-container: #cbe5da;
@@ -236,6 +296,24 @@ html {
 
   // Upward shadow for bars pinned to the bottom edge of a scroll area.
   --app-shadow-bar: 0 -2px 8px color-mix(in srgb, var(--mat-sys-shadow) 8%, transparent);
+}
+
+// Theme swatches: every theme's key colours, defined whichever theme is active,
+// for previews such as the theme picker. An element with
+// data-theme-swatch="<id>" exposes its theme's pair as --app-swatch-bg /
+// --app-swatch-primary.
+:root {
+  @each $theme, $colors in $_theme-key-colors {
+    --app-swatch-#{$theme}-bg: #{map.get($colors, bg)};
+    --app-swatch-#{$theme}-primary: #{map.get($colors, primary)};
+  }
+}
+
+@each $theme, $colors in $_theme-key-colors {
+  [data-theme-swatch='#{$theme}'] {
+    --app-swatch-bg: var(--app-swatch-#{$theme}-bg);
+    --app-swatch-primary: var(--app-swatch-#{$theme}-primary);
+  }
 }
 
 // -----------------------------------------------------------------------------

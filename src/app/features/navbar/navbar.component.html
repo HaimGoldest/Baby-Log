@@ -58,19 +58,6 @@
     </button>
     <button
       mat-menu-item
-      [routerLink]="['/', babyEventPreferencesPage]"
-      routerLinkActive="menu-item-active"
-      [routerLinkActiveOptions]="{ exact: true }"
-      [disabled]="!userHaveBabies()"
-    >
-      <mat-icon>tune</mat-icon>
-      <span>{{ strings.PREFERENCES }}</span>
-    </button>
-
-    <mat-divider></mat-divider>
-
-    <button
-      mat-menu-item
       [routerLink]="['/', growthTrackingPage]"
       routerLinkActive="menu-item-active"
       [routerLinkActiveOptions]="{ exact: true }"
@@ -79,9 +66,16 @@
       <mat-icon>show_chart</mat-icon>
       <span>{{ strings.GROWTH_TRACKING }}</span>
     </button>
-
-    <mat-divider></mat-divider>
-
+    <button
+      mat-menu-item
+      [routerLink]="['/', babyEventPreferencesPage]"
+      routerLinkActive="menu-item-active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [disabled]="!userHaveBabies()"
+    >
+      <mat-icon>tune</mat-icon>
+      <span>{{ strings.PREFERENCES }}</span>
+    </button>
     <button
       mat-menu-item
       [routerLink]="['/', babyInfoPage]"
@@ -105,11 +99,6 @@
 
     <mat-divider></mat-divider>
 
-    <!-- Temporary switcher until a theme picker lands in the redesign. -->
-    <button mat-menu-item (click)="cycleTheme()">
-      <mat-icon>palette</mat-icon>
-      <span>{{ strings.CYCLE_THEME }}</span>
-    </button>
     <button mat-menu-item (click)="logout()">
       <mat-icon class="mirror-in-rtl">logout</mat-icon>
       <span>{{ strings.LOGOUT }}</span>

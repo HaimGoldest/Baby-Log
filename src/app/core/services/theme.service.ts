@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { SessionStore } from '../stores/session/session.store';
 import {
-  APP_THEMES,
   AppThemeId,
   DEFAULT_APP_THEME,
   isAppThemeId,
@@ -60,15 +59,15 @@ export class ThemeService {
   }
 
   /**
-   * Advances to the next theme in APP_THEMES, wrapping from the last back to
-   * the first, and saves it to the signed-in user's profile.
+   * Switches to the given theme at once (signal, <html data-theme> and the
+   * localStorage cache) and saves it to the signed-in user's profile. Choosing
+   * the theme that is already active does nothing.
    */
-  public cycleTheme(): void {
-    const index = APP_THEMES.indexOf(this._theme());
-    const next = APP_THEMES[(index + 1) % APP_THEMES.length];
+  public setTheme(theme: AppThemeId): void {
+    if (theme === this._theme()) return;
 
-    this.apply(next);
-    if (this.uid()) this.persist(next);
+    this.apply(theme);
+    if (this.uid()) this.persist(theme);
   }
 
   private adoptProfileTheme(stored: unknown): void {

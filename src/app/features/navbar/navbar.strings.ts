@@ -5,6 +5,5 @@ export default class NavbarStrings {
   public static readonly PREFERENCES = 'העדפות משתמש';
   public static readonly ADD_BABY = 'הוספת תינוק';
   public static readonly BABY_INFO = 'פרטי תינוק';
-  public static readonly CYCLE_THEME = 'החלף ערכת נושא';
   public static readonly LOGOUT = 'יציאה';
 }

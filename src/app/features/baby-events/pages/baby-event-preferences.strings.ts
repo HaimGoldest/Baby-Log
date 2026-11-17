@@ -1,6 +1,7 @@
 export default class BabyEventsPreferencesStrings {
   public static readonly HEADER = 'העדפות משתמש - יומן אירועים';
 
+  public static readonly THEME_SECTION = 'ערכת נושא';
   public static readonly ACTIVE_SECTION = 'קטגוריות פעילות';
   public static readonly AVAILABLE_SECTION = 'קטגוריות זמינות להוספה';
   public static readonly ADD_FAVORITE = 'הוסף למועדפים';
