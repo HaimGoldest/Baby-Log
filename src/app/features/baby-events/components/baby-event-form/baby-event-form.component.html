@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>{{ strings.HEADER }}</h2>
 <hr />
 
-<mat-dialog-content [formGroup]="eventForm">
+<mat-dialog-content class="event-form-content" [formGroup]="eventForm">
   <mat-form-field appearance="outline">
     <mat-label>{{ strings.DATE }}</mat-label>
     <input
@@ -20,7 +20,7 @@
     <mat-icon matSuffix>schedule</mat-icon>
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="full-width">
+  <mat-form-field appearance="outline">
     <mat-label>{{ strings.COMMENT }}</mat-label>
     <input matInput formControlName="comment" [maxlength]="maxNoteLength" />
     <mat-hint align="end">

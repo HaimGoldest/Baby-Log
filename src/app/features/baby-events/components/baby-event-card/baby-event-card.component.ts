@@ -35,7 +35,9 @@ import BabyEventCardStrings from './baby-event-card.strings';
  * The feed's `cdk-virtual-scroll-viewport` positions items by exactly this
  * value, and the card's host height is bound to it, so it is the single place
  * to change the slot. The card must never grow with its content: every row in
- * it is one line or a fixed-size box.
+ * it is one line or a fixed-size box, except the note, which is clamped to two
+ * lines. The budget inside the 150px card: 2px border, 22px padding, 48px
+ * header, 12px plus two 20px note lines, 16px attribution, leaving 10px spare.
  */
 export const BABY_EVENT_CARD_ITEM_SIZE = 158;
 

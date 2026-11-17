@@ -21,7 +21,7 @@ These override convenience every time.
   npx ng lint
   npx ng build
   ```
-- **Virtual scroll fixed height:** The main events feed renders event cards in a `cdk-virtual-scroll-viewport` with a fixed item size. `BABY_EVENT_CARD_ITEM_SIZE` (exported from `baby-event-card.component.ts`) is both the viewport's `itemSize` and the card host's height. Never introduce variable-height event cards: every row in a card stays a single line (`white-space: nowrap; overflow: hidden; text-overflow: ellipsis`) or a fixed-size box, with no wrapping text and no conditional rows that add height. To change the slot height, change only that constant.
+- **Virtual scroll fixed height:** The main events feed renders event cards in a `cdk-virtual-scroll-viewport` with a fixed item size. `BABY_EVENT_CARD_ITEM_SIZE` (exported from `baby-event-card.component.ts`) is both the viewport's `itemSize` and the card host's height. Never introduce variable-height event cards: every row in a card stays a single line (`white-space: nowrap; overflow: hidden; text-overflow: ellipsis`) or a fixed-size box, with no conditional rows that add height. The one exception is the note, clamped to two lines (`-webkit-line-clamp: 2` with `overflow-wrap: anywhere`) inside a budget that fits the slot; any other wrapping text needs the same clamp and a re-checked budget. The card host keeps `contain: inline-size`, so no text in a card can widen the feed. To change the slot height, change only that constant.
 - **Mobile-first priority:** Design and verify every layout for narrow mobile viewports (360px wide) first, then add larger-breakpoint enhancements.
 
 ## Angular rules

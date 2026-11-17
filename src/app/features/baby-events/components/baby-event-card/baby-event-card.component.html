@@ -1,8 +1,9 @@
 @let pending = pendingKind();
 @let babyEvent = event();
 
-<!-- Fixed height: every row below is a single line or a fixed-size box, so no
-     content can grow the card past its virtual-scroll slot. -->
+<!-- Fixed height: every row below is a single line, a fixed-size box, or (the
+     note) clamped to two lines, so no content can grow the card past its
+     virtual-scroll slot. -->
 <mat-card
   appearance="outlined"
   class="event-card"

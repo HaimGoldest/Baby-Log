@@ -2,14 +2,25 @@
 // BABY_EVENT_CARD_ITEM_SIZE and includes this bottom padding, which is the gap
 // between cards. Surface, border, shadow and corner radius come from the
 // app-wide outlined mat-card tokens in src/styles.scss.
+//
+// `contain: inline-size` stops the card's content from counting towards its
+// width. The virtual-scroll content wrapper sizes itself to its widest item,
+// so without it a long unbreakable line (a note, a long name in the
+// attribution) widened every card and scrolled the feed sideways.
 :host {
   display: flex;
   justify-content: center;
+  min-width: 0;
+  max-width: 100%;
   padding-block-end: 8px;
+  contain: inline-size;
 }
 
+// min-width: 0 lets the card shrink to its slot: as a flex item it would
+// otherwise never be narrower than its longest unbreakable line.
 .event-card {
   width: 100%;
+  min-width: 0;
   max-width: 800px;
   height: 100%;
   overflow: hidden;
@@ -21,6 +32,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  min-width: 0;
   min-height: 48px;
 }
 
@@ -57,13 +69,23 @@
   flex: none;
 }
 
+// Up to two lines, then an ellipsis. `anywhere` breaks an unbroken string
+// (a pasted link, "ssss…") mid-word instead of letting it run past the card.
+// flex: none keeps the clamped box whole: two lines always fit the slot (see
+// BABY_EVENT_CARD_ITEM_SIZE), so it never needs to shrink.
 .note {
+  display: -webkit-box;
+  flex: none;
+  min-width: 0;
+  max-width: 100%;
   margin: 12px 0 0;
   overflow: hidden;
   color: var(--app-text-primary);
   font: var(--mat-sys-body-medium);
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
+  word-break: break-word; // fallback for WebKit without `anywhere`
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .note-label {

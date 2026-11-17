@@ -1,8 +1,30 @@
+@use '@angular/material' as mat;
+
+// The dialog is capped at 300px, which leaves no room for two fields side by
+// side, so each field is a full-width row of its own: block-level rather
+// than Material's default inline-flex, which needs no width and keeps the
+// fields off text lines. Rows are spaced only by each field's own subscript
+// (hint/error) area, so the gaps match the growth measurement dialog.
+// Material's 65vh cap on the content still applies, so it scrolls on
+// genuinely short screens.
 mat-form-field {
-  margin-inline-end: 16px;
+  display: flex;
+  min-width: 0;
 }
 
-.full-width {
-  width: 100%;
-  margin-top: 16px;
+// A guard only: block-level fields cannot overflow sideways, and the note
+// cannot widen anything, since an <input> scrolls its own text.
+.event-form-content {
+  overflow-x: hidden;
+
+  // Material gives dialog content no bottom padding when it has actions, so
+  // the last field's subscript sits on the scroll box's edge. The note's
+  // character counter is a fraction of a pixel taller than that slot with
+  // the theme fonts, which was enough to show a scrollbar. A few pixels of
+  // padding absorb it.
+  @include mat.dialog-overrides(
+    (
+      with-actions-content-padding: 20px 24px 4px,
+    )
+  );
 }
